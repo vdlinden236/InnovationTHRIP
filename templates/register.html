@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Innovate</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="static/images/icons/favicon.png"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="static/css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+
+	<div class="limiter">
+		<div class="container-login100" style="background-image: ">
+			<div class="wrap-login100">
+
+				<form class="login100-form validate-form p-t-30" action="{{  url_for('users_file.signup')  }}" method="POST">
+
+					{% if Error|length > 1 %}
+					<div class="danger text-center " style="border-radius: 25px;">
+					{{  Error  }}
+					</div>
+					{% endif %}
+
+					<span class="login100-form-title p-b-34 p-t-10">
+						Sign Up
+					</span>
+					<div class="wrap-input100 validate-input" data-validate = "Enter name">
+						<input class="input100" type="text" name="FName" placeholder="Name...">
+						<span class="focus-input100" data-placeholder="&#xf207;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Enter surname">
+						<input class="input100" type="text" name="Surname" placeholder="Surname...">
+						<span class="focus-input100" data-placeholder="&#xf207;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Enter email">
+						<input class="input100" type="email" name="Email" placeholder="Email...">
+						<span class="focus-input100" data-placeholder="&#xf224;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Enter organisation">
+						<select class="input100" name="Organisation" id="Organisation" style="border: none !important;">
+							<option value="" disabled>Organisation...</option>
+							{%  for i in org  %}
+							<option value="{{  i.OrgID  }}">{{  i.organisationName  }}</option>
+							{% endfor %}
+						</select>
+						<span class="focus-input100" data-placeholder="&#xf132;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<input class="input100" type="password" name="Pswd" placeholder="Password...">
+						<span class="focus-input100" data-placeholder="&#xf191;"></span>
+					</div>
+
+					<div class="container-login100-form-btn p-b-40">
+						<input type="submit" class="btn btn-info no-show btn-lg" value="Sign Up">
+					</div>
+					<center>
+					<p>Already have an accout? <a href="{{  url_for('users_file.login_org')  }}" style="">Login here</a>.</p>
+					</center>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+	<script src="static/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/bootstrap/js/popper.js"></script>
+	<script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/daterangepicker/moment.min.js"></script>
+	<script src="static/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="static/js/main.js"></script>
+
+</body>
+</html>

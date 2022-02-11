@@ -1,0 +1,819 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+<style>
+textarea {
+    height: 150px;
+}
+
+.star-rating {
+   padding: 10px;
+  font-size: 0;
+  white-space: nowrap;
+  display: inline-block;
+  width: 175px;
+  height: 35px;
+  overflow: hidden;
+  position: relative;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: contain;
+}
+
+.star-rating i {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 20%;
+  z-index: 1;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: contain;
+}
+
+.star-rating input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  opacity: 0;
+  display: inline-block;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  position: relative;
+}
+
+.star-rating input:hover + i,
+.star-rating input:checked + i {
+  opacity: 1;
+}
+.star-rating i ~ i {
+  width: 40%;
+}
+.star-rating i ~ i ~ i {
+  width: 60%;
+}
+.star-rating i ~ i ~ i ~ i {
+  width: 80%;
+}
+.star-rating i ~ i ~ i ~ i ~ i {
+  width: 100%;
+}
+
+.choice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 20px;
+  display: block;
+}
+span.scale-rating{
+margin: 5px 0 15px;
+    display: inline-block;
+
+    width: 100%;
+
+}
+span.scale-rating>label {
+  position:relative;
+    -webkit-appearance: none;
+  outline:0 !important;
+    border: 1px solid grey;
+    height:33px;
+    margin: 0 5px 0 0;
+  width: calc(10% - 7px);
+    float: left;
+  cursor:pointer;
+}
+
+span.scale-rating label {
+  position:relative;
+    -webkit-appearance: none;
+  outline:0 !important;
+    height:33px;
+
+    margin: 0 5px 0 0;
+  width: calc(10% - 7px);
+    float: left;
+  cursor:pointer;
+}
+
+span.scale-rating input[type=radio] {
+  position:absolute;
+    -webkit-appearance: none;
+  opacity:0;
+  outline:0 !important;
+    /*border-right: 1px solid grey;*/
+    height:33px;
+
+    margin: 0 5px 0 0;
+
+  width: 100%;
+    float: left;
+  cursor:pointer;
+  z-index:3;
+}
+span.scale-rating label:hover{
+background: orange;
+}
+span.scale-rating input[type=radio]:last-child{
+border-right:0;
+}
+span.scale-rating label input[type=radio]:checked ~ label{
+    -webkit-appearance: none;
+
+    margin: 0;
+  background: orange;
+}
+span.scale-rating label:before
+{
+  content:attr(value);
+    top: 7px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    vertical-align: middle;
+  z-index:2;
+}
+
+
+.checked {
+  color: orange;
+}
+
+/* Three column layout */
+.side {
+  float: left;
+  width: 15%;
+  margin-top:10px;
+}
+
+.middle {
+  margin-top:10px;
+  float: left;
+  width: 70%;
+}
+
+/* Place text to the right */
+.right {
+  text-align: right;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* The bar container */
+.bar-container {
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: center;
+  color: white;
+}
+
+/* Individual bars */
+.bar-5 {width: 60%; height: 18px; background-color: #4CAF50;}
+.bar-4 {width: 30%; height: 18px; background-color: #2196F3;}
+.bar-3 {width: 10%; height: 18px; background-color: #00bcd4;}
+.bar-2 {width: 4%; height: 18px; background-color: #ff9800;}
+.bar-1 {width: 15%; height: 18px; background-color: #f44336;}
+
+/* Responsive layout - make the columns stack on top of each other instead of next to each other */
+@media (max-width: 400px) {
+  .side, .middle {
+    width: 100%;
+  }
+  .right {
+    display: none;
+  }
+}
+
+.heading {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+</style>
+
+
+{% endblock %}
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+{% block body %}
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1" style="margin-top: 15px">Inputs</h2>
+                                    <span>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#downloadpdf"><i class="fas fa-fas fa-list-ul"></i> Download pdf</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#fitertype"><i class="fas fa-fas fa-list-ul"></i> Filter Input Type</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#submitProb"><i class="fas fa-plus"></i> Submit a Input</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate a Input</a>
+                                    </span>
+                                </div><hr>
+                            </div>
+                        </div>
+
+
+<div class="row m-t-25" style="height:100%">
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c1">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  active_problems[0]  }}</h2>
+                                                <span>Active Inputs</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c2">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <a href="{{  url_for('surveys_file.innovations', org_name=session['OrgName'])  }}">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-globe"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  innovations[0]  }}</h2>
+                                                <span>All Innovations</span>
+                                            </div>
+                                            </a>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c3">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  closed_problems[0]  }}</h2>
+                                                <span>Closed Inputs</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+<div class="row ">
+        <div class="col-md-12">
+                <div class="au-card chart-percent-card">
+                        <div class="au-card-inner">
+
+<div class="" auto-update="true" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+<table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+    <thead class="text-center dot--dblue text-white">
+      <tr class="">
+		<th style="width:15%;">Inputs</th>
+        <th style="width:40%;">Description</th>
+         <th style="width:10%;">Type</th>
+		<th style="width:10%;">Department</th>
+          <th style="width:10%;">Active</th>
+		<th style="width:10%;">Ratings</th>
+          <th style="width:10%;">Attachments</th>
+          <th style="width:5%;">Edit</th>
+      </tr>
+    </thead>
+    <tbody class="text-center" style="font-size: 14px !important;">
+        <!--{# for i in Problems #}. format({{output}}) -- test a variable here to display the select box-->
+
+        {% for i in Problems %}
+        <tr >
+			<td style="display: table-cell; vertical-align: middle;">{{  i.name  }}</td>
+			<td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
+            <td style="display: table-cell; vertical-align: middle;">{{  i.qtype  }}</td>
+			<td style="display: table-cell; vertical-align: middle;">{{  i.orgFunctionName  }}</td>
+			<td style="display: table-cell; vertical-align: middle;">{{  i.IsActive  }}</td>
+            <td style="display: table-cell; vertical-align: middle;"><a href="#" id="{{  i.ContractItemId  }}" data-toggle="modal" data-id="{{  i.problemID  }}" data-target="#ViewRatings{{  i.problemID  }}"><i class="fas fa-chart-bar change fa-lg"></i></a></td>
+
+            {% if i.attatchedFile is none %}
+            <td style="display: table-cell; vertical-align: middle;">-</td>
+            {% else %}
+            <td style="display: table-cell; vertical-align: middle;"><a href = "{{  url_for('surveys_file.download', filename = i.attatchedFile)  }}" ><i class="fas fa-download change fa-lg"></i></a></td>
+            {% endif %}
+
+            <td style="display: table-cell; vertical-align: middle;"><a href=# data-toggle="modal" data-target="#editProblem{{  i.problemID  }}"><i class="fas fa-edit change fa-lg"></i></a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+ </div>
+
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+    </div>
+<div class="modal fade" id="submitProb" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="subProb">Submit a Input</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Input:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="PName" id="PName"/>
+                <label class="text-center">Description:</label>
+                <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="UDesc" id="UDesc"></textarea>
+                <label class="text-center">Input Type:</label>
+            <select class="form-control qlogin" name="Utype" id="Utype">
+              <option value="" selected disabled></option>
+                <option value="Complaint" >Complaint</option>
+                <option value="Problem" >Problem</option>
+                <option value="Idea" >Idea</option>
+            </select>
+                <label class="text-center">Time Period:</label>
+            <select class="form-control qlogin" name="UTime" id="UTime">
+              <option value="" selected disabled></option>
+                <option value="3" >Short Term (Urgent)</option>
+                <option value="2" >Medium Term</option>
+                <option value="1" >Long Term</option>
+            </select>
+                <label class="text-center">Functional Area:</label>
+            <select class="form-control qlogin" name="UFunc" id="UFunc">
+              <option value="" selected disabled></option>
+                <option value="Finance" >Finance</option>
+                <option value="HR" >HR</option>
+                <option value="IT" >IT</option>
+                <option value="Production" >Production</option>
+                <option value="Management" >Management</option>
+            </select>
+                <label class="text-center">Attachments:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="file"  name="file" id="file"/>
+            </center>
+        </div>
+      </div>
+              <div class="modal-footer">
+                <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Submit Problem">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+              </div>
+    </div>
+  </div>
+</div>
+
+{% for i in Problems %}
+<div class="modal fade" id="editProblem{{  i.problemID  }}" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'] )  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="editProb1">Edit Input</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <input class="" type="hidden" value="{{  i.problemID  }}" name="probID">
+            <label class="text-center">Input:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="EName" id="EName" value="{{  i.name  }}"/>
+                <label class="text-center">Description:</label>
+                <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="EDesc" id="EDesc">{{  i.description  }}</textarea>
+                <label class="text-center">Input Type:</label>
+            <select class="form-control qlogin" name="Etype" id="Etype">
+              <option value="{{  i.qtype  }}" selected>{{  i.qtype  }}</option>
+                <option value="Complaint" >Complaint</option>
+                <option value="Problem" >Problem</option>
+                <option value="Idea" >Idea</option>
+            </select><label class="text-center">Time Period:</label>
+            <select class="form-control qlogin" name="ETime" id="ETime">
+              <option value="{{  i.horisonID  }}" selected>{{  i.Horizon  }}</option>
+                <option value="1" >Short Term</option>
+                <option value="2" >Medium Term</option>
+                <option value="3" >Long Term</option>
+            </select>
+                <label class="text-center">Functional Area:</label>
+            <select class="form-control qlogin" name="EFunc" id="EFunc">
+              <option value="{{  i.orgFunctionName  }}" selected>{{  i.orgFunctionName  }}</option>
+                <option value="Finance" >Finance</option>
+                <option value="HR" >HR</option>
+                <option value="IT" >IT</option>
+                <option value="Production" >Production</option>
+                <option value="Management" >Management</option>
+            </select>
+
+
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+
+          <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Edit Problem">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<div class="modal fade" id="fitertype" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="filterTit">Filter Input Type </h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <label class="text-center">Select Input Type</label>
+                <select class="form-control qlogin" name="InType" id="InType">
+                  <option value="" selected disabled></option>
+                    <option value="All" >All</option>
+                    <option value="Complaints" >Complaints</option>
+                    <option value="Problems" >Problems</option>
+                    <option value="Ideas" >Ideas</option>
+                </select>
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="View Type">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="downloadpdf" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('gamification_file.download', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="filterTit">Download a pdf of the problems </h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <label class="text-center">Select Input Type</label>
+                <select class="form-control qlogin" name="InType" id="InType">
+                  <option value="" selected disabled></option>
+                    <option value="All" >All</option>
+                    <option value="Complaints" >Complaints</option>
+                    <option value="Problems" >Problems</option>
+                    <option value="Ideas" >Ideas</option>
+                </select>
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Download pdf">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="rateProb" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="rateP">Rate a Problem</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+
+            <label class="text-center">Problem:</label>
+            <select class="form-control qlogin" name="UProb" id="UProb">
+              <option value="" selected disabled></option>
+                {% for i in Problems %}
+                <option value="{{  i.problemID  }}" >{{  i.name  }}</option>
+                {% endfor %}
+            </select>
+
+                <label style="padding-top: 10px;" class="text-center">Rating:</label><br>
+                <span class="star-rating">
+                  <input type="radio" name="rating1" value="1"><i></i>
+                  <input type="radio" name="rating1" value="2"><i></i>
+                  <input type="radio" name="rating1" value="3"><i></i>
+                  <input type="radio" name="rating1" value="4"><i></i>
+                  <input type="radio" name="rating1" value="5"><i></i>
+                </span>
+                <br>
+                <label class="text-center"  style="padding-top: 10px;">Feedback:</label>
+                <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="UFeed" id="UFeed"></textarea>
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Rate Problem">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% for i in Problems %}
+<div class="modal hide" id="ViewRatings{{  i.problemID  }}" tabindex="-1" role="dialog" aria-labelledby="ViewRatings" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabel">View Ratings</h5>
+
+      </div>
+
+      <div class="modal-body">
+        <div class="">
+            <center>
+            <span class="heading">Overall Rating:</span><br>
+            {% for j in problem_rating %}
+            {% if j.problemID == i.problemID %}
+            {% if j.Rating == 0 %}
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Rating == 1 %}
+            <span class="fa fa-star checked fa-lg"></span>
+           <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Rating == 2 %}
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Rating == 3 %}
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Rating == 4 %}
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Rating == 5 %}
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span><br>
+            {% else %}
+
+            {% endif %}
+
+            <p>{{  j.Rating  }} star average rating based on {{  j.Total  }} reviews.</p>
+            {% endif %}
+            {% endfor %}
+
+            <hr>
+
+
+{% for k in user_problem_rating %}
+{% if k.problemID == i.problemID %}
+<div class="text-center">
+    <h4 style="padding-bottom: 10px;"><i class="fas fa-user-circle fa-lg"></i> {{  k.firstname  }} {{  k.surname  }} commented:</h4>
+    <p style="padding-bottom: 10px; ">{{  k.feedback}}</p>
+    {% if k.rating == 0 %}
+    <span class="fa fa-star "></span>
+    <span class="fa fa-star "></span>
+    <span class="fa fa-star "></span>
+    <span class="fa fa-star "></span>
+    <span class="fa fa-star "></span><br>
+    {% elif k.rating == 1 %}
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span><br>
+    {% elif k.rating == 2 %}
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span><br>
+    {% elif k.rating == 3 %}
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span><br>
+    {% elif k.rating == 4 %}
+    <span class="fa fa-star checked "></span>
+    <span class="fa fa-star checked "></span>
+    <span class="fa fa-star checked "></span>
+    <span class="fa fa-star checked "></span>
+    <span class="fa fa-star fa-sm"></span><br>
+    {% elif k.rating == 5 %}
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span><br>
+    {% else %}
+
+    {% endif %}
+
+</div><br>
+{% endif %}
+{% endfor %}
+
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer" >
+        <button style="width:150px;" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+
+{% block js %}
+
+<script>
+var table = $('#example').DataTable({"dom": 'rt', "fixedHeader": {header: true}, "pageLength": 5000, "aaSorting": [], "ordering": true,
+    columnDefs: [{
+      orderable: false,
+      targets: "no-sort"
+    }],
+
+    drawCallback: function() {
+    $('[data-toggle="popover"]').popover();
+  }
+});
+
+
+
+// #myInput is a <input type="text"> element
+$('#myInput').on( 'keyup', function () {
+    table.search( this.value ).draw();
+} );
+
+$('input[type=file]').change(function (e) {
+    $(this).parents('.parent').find('.element-to-paste-filename').text(e.target.files[0].name);
+});
+
+$(document).ready(function(){
+$('[data-toggle="popover"]').popover({
+})
+});
+</script>
+
+<script>
+$(function(){
+   $("#submit-file").hide();
+    $("#submit-file1").hide();
+   $("#upload-file").hide();
+   $("#upload-file").change(function(){
+        if ($("#upload-file").val() != ""){
+             $("#submit-file").show();
+              $("#submit-file1").show();
+             $("#label").hide();
+        }
+        else{
+             $("#submit-file1").hide();
+        }
+   });
+});
+
+</script>
+
+<script>
+$('#orderModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var ContractReference = $("#ContractReference" + ConID).text();
+    var Desc = $("#Description" + ConID).text();
+    var Customer = $("#Customer" + ConID).text();
+    var Total = $("#Total" + ConID).text();
+    var Value = $("#Value" + ConID).text();
+    var ContractManager = $("#ContractManager" + ConID).text();
+    var DueDate = $("#DueDate" + ConID).text();
+    var ContractStatus = $("#Status" + ConID).text();
+    var Notes = $("#Notes" + ConID).text();
+    var Finish = $("#Finish" + ConID).text();
+    var Status = $("#Status" + ConID).text();
+    var OD = $("#OD" + ConID).text();
+
+    var modal = $(this);
+    modal.find('#ECID').val(ConID);
+    modal.find('#ECRef').val(ContractReference);
+    modal.find('#ECDes').val(Desc);
+    modal.find('#ECusName').val(Customer);
+    modal.find('#ECDate').val(DueDate);
+    modal.find('#FEStatus').val(Finish);
+    modal.find('#FEStatus').text(Finish);
+    modal.find('#EODate').val(OD);
+    modal.find('#VEName').val(Value.replace("R", "").replace(/,/g, ""));
+    modal.find('#ECNotes').val(Notes);
+    modal.find('#ECMan1').text(ContractManager);
+
+
+});
+
+$('#dltbtn').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var ContractReference = $("#ContractReference" + ConID).text();
+    var Customer = $("#Customer" + ConID).text();
+
+
+    var modal = $(this);
+    modal.find('#ECID1').val(ConID);
+    modal.find('#ECRef1').val(ContractReference);
+    modal.find('#ECusName1').val(Customer);
+
+
+
+});
+</script>
+
+<script>
+$(document).ready(function() {
+      window.socket = io.connect('http://' + document.domain + ':' + location.port + '/Update_Status');
+
+
+};
+
+</script>
+
+
+<script>
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+ if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+
+today = yyyy+'-'+mm+'-'+dd;
+document.getElementById("CDate").setAttribute("min", today);
+
+document.getElementById("ODate").setAttribute("max", today);
+</script>
+
+
+
+
+
+{% endblock %}

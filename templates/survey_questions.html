@@ -1,0 +1,235 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+<script src="jquery.toaster.js"></script>
+
+<style>
+.container {
+    max-width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 9px;
+}
+
+ul.ks-cboxtags {
+    list-style: none;
+    padding: 10px;
+    rows: 1;
+
+
+}
+
+
+ul.ks-cboxtags li{
+  display: inline;
+  vertical-align: top;
+}
+
+ul.ks-cboxtags li label{
+    width: 18%;
+    margin: 1px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, .9);
+    border: 2px solid rgba(139, 139, 139, .7);
+    color: #adadad;
+    border-radius: 15px;
+    white-space: nowrap;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .2s;
+    font-size: 14px;
+}
+
+ul.ks-cboxtags li label {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+ul.ks-cboxtags li label::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 12px;
+    padding: 2px 6px 2px 2px;
+    content: "\f067";
+    transition: transform .3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="radio"]:checked + label::before {
+    content: "\f00c";
+
+    transition: transform .3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="radio"]:checked + label {
+    border: 2px solid #1bdbf8;
+    background-color: #12bbd4;
+    color: #fff;
+    transition: all .2s;
+}
+
+ul.ks-cboxtags li input[type="radio"] {
+  display: absolute;
+}
+ul.ks-cboxtags li input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+ul.ks-cboxtags li input[type="radio"]:focus + label {
+  border: 2px solid #1bdbf8;
+}
+
+
+
+</style>
+
+
+{% endblock %}
+
+
+{% block body %}
+        <!-- PAGE CONTAINER-->
+       <div class="page-container">
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+
+<div class="row ">
+        <div class="col-md-12">
+                <div class="au-card chart-percent-card">
+                        <div class="au-card-inner">
+
+<div class="" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+    <input id="survey_id" type="hidden" value="1">
+    <!--form action="{{  url_for('surveys_file.survey_questions', org_name=session['OrgName'], survey_id=1)  }}" method="POST"-->
+    {% for i in categories %} <!--categories var send from surveys.py line46-->
+        <div class="{{  i.name  }}" style="display: block;">
+        <h2 class="mbr-fonts-style mbr-section-title align-center " style="padding: 30px;">{{  i.name  }}</h2>
+        <center>
+        {% for j in questions %} <!--questions var send from surveys.py line48-->
+            {% if j.OptionType == 101 and j.questionGroupID == i.questionGroupID %} <!-- 101 is likert Scale - SAgree-SDisA - display all questions(j) for each category(i)-->
+                <p id="{{  j.questionID  }}">{{  j.questionID  }}. {{  j.Questions  }}</p>
+                <div class="container">
+                <ul class="ks-cboxtags">
+                <li><input type="radio" id="{{  j.questionID  }}5" name="{{  j.questionID  }}" value="5"><label for="{{  j.questionID  }}5">Strongly Agree</label></li>
+                <li><input type="radio" id="{{  j.questionID  }}4" name="{{  j.questionID  }}" value="4"><label for="{{  j.questionID  }}4">Agree</label></li>
+                <li><input type="radio" id="{{  j.questionID  }}3" name="{{  j.questionID  }}" value="3"><label for="{{  j.questionID  }}3">Neutral</label></li>
+                <li><input type="radio" id="{{  j.questionID  }}2" name="{{  j.questionID  }}" value="2"><label for="{{  j.questionID  }}2">Disagree</label></li>
+                <li><input type="radio" id="{{  j.questionID  }}1" name="{{  j.questionID  }}" value="1"><label for="{{  j.questionID  }}1">Strongly Disagree</label></li>
+                </ul>
+                </div>
+                <br>
+            {% elif j.OptionType == 102 and j.questionGroupID == i.questionGroupID %} <!--102 -question type is a open ended q. - does not get likert options get long inut text container -    -->
+                <p class="col-sm-10 col-md-10 col-lg-10" id="" style="padding-bottom: 10px;">{{  j.questionID  }}. {{  j.Questions  }}</p>
+
+                <div class="container col-sm-10 col-md-10 col-lg-10" >
+                <textarea style="text-align:left; height: 100px;" class="form-control qlogin" name="{{  j.questionID  }}" id="{{  j.questionID  }}6"></textarea>
+                </div>
+                <br>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    <hr class=" col-sm-10 col-md-10 col-lg-10">
+<!-- calls a js function update survey in line 186-->
+    <input type="submit" class="btn btn-norm btn-lg no-show" name="survey" value="Submit" onclick="update_survey('Survey')">
+    </center>
+    </div>
+
+</div>
+            </div>
+        </div>
+    </div>
+
+ </div>
+
+                                </div><hr>
+                            </div>
+                        </div>
+
+
+
+
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block js %}
+<script>
+$(document).ready(function() {
+      window.socket = io.connect('http://' + document.domain + ':' + location.port + '/Update_Survey');
+
+});
+</script>
+
+<script>
+function update_survey(action){
+    var survey = document.getElementById("survey_id").value;
+    var results = {};
+    var comments = {};
+
+    {% for i in questions %}
+
+    {% if i.OptionType == 101 %}
+    if (document.getElementById('{{  i.questionID }}1').checked) {
+        results["{{  i.questionID }}"] = document.getElementById("{{  i.questionID }}1").value;
+    }
+    else if (document.getElementById('{{  i.questionID }}2').checked) {
+        results["{{  i.questionID }}"] = document.getElementById("{{  i.questionID }}2").value;
+    }
+    else if (document.getElementById('{{  i.questionID }}3').checked) {
+        results["{{  i.questionID }}"] = document.getElementById("{{  i.questionID }}3").value;
+    }
+    else if (document.getElementById('{{  i.questionID }}4').checked) {
+        results["{{  i.questionID }}"] = document.getElementById("{{  i.questionID }}4").value;
+    }
+    else if (document.getElementById('{{  i.questionID }}5').checked) {
+        results["{{  i.questionID }}"] = document.getElementById("{{  i.questionID }}5").value;
+    }
+    {% else %}
+
+    results["{{  i.questionID }}"] = 6;
+    comments["{{  i.questionID }}"] = document.getElementById("{{  i.questionID }}6").value;
+
+    {% endif %}
+    {% endfor %}
+
+//Calls app.py window @socketio.on('SurveyPage', namespace='/Update_Survey') and send the arrays with survey answers in
+
+    window.socket.emit('SurveyPage',{
+        survey_id : survey,
+        results : results,
+        comments: comments
+    });
+//send user back to dashboard and runs app.py in backgound
+    window.location = "{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}";
+
+};f
+
+</script>
+
+
+
+
+
+{% endblock %}

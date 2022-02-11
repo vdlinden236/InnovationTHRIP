@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Shop Floor</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico') }}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/iconic/css/material-design-iconic-font.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animate/animate.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/css-hamburgers/hamburgers.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animsition/css/animsition.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+<!--===============================================================================================-->
+	<style>
+		input {
+    text-align: center;
+}
+	</style>
+</head>
+<body>
+
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url({{ url_for('static', filename='images/BG1.jpeg') }});">
+			<div class="wrap-login100">
+
+				<form id="myForm" class="login100-form validate-form p-t-30" action="{{  url_for('users_file.login', org_name=session['OrgName'])  }}" method="POST">
+					<div class="danger text-center" style="border-radius: 25px;">
+					{% if Error|length > 1 %}
+					{{  Error  }}
+					{% endif %}
+					</div>
+
+					<span class="login100-form-title p-b-34 p-t-10">
+						Shop Floor
+					</span>
+
+<!--div class="container form-group p-b-15">
+<center>
+<input name="val1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="1" type="number" class="login" autofocus/>
+<input name="val2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="1" type="number" class="login"/>
+<input name="val3" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="1" type="number" class="login"/>
+<input name="val4" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="1" type="number" class="login"/>
+</center>
+</div-->
+
+					<div class="wrap-input100 validate-input" data-validate="Enter PIN">
+						<input style="font-size: 48px;" autofocus class="input100" type="number" max="9999" name="UserPin" id="UserPin" placeholder="PIN">
+
+					</div>
+					<div class="container-login100-form-btn p-b-40">
+
+						<input class="login100-form-btn" id="subHere" type="submit" value="Login">
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="dropDownSelect1"></div>
+
+<script>
+$("#UserPin").keyup(function() {
+    event.preventDefault();
+    if ($(this).val().length == 4)
+        document.getElementById("myForm").submit();
+})
+</script>
+
+	<!--script>
+	var container = document.getElementsByClassName("container")[0];
+	container.onkeyup = function(e) {
+	    var target = e.srcElement || e.target;
+	    var maxLength = parseInt(target.attributes["maxlength"].value, 10);
+	    var myLength = target.value.length;
+	    if (myLength >= maxLength) {
+	        var next = target;
+	        while (next = next.nextElementSibling) {
+	            if (next == null)
+	                break;
+	            if (next.tagName.toLowerCase() === "input") {
+	                next.focus();
+	                break;
+	            }
+	        }
+	    }
+	    // Move to previous field if empty (user pressed backspace)
+	    else if (myLength === 0) {
+	        var previous = target;
+	        while (previous = previous.previousElementSibling) {
+	            if (previous == null)
+	                break;
+	            if (previous.tagName.toLowerCase() === "input") {
+	                previous.focus();
+	                break;
+	            }
+	        }
+	    }
+	}
+	</script-->
+
+
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/animsition/js/animsition.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/select2/select2.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/daterangepicker/moment.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/countdowntime/countdowntime.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+</body>
+</html>

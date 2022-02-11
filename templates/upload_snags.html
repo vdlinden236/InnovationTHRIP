@@ -1,0 +1,93 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+    <style>
+td a:hover {
+    display:block;
+    width:100%;
+
+}
+
+a {
+    color:black;
+}
+
+    </style>
+{% endblock %}
+
+
+{% block body %}
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1">Scanning</h2>
+                                    <!--a class="btn btn-primary" href="{{ url_for('static', filename='reports/TemplateItems.xlsx') }}"><i class="fas fa-file"></i> Download Contract Template</a-->
+                                </div><hr>
+                            </div>
+                        </div>
+
+
+ <div class="row m-t-25">
+                            <div class="col-md-12">
+                        <div class="au-card chart-percent-card">
+                            <div class="au-card-inner">
+{% if Error|length > 1 %}
+    <div class="danger text-center">
+        {{  Error  }}
+    </div>
+{% endif %}
+        <form id="myForm" action="{{  url_for('snags_file.snags', org_name=session['OrgName'])  }}" method="POST">
+                <center style="padding:20px;">
+                <div class="col-md-10">
+                    <h3 class="text-center" style="padding: 10px;">Job Number:</h3>
+                <input autofocus style="text-align:left; width: 90%" class="form-control qlogin" type="text" required name="JobNumber" id="JobNumber"/>
+                </div>
+                    <div class="row col-md-12 " style="padding: 20px">
+                        <span class="col-md-6">
+                <h3 class="text-center" style="padding: 10px;">User:</h3>
+                <input style="text-align:left; " readonly class="form-control qlogin" type="text" name="UserName" id="UserName" value="{{  session['UserName']  }}"/>
+</span>
+                        <span class="col-md-6">
+                <h3 class="text-center" style="padding: 10px;">Activity:</h3>
+                <input style="text-align:left; " readonly class="form-control qlogin" type="text" name="UserAct" id="UserAct" value="{{  user_act  }}"/><br>
+                        </span>
+                    </div>
+
+                <input type="submit" style="" class="btn btn-lg btn-norm no-show mr-auto" name="Scanner" value="Submit">
+
+                </center>
+                                </form>
+                        </div>
+                      </div>
+                      </div>
+ </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="copyright">
+                                    <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+</script>
+{% endblock %}
