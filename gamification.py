@@ -115,16 +115,17 @@ def dashboardg(org_name):
 
 @gamification_file.route('/<string:org_name>/.download', methods=['GET', 'POST'])
 def download(org_name):
-    filepath = 'emptyspace'
-    file_content = 'emptyspace'
-    with open(filepath) as f:
-        file_content = f.read()
-    
-    response = make_response(file_content)
-    response.headers['Content-type'] = 'application/pdf'
-    response.headers['Content-disposition'] = 'inline; filename = output.pdf'
  
-    return send_from_directory(directory=some_directory, filename=filename, mimetype='application/pdf')
+    return render_template("login.html", directory='/<string:org_name>/.download', filename= org_name, mimetype='application/pdf')
+
+    # filepath = 'emptyspace'
+    # file_content = 'emptyspace'
+    # with open(filepath) as f:
+    #     file_content = f.read()
+    
+    # response = make_response(file_content)
+    # response.headers['Content-type'] = 'application/pdf'
+    # response.headers['Content-disposition'] = 'inline; filename = output.pdf
 
 #  rendered = render_template('pdf_problems.html')
 #  pdf = pdfkit.from_string(rendered, False)
@@ -134,4 +135,4 @@ def download(org_name):
 #  response.headers['Content-Dispositional'] = 'inline; filename = output.pdf'
 
 #  return response
-    render_template('login.html')
+#  render_template('login.html')
