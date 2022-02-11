@@ -1,0 +1,913 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+<style>
+textarea {
+    height: 150px;
+}
+
+.star-rating {
+   padding: 10px;
+  font-size: 0;
+  white-space: nowrap;
+  display: inline-block;
+  width: 175px;
+  height: 35px;
+  overflow: hidden;
+  position: relative;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: contain;
+}
+
+.star-rating i {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 20%;
+  z-index: 1;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: contain;
+}
+
+.star-rating input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  opacity: 0;
+  display: inline-block;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  position: relative;
+}
+
+.star-rating input:hover + i,
+.star-rating input:checked + i {
+  opacity: 1;
+}
+.star-rating i ~ i {
+  width: 40%;
+}
+.star-rating i ~ i ~ i {
+  width: 60%;
+}
+.star-rating i ~ i ~ i ~ i {
+  width: 80%;
+}
+.star-rating i ~ i ~ i ~ i ~ i {
+  width: 100%;
+}
+
+.choice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 20px;
+  display: block;
+}
+span.scale-rating{
+margin: 5px 0 15px;
+    display: inline-block;
+
+    width: 100%;
+
+}
+span.scale-rating>label {
+  position:relative;
+    -webkit-appearance: none;
+  outline:0 !important;
+    border: 1px solid grey;
+    height:33px;
+    margin: 0 5px 0 0;
+  width: calc(10% - 7px);
+    float: left;
+  cursor:pointer;
+}
+
+span.scale-rating label {
+  position:relative;
+    -webkit-appearance: none;
+  outline:0 !important;
+    height:33px;
+
+    margin: 0 5px 0 0;
+  width: calc(10% - 7px);
+    float: left;
+  cursor:pointer;
+}
+
+span.scale-rating input[type=radio] {
+  position:absolute;
+    -webkit-appearance: none;
+  opacity:0;
+  outline:0 !important;
+    /*border-right: 1px solid grey;*/
+    height:33px;
+
+    margin: 0 5px 0 0;
+
+  width: 100%;
+    float: left;
+  cursor:pointer;
+  z-index:3;
+}
+span.scale-rating label:hover{
+background: orange;
+}
+span.scale-rating input[type=radio]:last-child{
+border-right:0;
+}
+span.scale-rating label input[type=radio]:checked ~ label{
+    -webkit-appearance: none;
+
+    margin: 0;
+  background: orange;
+}
+span.scale-rating label:before
+{
+  content:attr(value);
+    top: 7px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    vertical-align: middle;
+  z-index:2;
+}
+
+
+.checked {
+  color: orange;
+}
+
+/* Three column layout */
+.side {
+  float: left;
+  width: 15%;
+  margin-top:10px;
+}
+
+.middle {
+  margin-top:10px;
+  float: left;
+  width: 70%;
+}
+
+/* Place text to the right */
+.right {
+  text-align: right;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* The bar container */
+.bar-container {
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: center;
+  color: white;
+}
+
+/* Individual bars */
+.bar-5 {width: 60%; height: 18px; background-color: #4CAF50;}
+.bar-4 {width: 30%; height: 18px; background-color: #2196F3;}
+.bar-3 {width: 10%; height: 18px; background-color: #00bcd4;}
+.bar-2 {width: 4%; height: 18px; background-color: #ff9800;}
+.bar-1 {width: 15%; height: 18px; background-color: #f44336;}
+
+/* Responsive layout - make the columns stack on top of each other instead of next to each other */
+@media (max-width: 400px) {
+  .side, .middle {
+    width: 100%;
+  }
+  .right {
+    display: none;
+  }
+}
+
+.heading {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+</style>
+
+
+{% endblock %}
+
+
+{% block body %}
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1" style="margin-top: 15px">Innovation Pipeline </h2>
+                                  <!--add submit button called in ln 229-->
+                                    <span>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#autmailed"><i class="fa fa-envelope"></i> Send Mails</a> 
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#selDep"><i class="fas fa-list-ul"></i> Filter Department</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#LinkInPS"><i class="fas fa-check-circle"></i> Link Problem Statement </a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#submitPS"><i class="fas fa-plus"></i> New Problem Statement</a>
+                                    </span>
+
+                                </div><hr>
+                            </div>
+                        </div>
+                     <h2>name = {{  useridprob  }}</h2>
+                     <h2>Test = {{  OGStatus  }}</h2>
+                     <h2>temp = {{  NewStatus  }}</h2>
+                     
+  <div class="row m-t-25" style="height:100%">
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c1">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-globe"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  active_problemstaments[0]  }}</h2>
+                                                <span>Active Problem Statements</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+           
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c2">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  active_inputs[0]  }}</h2>
+                                                <span>Active Inputs</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c3">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{   active_innovations[0]  }}</h2>
+                                                <span>Active Innovations </span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<h4 class="title-3" style="margin-top: 15px">Inputs to be consolidated in Problem Statements </h4>
+<div class="row ">
+        <div class="col-md-12">
+                <div class="au-card chart-percent-card">
+                        <div class="au-card-inner">
+
+<div class="" auto-update="true" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+<table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+    <thead class="text-center dot--dblue text-white">
+      <tr class="">
+		<th style="width:15%;">Inputs</th>
+        <th style="width:40%;">Description</th>
+         <th style="width:10%;">Type</th>
+		<th style="width:10%;">Department</th>
+		<th style="width:10%;">Ratings</th>
+      </tr>
+    </thead>
+    <tbody class="text-center" style="font-size: 14px !important;">
+        <!--{# for i in Problems #}. format({{output}}) -- test a variable here to display the select box-->
+
+        {% for i in problemnotgate %}
+        <tr >
+			<td style="display: table-cell; vertical-align: middle;">{{  i.name  }}</td>
+			<td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
+            <td style="display: table-cell; vertical-align: middle;">{{  i.qtype  }}</td>
+			<td style="display: table-cell; vertical-align: middle;">{{  i.orgFunctionName  }}</td>
+             <td style="display: table-cell; vertical-align: middle;"><a href="#" id="{{  i.ContractItemId  }}" data-toggle="modal" data-id="{{  i.problemID  }}" data-target="#ViewRatings{{  i.problemID  }}"><i class="fas fa-chart-bar change fa-lg"></i></a></td>
+   </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+ </div>
+ <h4 class="title-3" style="margin-top: 15px">Problem Statements </h4>
+
+<div class="row ">
+        <div class="col-md-12">
+                <div class="au-card chart-percent-card">
+                        <div class="au-card-inner">
+
+<div class="" auto-update="true" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+<table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+    <thead class="text-center dot--dblue text-white">
+
+      <tr class="">
+		<th style="width:15%;">Problem Statement</th>
+        <th style="width:40%;">Description</th>
+        <th style="width:10%;">Department</th>
+		<th style="width:10%;">Score</th>
+		<th style="width:10%;">Status</th>
+        <th style="width:5%;">Edit</th>
+      </tr>
+    </thead>
+    <tbody class="text-center" style="font-size: 14px !important;">
+        <!--{# for i in Problems #}. format({{output}}) -- test a variable here to display the select box-->
+
+        {% for i in gatePS %}
+        <tr >
+			<td style="display: table-cell; vertical-align: middle;">{{  i.name  }}</td>
+			<td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
+            <td style="display: table-cell; vertical-align: middle;">{{  i.orgFunctionName  }}</td>
+			<td style="display: table-cell; vertical-align: middle;">{{  i.PSScore  }}</td>
+            <td style="display: table-cell; vertical-align: middle;">{{  i.PSStatus  }}</td>
+            <td style="display: table-cell; vertical-align: middle;"><a href=# data-toggle="modal" data-target="#editProblem{{  i.gateproblemID  }}"><i class="fas fa-edit change fa-lg"></i></a></td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+ </div>
+
+
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+    </div>
+
+{% for i in gatePS %}
+<div class="modal fade" id="editProblem{{  i.gateproblemID  }}" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('surveys_file.gatekeeper', org_name=session['OrgName'] )  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="editProb1">Edit Input</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <input class="" type="hidden" value="{{  i.gateproblemID  }}" name="gateprobID" id="gateprobID">
+                <label class="text-center">Name:</label>
+                <input style="text-align:left;" class="form-control qlogin" type="text" required name="EPSName" id="EPSName" value="{{  i.name  }}"/>
+                <label class="text-center">Description:</label>
+                <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="EDesPS" id="EDesPS">{{  i.description  }}></textarea>
+                  <label class="text-center">Department:</label>
+             <select class="form-control qlogin" name="EFunPS" id="EFunPS">
+                  <option value="{{  i.orgFunctionName  }}" selected>{{  i.orgFunctionName  }}</option>
+                <option value="Finance" >Finance</option>
+                <option value="HR" >HR</option>
+                <option value="IT" >IT</option>
+                <option value="Production" >Production</option>
+                <option value="Management" >Management</option>
+            </select>
+                <label class="text-center">Score:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="EPSScore" id="EPSScore" value="{{  i.PSScore  }}"/>
+                <label class="text-center">Status:</label>
+            <select class="form-control qlogin" name="EStatPS" id="EStatPS">
+               <option value="{{  i.PSStatus  }}" selected>{{  i.PSStatus  }}</option>
+                <option value="Active" >Active</option>
+                <option value="Closed" >Closed</option>
+            </select>
+
+
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+
+          <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Edit Problem Statement">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<div class="modal fade" id="submitPS" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form action="{{  url_for('surveys_file.gatekeeper', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="subPS">Submit a Problem Statement</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <label class="text-center">Name:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="PSName" id="PSName"/>
+                <label class="text-center">Description:</label>
+                <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="UDesPS" id="UDesPS"></textarea>
+                  <label class="text-center">Department:</label>
+             <select class="form-control qlogin" name="UFunPS" id="UFunPS">
+              <option value="" selected disabled></option>
+                <option value="Finance" >Finance</option>
+                <option value="HR" >HR</option>
+                <option value="IT" >IT</option>
+                <option value="Production" >Production</option>
+                <option value="Management" >Management</option>
+            </select>
+                 <label class="text-center">Importance Rating /100:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="UPSScore" id="UPSScore"/>
+                <label class="text-center">Status:</label>
+            <select class="form-control qlogin" name="StatPS" id="StatPS">
+              <option value="" selected disabled></option>
+                <option value="Active" >Active</option>
+                <option value="Closed" >Closed</option>
+            </select>
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Submit Problem Statement">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Link Input IDs with Problem Statement ID  -->
+<div class="modal fade" id="LinkInPS" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form action="{{  url_for('surveys_file.gatekeeper', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="surveyTitle">Link Inputs to a Problem Statement </h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Select Inputs:</label>
+                <select class="form-control qlogin" name="inprob" id="inprob">
+              <option value="" selected disabled></option>
+                {% for i in problemnotgate %}
+                <option value="{{  i.problemID }}" >{{  i.name  }}</option>
+                {% endfor %}
+            </select>
+            <label class="text-center">Select a Problem Statement :</label>
+                <select class="form-control qlogin" name="PSin" id="PSin">
+              <option value="" selected disabled></option>
+                {% for i in gatePS %}
+                <option value="{{  i.gateproblemID  }}" >{{  i.name  }}</option>
+                {% endfor %}
+            </select>
+                  </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Link Survey Inputs">
+
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="selDep" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form action="{{  url_for('surveys_file.gatekeeper', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="selDeps">Filter Department</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">View Department:</label>
+           <select class="form-control qlogin" name="Depart" id="Depart">
+              <option value="" selected disabled></option>
+               <option value="All" >All</option>
+                <option value="Finance" >Finance</option>
+                <option value="HR" >HR</option>
+                <option value="IT" >IT</option>
+                <option value="Production" >Production</option>
+                <option value="Management" >Management</option>
+            </select>
+                 </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Select Department">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="autmailed" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form action="{{  url_for('surveys_file.gatekeeper', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="autmailed">Send Mails</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Select Communication Type:</label>
+           <select class="form-control qlogin" name="Com" id="Com" >
+              <option value="" selected disabled></option>
+               <option value="AllCommunication" >All Communication</option>
+                <option value="InactiveUsers" >Inactive Users</option>
+                <option value="HighImportanceInput" >High Importance Input</option>
+                <option value="CloseTobadge" >Close To Badge</option>
+                <option value="UserProblemClosed" >User Problem Closed</option>
+                <option value="TimeBasedChallenge" >Time Based Challenge</option>
+            </select>
+            
+            <div class = "TimeBasedChallenge" style="display:none">
+            <label class="text-center">Select the amount of time for the challenge</label>
+            <select class="form-control qlogin" name="tbchaltime" id="tbchaltime" >
+            <option value="" selected="selected"></option>
+            <option value="30" >30 minutes</option>
+            <option value="60">60 minutes</option>
+            <option value="120">120 minutes</option>
+          </select>
+            
+          <label class="text-center">Select a Problem Statement :</label>
+          <select class="form-control qlogin" name="probtbchal" id="probtbchal"  >
+        <option value="" selected disabled></option>
+          {% for i in gatePS %}
+          <option value="{{  i.gateproblemID  }}" >{{  i.name  }}</option>
+          {% endfor %}
+      </select>
+         </div> 
+         </div>
+        </div>
+               </center>
+      
+        
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Send mails">
+         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+       </form>
+     </div> </div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+  $(document).ready(function(){
+        $("select").change(function(){
+            $( "select option:selected").each(function(){
+                if($(this).attr("value")=="TimeBasedChallenge"){
+                    $(".TimeBasedChallenge").show();
+                
+                }    // }else{
+                //   $(".TimeBasedChallenge").hide();
+                // }
+
+                     });
+        }).change();
+    });
+  
+</script>
+  
+
+
+
+<div class="modal fade" id="fitertype" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="filterTit">Filter Input Type </h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <label class="text-center">Select Input Type</label>
+                <select class="form-control qlogin" name="InType" id="InType">
+                  <option value="" selected disabled></option>
+                    <option value="All" >All</option>
+                    <option value="Complaints" >Complaints</option>
+                    <option value="Problems" >Problems</option>
+                    <option value="Ideas" >Ideas</option>
+                </select>
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="View Type">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% for i in problems %}
+<div class="modal hide" id="ViewRatings{{  i.problemID  }}" tabindex="-1" role="dialog" aria-labelledby="ViewRatings" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabel">View Ratings</h5>
+
+      </div>
+
+      <div class="modal-body">
+        <div class="">
+            <center>
+            <span class="heading">Overall Rating:</span><br>
+            {% for j in problem_rating %}
+            {% if j.problemID == i.problemID %}
+            {% if j.Ratings == 0 %}
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Ratings == 1 %}
+            <span class="fa fa-star checked fa-lg"></span>
+           <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Ratings == 2 %}
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Ratings == 3 %}
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Ratings == 4 %}
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star fa-lg"></span><br>
+            {% elif j.Ratings == 5 %}
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span>
+            <span class="fa fa-star checked fa-lg"></span><br>
+            {% else %}
+
+            {% endif %}
+
+            <p>{{  j.Ratings  }} star average rating based on {{  j.Total  }} reviews.</p>
+            {% endif %}
+            {% endfor %}
+
+            <hr>
+
+
+{% for k in user_problem_rating %}
+{% if k.problemID == i.problemID %}
+<div class="text-center">
+    <h4 style="padding-bottom: 10px;"><i class="fas fa-user-circle fa-lg"></i> {{  k.firstname  }} {{  k.surname  }} commented:</h4>
+    <p style="padding-bottom: 10px; ">{{  k.feedback}}</p>
+    {% if k.rating == 0 %}
+    <span class="fa fa-star "></span>
+    <span class="fa fa-star "></span>
+    <span class="fa fa-star "></span>
+    <span class="fa fa-star "></span>
+    <span class="fa fa-star "></span><br>
+    {% elif k.rating == 1 %}
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span><br>
+    {% elif k.rating == 2 %}
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span><br>
+    {% elif k.rating == 3 %}
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span><br>
+    {% elif k.rating == 4 %}
+    <span class="fa fa-star checked "></span>
+    <span class="fa fa-star checked "></span>
+    <span class="fa fa-star checked "></span>
+    <span class="fa fa-star checked "></span>
+    <span class="fa fa-star fa-sm"></span><br>
+    {% elif k.rating == 5 %}
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span><br>
+    {% else %}
+
+    {% endif %}
+
+</div><br>
+{% endif %}
+{% endfor %}
+
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer" >
+        <button style="width:150px;" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+
+
+
+
+
+
+
+{% block js %}
+
+
+<script>
+var table = $('#example').DataTable({"dom": 'rt', "fixedHeader": {header: true}, "pageLength": 5000, "aaSorting": [], "ordering": true,
+    columnDefs: [{
+      orderable: false,
+      targets: "no-sort"
+    }],
+
+    drawCallback: function() {
+    $('[data-toggle="popover"]').popover();
+  }
+});
+
+
+
+// #myInput is a <input type="text"> element
+$('#myInput').on( 'keyup', function () {
+    table.search( this.value ).draw();
+} );
+
+$('input[type=file]').change(function (e) {
+    $(this).parents('.parent').find('.element-to-paste-filename').text(e.target.files[0].name);
+});
+
+$(document).ready(function(){
+$('[data-toggle="popover"]').popover({
+})
+});
+</script>
+
+<script>
+$(function(){
+   $("#submit-file").hide();
+    $("#submit-file1").hide();
+   $("#upload-file").hide();
+   $("#upload-file").change(function(){
+        if ($("#upload-file").val() != ""){
+             $("#submit-file").show();
+              $("#submit-file1").show();
+             $("#label").hide();
+        }
+        else{
+             $("#submit-file1").hide();
+        }
+   });
+});
+
+</script>
+
+<script>
+$('#orderModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var ContractReference = $("#ContractReference" + ConID).text();
+    var Desc = $("#Description" + ConID).text();
+    var Customer = $("#Customer" + ConID).text();
+    var Total = $("#Total" + ConID).text();
+    var Value = $("#Value" + ConID).text();
+    var ContractManager = $("#ContractManager" + ConID).text();
+    var DueDate = $("#DueDate" + ConID).text();
+    var ContractStatus = $("#Status" + ConID).text();
+    var Notes = $("#Notes" + ConID).text();
+    var Finish = $("#Finish" + ConID).text();
+    var Status = $("#Status" + ConID).text();
+    var OD = $("#OD" + ConID).text();
+
+    var modal = $(this);
+    modal.find('#ECID').val(ConID);
+    modal.find('#ECRef').val(ContractReference);
+    modal.find('#ECDes').val(Desc);
+    modal.find('#ECusName').val(Customer);
+    modal.find('#ECDate').val(DueDate);
+    modal.find('#FEStatus').val(Finish);
+    modal.find('#FEStatus').text(Finish);
+    modal.find('#EODate').val(OD);
+    modal.find('#VEName').val(Value.replace("R", "").replace(/,/g, ""));
+    modal.find('#ECNotes').val(Notes);
+    modal.find('#ECMan1').text(ContractManager);
+
+
+});
+
+$('#dltbtn').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var ContractReference = $("#ContractReference" + ConID).text();
+    var Customer = $("#Customer" + ConID).text();
+
+
+    var modal = $(this);
+    modal.find('#ECID1').val(ConID);
+    modal.find('#ECRef1').val(ContractReference);
+    modal.find('#ECusName1').val(Customer);
+
+
+
+});
+</script>
+
+<script>
+$(document).ready(function() {
+      window.socket = io.connect('http://' + document.domain + ':' + location.port + '/Update_Status');
+};
+
+
+
+</script>
+
+
+<script>
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+ if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+
+today = yyyy+'-'+mm+'-'+dd;
+document.getElementById("CDate").setAttribute("min", today);
+
+document.getElementById("ODate").setAttribute("max", today);
+</script>
+
+
+{% endblock %}

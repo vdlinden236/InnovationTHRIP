@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block navhead %}Product Tracking System{% endblock %}
+
+{% block upbtn %}
+{% endblock %}
+
+{% block navbody %}
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block body %}
+{% if Error|length > 1 %}
+<div class="danger text-center">
+    <p>{{  Error  }}</p>
+</div>
+{% endif %}
+{% block topbtn %}
+{% endblock %}
+
+<div class="login-form" style="margin-top:12px">
+    <center>
+        <div class="container col-md-6 offset-md-3" >
+            <h2 style="margin-bottom:20px; margin-top:40px;">Enter your Organisation details:</h2>
+            <form class="dsadsa" action="{{  url_for('users_file.login_org')  }}" method="POST">
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-envelope fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="email" required name="OrgEmail" id="OrgEmail" placeholder="Organisation Email">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-unlock fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="password" required name="OrgPswd" id="myInput" placeholder="Organisation Password">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><a href = "#" onclick="myFunction()"><i id="spass" class="fas fa-eye"></i></a></span>
+                    </div>
+                </div>
+                <input type="submit" style="margin-bottom: 40px" class="btn btn-outline-success no-show" value="Login">
+            </form>
+            </div>
+    </center>
+</div>
+
+
+<script>
+    function myFunction() {
+      var x = document.getElementById("myInput");
+      if (x.type === "password") {
+        x.type = "text";
+        
+      } else {
+        x.type = "password";
+      }
+    }
+</script>
+{% endblock %}

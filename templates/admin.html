@@ -1,0 +1,457 @@
+{% extends 'base.html' %}
+
+{% block ref %}"{{  url_for('users_file.admin')  }}"{% endblock %}
+
+{% block navbody %}
+            <li class="nav-item">
+                <a class="text-white" href="{{  url_for('users_file.logout_org')  }}">Logout <i class="fas fa-sign-out-alt"></i></a>
+            </li>
+            {% endblock %}
+
+{% block body %}
+
+<div style="background-color: #122854; padding: 0px;">
+    <center>
+<h1 style="padding-bottom: 10px; color:#FFFFFF;">Admin Home</h1>
+    </center>
+</div>
+
+<div class = "col-md-12">
+<div class="tab" style="margin-bottom: 5px;">
+    <button class="tablinks" id="aorg">Add an Organisation <i class="fas fa-building"></i></button>
+    <button class="tablinks" id="auser">Add a User <i class="fas fa-user-plus"></i></button>
+    <button class="tablinks" id="aact">Add an Activity <i class="fas fa-cart-plus"></i></button>
+</div>
+    
+<div class="tab">
+    <button class="tablinks" id="vorg">View all Organisations <i class="far fa-building"></i></button>
+    <button class="tablinks" id="vuser">View all Users <i class="far fa-user"></i></button>
+    <button class="tablinks" id="vact">View all Activities <i class="fas fa-hammer"></i></button>
+</div>
+
+   
+    
+{% if Error|length > 1 %}
+    <br>
+<div class="danger1 text-center">
+    <p>{{  Error  }}</p>
+</div>
+{% endif %}
+{% if Confirm|length > 1 %}
+    <br>
+<div class="confirm text-center">
+    <p>{{  Confirm  }}</p>
+</div>
+{% endif %}
+</div>
+
+<div id="form">
+<center>
+  <h1 style="margin-top: 5%">Forms will be shown here</h1>
+    <i class="fab fa-wpforms picture1"></i>
+    
+  </center>
+</div>
+
+<div class="login-form" style="margin-top:12px; display: none;" id="org">
+    <center>
+        <div class="container col-md-6 offset-md-3" >
+            <h2 style="margin-bottom:20px; margin-top:40px;">Enter the Organisation details:</h2>
+            <form class="dsadsa" action="{{  url_for('users_file.admin')  }}" method="POST">
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-building fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="text" required name="OName" id="OName" placeholder="Organisation Name">
+                </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-envelope fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="email" required name="OEmail" id="OEmail" placeholder="Organisation Email">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-unlock fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="password" required name="OPass" id="myInput" placeholder="Organisation Password">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><a href = "#" onclick="myFunction()"><i id="spass" class="fas fa-eye"></i></a></span>
+                    </div>
+                </div>
+                <input type="submit" style="margin-bottom: 40px" class="btn btn-outline-success no-show" name="admin" value="Add Organisation">
+            </form>
+            </div>
+    </center>
+</div>
+
+<div class="login-form" style="margin-top:12px; display: none;" id="user">
+    <center>
+        <div class="container col-md-6 offset-md-3" >
+            <h2 style="margin-bottom:20px; margin-top:40px;">Enter the User details:</h2>
+            <form class="dsadsa" action="{{  url_for('users_file.admin')  }}" method="POST">
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="text" required name="UN" id="UN" placeholder="User Name">
+                </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user-shield fa-fw"></i></span>
+                    </div>
+                    <select style="border-radius: 0;" required class="form-control ologin" name="UR" id="UR">
+                        <option disabled selected value="">User Role</option>
+                        <option value="1">User</option>
+                        <option value="2">Controller</option>
+                        <option value="3">Contract Administrator</option>
+                        <option value="4">Administrator</option>
+                    </select>
+                    </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-lock fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="number" maxlength="4" max="9999" required name="UP" id="UP" placeholder="User PIN">
+                </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-building fa-fw"></i></span>
+                    </div>
+                    <select style="border-radius: 0;" class="form-control ologin" required name="UO" id="UO">
+                        <option disabled selected value="">User Organisation</option>
+                        {% for i in orgs %}
+                        <option value="{{  i.OrgId  }}">{{  i.Name  }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                
+                
+
+                <input type="submit" style="margin-bottom: 40px" class="btn btn-outline-success no-show" name="admin" value="Add User">
+            </form>
+            </div>
+    </center>
+</div>
+
+
+<div class="login-form" style="margin-top:12px; display: none;" id="act">
+    <center>
+        <div class="container col-md-6 offset-md-3" >
+            <h2 style="margin-bottom:20px; margin-top:40px;">Enter the Activity details:</h2>
+            <form class="dsadsa" action="{{  url_for('users_file.admin')  }}" method="POST">
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-hammer fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="text" required name="Aname" id="Aname" placeholder="Activity">
+                </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-building fa-fw"></i></span>
+                    </div>
+                    <select style="border-radius: 0;" class="form-control ologin" required name="Aorg" id="Aorg">
+                        <option disabled selected value="">Organisation</option>
+                        {% for i in orgs %}
+                        <option value="{{  i.OrgId  }}">{{  i.Name  }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-sort fa-fw"></i></span>
+                    </div>
+                    <select class="form-control ologin" style="border-radius: 0;" required name="Alevel" id="Alevel" >
+                        <option disabled selected value="">Level</option>
+                        <option value="1">Contract</option>
+                        <option value="2">Item</option>
+                    </select>
+                    </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-sort fa-fw"></i></span>
+                    </div>
+                    <select class="form-control ologin" style="border-radius: 0;" required name="ACan" id="ACan" >
+                        <option disabled selected value="">Cancelled Status</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                    </div>
+
+                <input type="submit" style="margin-bottom: 40px" class="btn btn-outline-success no-show" name="admin" value="Add Activity">
+            </form>
+            </div>
+    </center>
+</div>
+
+
+<div class = "col-md-12">
+    
+<table id="exampleorg" class="table compact" style="width:100%; margin-top:12px; display: none;" >
+    <thead class="bg-5">
+      <tr class="text-center">
+		<th style="width: 50%">Name</th>
+        <th style="width: 50%">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for i in orgs %}
+        <tr class='clickable-row3 clickable text-center' href="#" id="{{  i.OrgId  }}" data-toggle="modal" data-target="#orderModal{{  i.OrgId  }}">
+            <td>{{  i.Name  }}</td>
+            <td>{{  i.Email  }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    
+<div id="exampleuser" style="display: none;">
+<table id="exampleuser1" class="table compact" style="width:100%; margin-top:12px; ">
+    <thead class="bg-5">
+      <tr class="text-center">
+          
+          <th style="width: 25%">Organisation</th>
+		<th style="width: 25%">Name</th>
+        <th style="width: 25%">PIN</th>
+		<th style="width: 25%">Role</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for i in users %}
+        <tr class='clickable-row3 clickable text-center' href="#" id="{{  i.UserId  }}" data-toggle="modal" data-target="#orderModals{{  i.UserId  }}">
+            <td>{{  i.Org  }}</td>
+            <td>{{  i.UserName  }}</td>
+            <td>{{  i.PIN  }}</td>
+            <td>{{  i.RoleName  }}</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+ </div>    
+    
+    
+<table id="exampleact" class="table compact" style="width:100%; margin-top:12px; display: none;">
+    <thead class="bg-5">
+      <tr class="text-center">
+          <th style="width: 33%">Organisation</th>
+		<th style="width: 33%">Name</th>
+        <th style="width: 33%">Level</th>
+		
+		
+      </tr>
+    </thead>
+    <tbody>
+        </tbody>
+    {% for i in acts %}
+        <tr class='clickable-row3 clickable text-center' href="#" id="{{  i.ActivityId  }}" data-toggle="modal" data-target="#orderModales">
+            <td>{{  i.Name  }}</td>
+            <td>{{  i.Activity  }}</td>
+            <td>{% if i.Level == 1 %}Contract{% else %}Item{% endif %}</td>
+            
+        
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+
+<br><br><br><br>
+
+
+
+
+{% for i in orgs %}
+<div class="modal hide" id="orderModal{{  i.OrgId  }}" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="login-form" style="margin-top:12px;">
+    <center>
+        <div class="container col-md-10 offset-md-1" >
+            <h2 style="margin-bottom:20px; margin-top:40px;">Organisation details:</h2>
+            <form class="dsadsa" action="{{  url_for('users_file.admin')  }}" method="POST">
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-building fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="text" required name="OName" id="OName" value="{{  i.Name  }}">
+                </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-envelope fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="email" required name="OEmail" id="OEmail" value="{{  i.Email  }}">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-unlock fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="password" required name="OPass" id="myInput" value="">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><a href = "#" onclick="myFunction()"><i id="spass" class="fas fa-eye"></i></a></span>
+                    </div>
+                </div>
+                <input type="submit" style="margin-bottom: 40px" class="btn btn-outline-success no-show" name="admin" value="Save Organisation">
+            </form>
+            </div>
+    </center>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% for i in users %}
+<div class="modal hide" id="orderModals{{  i.UserId  }}" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="login-form" style="margin-top:12px;">
+    <center>
+        <div class="container col-md-6 offset-md-3" >
+            <h2 style="margin-bottom:20px; margin-top:40px;">User details:</h2>
+            <form class="dsadsa" action="{{  url_for('users_file.admin')  }}" method="POST">
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="text" required name="UN" id="UN" value="{{  i.UserName  }}">
+                </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user-shield fa-fw"></i></span>
+                    </div>
+                    <select required class="form-control ologin" name="UR" id="UR">
+                        <option disabled selected value="">{{  i.RoleName  }}</option>
+                        <option value="1">User</option>
+                        <option value="2">Controller</option>
+                        <option value="3">Contract Administrator</option>
+                        <option value="4">Administrator</option>
+                    </select>
+                    </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-lock fa-fw"></i></span>
+                    </div>
+                    <input class="form-control ologin" type="number" maxlength="4" max="9999" required name="UP" id="UP" value="{{  i.PIN  }}">
+                </div>
+                
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-building fa-fw"></i></span>
+                    </div>
+                    <select class="form-control ologin" required name="UO" id="UO">
+                        <option disabled selected value="">{{  i.Org  }}</option>
+                        {% for i in orgs %}
+                        <option value="{{  i.OrgId  }}">{{  i.Name  }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                
+                
+
+                <input type="submit" style="margin-bottom: 40px" class="btn btn-outline-success no-show" name="admin" value="Save User">
+            </form>
+            </div>
+    </center>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+
+<script>
+$("#aorg").click(function(){
+        $("#org").toggle();
+        $("#act").hide();
+        $("#user").hide();
+        $("#form").hide();
+        $("#exampleorg").hide();
+        $("#exampleuser").hide();
+        $("#exampleact").hide();
+    });
+    
+$("#aact").click(function(){
+        $("#act").toggle();
+        $("#org").hide();
+        $("#user").hide();
+        $("#form").hide();
+        $("#exampleorg").hide();
+        $("#exampleuser").hide();
+        $("#exampleact").hide();
+    });
+    
+$("#auser").click(function(){
+        $("#user").toggle();
+        $("#org").hide();
+        $("#act").hide();
+        $("#form").hide();
+        $("#exampleorg").hide();
+        $("#exampleuser").hide();
+        $("#exampleact").hide();
+    });
+    
+$("#vorg").click(function(){
+        $("#exampleorg").toggle();
+        $("#act").hide();
+        $("#org").hide();
+        $("#user").hide();
+        $("#form").hide();
+        $("#exampleuser").hide();
+        $("#exampleact").hide();
+    });
+    
+$("#vuser").click(function(){
+        $("#exampleuser").toggle();
+        $("#org").hide();
+        $("#user").hide();
+        $("#act").hide();
+        $("#form").hide();
+        $("#exampleorg").hide();
+        $("#exampleact").hide();
+    });
+    
+$("#vact").click(function(){
+        $("#exampleact").toggle();
+        $("#org").hide();
+        $("#act").hide();
+        $("#user").hide();
+        $("#form").hide();
+        $("#exampleuser").hide();
+        $("#exampleorg").hide();
+    });
+</script>
+
+
+<script>
+    function myFunction() {
+      var x = document.getElementById("myInput");
+      if (x.type === "password") {
+        x.type = "text";
+        
+      } else {
+        x.type = "password";
+      }
+    }
+</script>
+{% endblock %}

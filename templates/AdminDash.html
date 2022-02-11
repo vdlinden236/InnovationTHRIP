@@ -1,0 +1,348 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block body %}
+<style>
+ 
+    
+ div.a {
+      position: absolute;
+      right: 0;
+      top: 0px;
+      width: 210px;
+      height: 1200px;
+      background-color: lightgray;
+      
+    }  
+    
+    div.b {
+      position: absolute;
+      left: 50;
+      width: 1300px;
+      height: 120px;
+      
+    } 
+   
+
+    .buttoncssgam {font-size: 12px;}
+    
+ 
+    </style>
+        
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+       
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1">Home</h2>
+
+                                    <div class="form-inline row" style="display: table; vertical-align: middle;">
+<!--User profile-->
+                                        <a style="padding-right: 10px;" href=# data-toggle="modal" data-target="#editUser"><span style="display: table-cell; vertical-align: middle; padding-right: 5px;">{{  session['UserName']  }} {{  session['Surname']  }}    </span> <i style="display: table-cell; vertical-align: middle;" class="fas fa-user-circle fa-2x"></i></a>
+                                    </div>
+                                </div><hr>
+                            </div>
+                        </div>
+                    
+
+                    <div class = "b">
+                        <h6 class="mbr-fonts-style mbr-section-title align-center display-4">Welcome to Open Innovation</h6>
+         <div class="underline align-center">
+             <div class="line"></div>
+         </div>
+
+        <p class="mbr-fonts-style mbr-section-subtitle align-center mbr-light pt-3 display-5">The Open Innovation (OI) process is as follows:</p>
+
+        <div class="row justify-content-center pt-3">
+
+            <div class="col-md-12 row-item col-lg-12">
+                <div class="card-img pb-3 align-left">
+                    <span class="mbr-iconfont mbri-edit" media-simple="true"></span>
+                </div>
+                <h3 class="mbr-fonts-style mbr-card-title "><i style="padding-right: 5px;" class="fas fa-lightbulb"></i> CAMPAIGNS</h3>
+                <hr>
+                <p class="mbr-text mbr-fonts-style display-5" style="text-align: justify; text-justify: inter-word;">
+                    You need to familiarise yourself with the various Campaigns. They are essentially problems that need to be solved. (The Corporate Package allows you to create your own Campaigns).</p>
+            </div><br>
+
+            <div class="col-md-12 row-item col-lg-12">
+                <div class="card-img pb-4 align-left">
+                    <span class="mbr-iconfont mbri-sites" media-simple="true"></span>
+                </div>
+                <h3 class="mbr-fonts-style mbr-card-title "><i style="padding-right: 5px;" class="fas fa-list-ul"></i> CRITERIA</h3>
+                <hr>
+                <p class="mbr-text mbr-fonts-style display-7" style="text-align: justify; text-justify: inter-word;">
+                    It is important for Innovations to be practical and relevant so the next step is to analyse the Campaign and develop criteria that Innovations for the Campaign should be evaluated against.</p>
+            </div>
+
+
+            <div class="col-md-12 row-item col-lg-12">
+                <div class="card-img pb-4 align-left">
+                    <span class="mbr-iconfont mbri-photos" media-simple="true"></span>
+                </div>
+                <h3 class="mbr-fonts-style mbr-card-title "><i style="padding-right: 5px;" class="fas fa-globe"></i> LOG INNOVATIONS</h3>
+                <hr>
+                <p class="mbr-text mbr-fonts-style display-7" style="text-align: justify; text-justify: inter-word;">
+                    Now it is time to get creative and log your Innovations for the Campaign. Make sure to read and rate the Innovations of the other users so that you don’t copy their ideas.</p>
+            </div><br>
+
+            <div class="col-md-12 row-item col-lg-12">
+                <div class="card-img pb-4 align-left">
+                    <span class="mbr-iconfont mbri-like" media-simple="true"></span>
+                </div>
+                <h3 class="mbr-fonts-style mbr-card-title "><i style="padding-right: 5px;" class="fas fa-chart-line"></i> OVERALL PERFORMANCE</h3>
+                <hr>
+                <p class="mbr-text mbr-fonts-style display-7" style="text-align: justify; text-justify: inter-word;">
+                    You can track the performance of your Analysis, Innovations and overall Ranking in reports section</p>
+            </div><br>
+        </div>
+                        <br>
+                        <p class="mbr-fonts-style mbr-section-subtitle align-center mbr-light pt-3 display-5">For more information, you can look at the User Manual. <strong>Good Luck.</strong></p><br>
+
+    </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                        <div class="overview-wrap">
+                            <center>
+                              <div class = "a">
+                                {% if (session['OftheWeek'] == "1"): %}
+                                <br>
+                                 <div class = 'topprob'> 
+                                  <label class="text-center">Top Problem Finder  </label>
+                                  <a style="padding-right: 10px;" href=# data-toggle="modal" data-target="#topprobb">             
+                                  <img src="../static/images/TopProb.png" class="w3-border " width="80%" alt="Image">
+                                  </a>
+                                </div>
+                                 {% endif %} 
+                                 {% if (session['OftheWeeki'] == "1"): %}
+                                 <br>
+                                 <div class = 'topprob'> 
+                                  <label class="text-center">Top Innovator </label>
+                                  <a style="padding-right: 10px;" href=# data-toggle="modal" data-target="#topprobb">             
+                                  <img src="../static/images/TopInnov.png" class="w3-border " width="80%" alt="Image">
+                                  </a>
+                                </div>
+                                 {% endif %} 
+                                 {% if (session['OftheWeekr'] == "1"): %}
+                                 <div class = 'topprob'> 
+                                   <br>
+                                  <label class="text-center">Top Ranker </label>
+                                  <a style="padding-right: 10px;" href=# data-toggle="modal" data-target="#toprank">             
+                                  <img src="../static/images/TopRank.png" class="w3-border " width="80%" alt="Image">
+                                  </a>
+                                </div>
+                                 {% endif %} 
+                              </div>
+                             </center>   
+                        </div>
+                    </div>
+                </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="exampleModalLabel">Update your Profile</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">First Name:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="Name" id="Name" value="{{  session['UserName']  }}"/>
+            <label class="text-center">Surname:</label>
+            <input name="Surname" id="Surname" style="text-align:left;" class="form-control qlogin" type="text" required value="{{  users.surname  }}">
+            <label class="text-center">Gender:</label><br>
+            <select class="form-control qlogin" name="Gender" id="Gender" required>
+              <option value="" selected disabled></option>
+                <option value="m">Male</option>
+                <option value="f">Female</option>
+                <option value="o">Other</option>
+            </select>
+            <label class="text-center">Language:</label><br>
+            <select class="form-control qlogin" name="Language" id="Language" required>
+              <option value="" selected disabled></option>
+                <option value="e">English</option>
+                <option value="o">Other</option>
+            </select>
+            <label class="text-center">Qualification:</label><br>
+            <select class="form-control qlogin" name="Qualification" id="Qualification" required>
+              <option value=""></option>
+                <option value="sec">Secondary</option>
+                <option value="dip">Diploma</option>
+                <option value="bach">Bachelor's</option>
+                <option value="hon">Honours</option>
+                 <option value="mas">Master's</option>
+                <option value="phd">PhD</option>
+            </select>
+            <label class="text-center">Department:</label><br>
+            <select class="form-control qlogin" name="Department" id="Department" required>
+              <option value=""></option>
+                <option value="Production">Production</option>
+                <option value="IT">IT</option>
+                <option value="HR">HR</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Management">Management</option>
+
+            </select>
+            </center>
+         </div>
+       </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="AddUsers" value="Update Details">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+                </div>
+            </div>
+
+  <div class="modal fade" id="topprobb" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <form action="{{  url_for('gamification_file.dashboardg', org_name=session['OrgName'])  }}" method="POST">
+        <div class="modal-header dot--dblue">
+          <h5 class="modal-title dot--dblue text-white" id="exampleModalLabel">Send Brainstorming invites</h5>
+  
+        </div>
+       
+         
+          <div class="modal-body">
+
+              <label class="text-center"> Invite other system users to brainstorm with you on other problems and find solutions together.</label>
+            <div class="form-group">
+                <center>
+                <label class="text-center">Date:</label>
+                <input  style="text-align:left;" class="form-control qlogin" type="date" required name="datesched" id="datesched" >
+                <label class="text-center">Time:</label>
+                <input style="text-align:left;" class="form-control qlogin" type="time" required name="timesced" id="timesced" >
+                <label class="text-center">Subject:</label><br>
+                <input  style="text-align:left;" class="form-control qlogin" type="text" required name="subject" id="subject">
+                <label class="text-center">Meeting Link:</label><br>
+                <input name="meetlink" tip = " Create any meeting and paste the link here." id="meetlink" style="text-align:left;" class="form-control qlogin" type="text" required >
+                
+              </center>
+            </div>
+          </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-success no-show mr-auto" name="topotw" value="Schedule Brainstorming Session">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+        </div>
+      </div>
+  </div>
+        </div>
+        <div class="modal fade" id="toprank" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <form action="{{  url_for('gamification_file.dashboardg', org_name=session['OrgName'])  }}" method="POST">
+              <div class="modal-header dot--dblue">
+                <h5 class="modal-title dot--dblue text-white" id="exampleModalLabel">Email your view to a specific problem or innovation</h5>
+        
+              </div>
+             
+               
+                <div class="modal-body">
+      
+                    <label class="text-center"> Invite other system users to brainstorm with you on other problems and find solutions together.</label>
+                  <div class="form-group">
+                      <center>
+                        <label class="text-center">Select a Problem </label>
+                        <select class="form-control qlogin" name="selprob" id="selprob">
+                          <option value="" selected disabled></option>
+                            {% for i in allprob %}
+                              <option value="{{  i.problemID }}" >{{  i.name  }}</option>
+                            {% endfor %}
+                          </select> 
+                          <!-- <label class="text-center">OR</label>
+                          <br>
+                          <label class="text-center">Select an Innovation:</label>
+                          <select class="form-control qlogin" name="selinnov" id="selinnov">
+                            <option value="" selected disabled></option>
+                              {% for i in allinnov %}
+                                <option value="{{  i.innovationID }}" >{{  i.name  }}</option>
+                              {% endfor %}
+                          </select> -->
+                         <label class="text-center">Type your views:</label><br>
+                          <textarea rows ="2" cols = "10"  style="text-align:left;" class="form-control qlogin" type="text" required name="emailviews" id="emailviews"> </textarea>
+            
+                    </center>
+                  </div>
+                </div>
+              <div class="modal-footer">
+                <input type="submit" class="btn btn-success no-show mr-auto" name="topotw" value="Send Views Mail ">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </form>
+              </div>
+            </div>
+        </div>
+              </div>
+      <!-- <div class="modal fade" id="toprank" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <form action="{{  url_for('gamification_file.dashboardg', org_name=session['OrgName'])  }}" method="POST">
+              <div class="modal-header dot--dblue">
+                <h5 class="modal-title dot--dblue text-white" id="exampleModalLabel">Email your view to a specific problem or innovation</h5>
+              </div>
+
+  
+                <div class="modal-body">
+                  <label class="text-center"> Well done Top Ranker of the Week. Select a problem or solution and discuss your views with the owner.</label>
+                    <div class="form-group">
+                    <center>
+                      <label class="text-center">Select a Problem </label>
+                      <select class="form-control qlogin" name="selprob" id="selprob">
+                        <option value="" selected disabled></option>
+                          {% for i in allprob %}
+                            <option value="{{  i.problemID }}" >{{  i.name  }}</option>
+                          {% endfor %}
+                        </select> 
+                        <label class="text-center">OR</label>
+                        <label class="text-center">Select an Innovation:</label>
+                        <select class="form-control qlogin" name="inprob" id="inprob">
+                          <option value="" selected disabled></option>
+                            {% for i in allinnov %}
+                              <option value="{{  i.innovationID }}" >{{  i.name  }}</option>
+                            {% endfor %}
+                        </select> 
+                        <label class="text-center">Type your views:</label><br>
+                        <textarea rows = "4" cols = "50"  style="text-align:left;" class="form-control qlogin" type="text" required name="emailviews" id="emailviews">
+          
+                     </center>
+                    </div>
+                 </div>
+
+                <div class="modal-footer">
+                <input type="submit" class="btn btn-success no-show mr-auto" name="topotw" value="Schedule Brainstorming Session">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </form>
+          </div>
+        </div>
+      </div>
+  </div> -->
+
+      </div>
+    </div>
+
+      
+
+
+ {% endblock %}
+
+{% block js %}
+
+
+
+{% endblock %}

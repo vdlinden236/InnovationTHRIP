@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Page Not Found{% endblock %}
+
+{% block navbody %}
+{% endblock %}
+
+{% block body %}
+<center>
+    
+  <h1 style="margin-top: 5%">Page Not Found</h1>
+    <i class="far fa-frown picture1"></i>
+    <h4>What you were looking for is just not there.</h4>
+    <h6><a href="{{ url_for('users_file.login_org')  }}">Click here to go back to the home page</a></h6>
+  </center>
+{% endblock %}

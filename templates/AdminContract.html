@@ -1,0 +1,601 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+<style>
+#myProgress {
+    width: 100%;
+    background-color: #ddd;
+}
+
+td a:hover {
+    display:block;
+    width:100%;
+
+}
+
+#myBar {
+    height: 30px;
+    line-height: 2;
+    color: #FFFFFF;
+    background-color: #4BAC3F;
+
+}
+
+.progress span{
+    position:absolute; !important
+    left:0; !important
+    width:100%;!important
+    text-align:center;!important
+    z-index:50;!important
+    color:black;
+}
+
+a {
+    color:black;
+}
+
+.search {
+    border: 2px solid black;
+    width: 400px;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 5px;
+]
+
+@media (max-width: 991px) {
+    .search {
+        margin-bottom: 20px;
+    }
+}
+
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+    border: 2px solid #9CADBD;
+    color: white;
+    background-color: #9CADBD;
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #FFFFFF;
+    color: #9CADBD;
+    border: 2px solid #9CADBD;
+    cursor: pointer;
+}
+
+.inputfile:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+
+.inputfile + label * {
+	pointer-events: none;
+}
+
+.editbtn {
+    color: #9CADBD;
+}
+
+.dltbtn {
+    color: #DF3062;
+}
+</style>
+
+
+{% endblock %}
+
+
+{% block body %}
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1" style="margin-top: 15px">Jobs</h2>
+
+                                    <span>
+                                    <!--a class="btn btn-primary" id="showall" target="_blank" download href="{{ url_for('static', filename='reports/TemplateItems.xlsx') }}"><i class="fas fa-file-download"></i> Download Contract Template</a-->
+                                    <input style="width:200px;" placeholder="Search Jobs..." type="text" id="myInput" class="search">
+                                        {% if session["RoleId"] > 2 %}
+                                    <a style="width:150px;" class="btn btn-norm2 " data-toggle="modal" href=# data-target="#AddContract"><i class="fas fa-plus"></i> Add a Job</a>
+
+                                        <a style="width: 150px;" class="btn btn-norm2 " data-toggle="modal" href=# data-target="#Upload"><i class="fas fa-upload"></i> Upload Jobs</a>
+                                        {% endif %}
+                                        {% if session["RoleId"] > 1 %}
+                                            <a class="btn btn-norm2  dropdown-toggle" data-toggle="dropdown" href="#"><i class="fas fa-filter"></i> Filter Jobs</a>
+                                                <div class="dropdown-menu">
+                                            <a class="dropdown-item" id="showall" href="#"><i class="fas fa-align-justify" style="padding-right: 8px;"></i>All Jobs</a>
+                                            <a class="dropdown-item" id="showcom" href="#"><i class="far fa-check-square" style="padding-right: 8px;"></i>Completed</a>
+                                            <a class="dropdown-item" id="showprog" href="#"><i class="fas fa-tasks" style="padding-right: 8px;"></i>In Progress</a>
+                                            <a class="dropdown-item" id="showqc" href="#"><i class="fas fa-wrench" style="padding-right: 8px;"></i>QC Required</a>
+                                            <a class="dropdown-item" id="showoh" href="#"><i class="fas fa-pause" style="padding-right: 8px;"></i>On Hold</a>
+                                            <a class="dropdown-item" id="showcancel" href="#"><i class="fas fa-ban" style="padding-right: 8px;"></i>Cancelled</a>
+
+                                          </div>
+
+                                        {% endif %}
+
+                                    </span>
+                                        <!--a class="btn btn-primary" href="{{ url_for('static', filename='reports/TemplateItems.xlsx') }}"><i class="fas fa-file"></i> Download Contract Template</a-->
+                                </div><hr>
+                            </div>
+                        </div>
+
+
+ <div class="row m-t-25">
+                            <div class="col-md-12">
+                        <div class="au-card chart-percent-card">
+                            <div class="au-card-inner">
+<div class="danger text-center" style="border-radius: 25px;">
+					{% if Error|length > 1 %}
+					{{  Error  }}
+					{% endif %}
+					</div>
+
+<div class=""  style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+<table id="example"  class="table compact table-hover " style="border-collapse: collapse; width:100%; border-radius:10px; overflow:hidden;">
+    <thead class="text-center dot--dblue text-white">
+        <tr class="card-header">
+        <th class="no-sort"  style="width: 15%" data-priority="1">Job Number</th>
+            <th class="no-sort" style="width: 15%" data-priority="1">Job Description</th>
+        <th class="no-sort" style="width: 15%" data-priority="1">Customer</th>
+        <th class="no-sort" style="width: 15%" data-priority="1">Job Progress</th>
+        {% if session["RoleId"] > 2 %}
+        <th class="no-sort" style="display:none;">Job Value</th>
+        {% endif %}
+
+        <th class="no-sort" style="width: 15%" data-priority="2">Planned Date</th>
+        <th class="no-sort" style="width: 10%" data-priority="2">Days</th>
+
+
+        <td class="no-sort" style="display:none;"></td>
+        <td class="no-sort" style="display:none;"></td>
+        <td class="no-sort" style="display:none;"></td>
+        {% if session["RoleId"] > 2 %}
+        <th class="no-sort" width="2%" data-priority="1"></th>
+        {% endif %}
+            {% if session["RoleId"] > 3 %}
+            <th class="no-sort" width="2%" data-priority="1"></th>
+        <!--th width="5%">Import</th-->
+        {% endif %}
+        </tr>
+    </thead>
+    <tbody class="text-center" style="font-size: 14px !important;">
+        {% for i in sp %}
+        <tr id="{{  i.ContractId  }}" class='clickable-row2 clickable' data-toggle="popover" data-trigger="hover" title="{{ i.ContractReference }} Summary " data-content="Status: {% if i.ContactNumber1 != 'Complete' %}{{  i.ContactNumber1  }}{% else %}Delivered{% endif %} <br /> {% if session['RoleId'] > 3 %} Value: {{ 'R{:,.2f}'.format(i.Value) }} <br />{% endif %} Created by: {{  i.Username  }} <br /> Order Date: {{  i.OrderedDate  }} <br /> Notes: {% if i.Notes is not none %}{% if i.Notes != '' %} {{ i.Notes }}{% endif %}{% else %} None {% endif %}" data-html="true" data-placement="bottom">
+			<td onclick="loadCon()" id="ContractReference{{  i.ContractId  }}"><a href="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=i.ContractReference)  }}">{{  i.ContractReference  }}</a></td>
+            <td onclick="loadCon()" id="Description{{  i.ContractId  }}"><a href="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=i.ContractReference)  }}">{% if i.Description is not none %}{{  i.Description  }}{% else %}-{% endif %}</a></td>
+
+			<td onclick="loadCon()" id="Customer{{  i.ContractId  }}"><a href="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=i.ContractReference)  }}">{{  i.ContactPerson  }}</a></td>
+            <td><div class="progress" style="margin-bottom: 0px !important;">
+											<div id="progbar"  class="progress-bar dot--green" role="progressbar" style="width: {{  i.Progress  }}%; margin-bottom: 0px !important;" aria-valuenow="{{  i.Progress  }}" aria-valuemin="0" aria-valuemax="100">{{  i.Progress  }}%</div>
+										</div></td>
+            {% if session["RoleId"] > 2 %}
+            <td onclick="loadCon()" style="display:none;" id="Value{{  i.ContractId  }}"><a href="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=i.ContractReference)  }}"></a>{{ "R{:,.2f}".format(i.Value) }}</td>
+            {% endif %}
+
+			<td nowrap onclick="loadCon()" id="DueDate{{  i.ContractId  }}"><a href="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=i.ContractReference)  }}">{{  i.DueDate  }}</a></td>
+            <td id="DaysLeft{{  i.ContractId  }}" style="{% if i.DaysLeft < 0 %}color:red;{% endif %}">{% if i.Progress != 100 %}{{  i.DaysLeft  }}{% else %}-{% endif %}</td>
+
+
+
+            <td onclick="loadCon()" id="Notes{{  i.ContractId  }}" style="display:none;">{{  i.Notes  }}</td>
+            <td onclick="loadCon()" id="OD{{  i.ContractId  }}" style="display:none;">{{  i.OrderedDate  }}</td>
+            <td onclick="loadCon()" id="Finish{{  i.ContractId  }}" style="display:none;">{{  i.ContactNumber1  }}</td>
+			{% if session["RoleId"] > 2 %}
+			<td  style="text-align:center;"><a href="#" class="editbtn" data-toggle="modal" data-target="#orderModal" data-id="{{  i.ContractId  }}"><i class="fas fa-edit change"></i></a></td>
+			{% endif %}
+            {% if session["RoleId"] > 3 %}
+            <td  style="text-align:center;"><a href="#" class="dltbtn" data-toggle="modal" data-target="#dltbtn" data-id="{{  i.ContractId  }}"><i style="color: red;" class="fas fa-trash" aria-hidden="true"></i></a></td>
+			{% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="copyright">
+                                    <p>Copyright © 2020 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="AddContract" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contracts', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Add a Job</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Job Number:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="CRef" id="CRef"/>
+                <label class="text-center">Job Description:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="CDes" id="CDes/">
+            <label class="text-center">Customer:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="CusName" id="CusName"/>
+                <label class="text-center">Value:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="number" required name="VName" id="VName"/>
+            <label class="text-center">Ordered Date:</label>
+            <input max="{{ today_date }}" style="text-align:left;" class="form-control qlogin" type="date" required name="ODate" id="ODate"/>
+                <label class="text-center">Planned Date:</label>
+            <input min="{{ today_date }}" max="9999-12-31" style="text-align:left;" class="form-control qlogin" type="date" required name="CDate" id="CDate"/>
+                <label class="text-center">Status:</label>
+            <select class="form-control qlogin" name="CStatus" id="CStatus">
+              <option value="Start" selected>Started</option>
+                <option value="Complete">Delivered</option>
+
+
+            </select>
+
+            <label class="text-center">Notes:</label>
+            <textarea style="text-align:left; height:100px;" class="form-control qlogin" name="CNotes" id="CNotes"></textarea>
+
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="AddContracts" value="Add Job">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contracts', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Edit the Job</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Job Number:</label>
+            <input type="hidden" name="ECID" id="ECID" value=""/>
+            <input class="form-control qlogin" type="text" required name="ECRef" id="ECRef" value=""/>
+            <label class="text-center">Job Description:</label>
+            <input class="form-control qlogin" type="text" required name="ECDes" id="ECDes" value="">
+                <label class="text-center">Customer:</label>
+            <input class="form-control qlogin" type="text" required name="ECusName" id="ECusName" value=""/>
+                <label class="text-center">Value:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="VEName" id="VEName"/>
+                <label class="text-center">Ordered Date:</label>
+            <input min="1899-01-01" max="9999-12-31" style="text-align:left;" class="form-control qlogin" type="date" value="" required name="EODate" id="EODate"/>
+            <label class="text-center">Planned Date:</label>
+            <input min="1899-01-01" max="9999-12-31" style="text-align:left;" class="form-control qlogin" type="date" value="" required name="ECDate" id="ECDate"/>
+            <label class="text-center">Status:</label>
+            <select class="form-control qlogin" name="ECStatus" required>
+                <option id="FEStatus" value="" selected></option>
+                <option value="Complete">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+
+
+            </select>
+
+                <label class="text-center">Notes:</label>
+            <textarea style="text-align:left; height:100px;" class="form-control qlogin" name="ECNotes" id="ECNotes"></textarea>
+
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="AddContracts" value="Save Job">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="dltbtn" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contracts', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabela">Delete the Job</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Job Number:</label>
+            <input type="hidden" name="ECID1" id="ECID1" value=""/>
+            <input readonly class="form-control qlogin" type="text" required name="ECRef1" id="ECRef1" value=""/>
+
+                <label class="text-center">Customer:</label>
+            <input readonly class="form-control qlogin" type="text" required name="ECusName1" id="ECusName1" value=""/>
+                <br><h3 class="">Do you want to delete this job?</h3>
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="AddContracts" value="Delete">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="Upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form method="POST" enctype=multipart/form-data action="{{  url_for('contracts_file.manage_contracts', org_name=session['OrgName'])  }}">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Upload Jobs</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+                <center>
+                     <span class="parent">
+                    <input type="file" name="file" id="upload-file" class="inputfile"/>
+                    <label id="label" for="upload-file" class="btn btn-norm1 btn-lg m-t-20"><i class="fas fa-file-text"></i>  Choose a file</label>
+
+
+                    <span class="element-to-paste-filename"></span>
+                    </span><br><br>
+
+                    <input type="submit" class="btn btn-lg btn-success no-show mr-auto" id="submit-file" name="AddContracts" value="Upload">
+
+                </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <a class="btn btn-norm mr-auto" href="{{ url_for('static', filename='reports/ShopFloorAppInputSheet.xlsx') }}" download target="_blank"><i class="fas fa-download"></i> Download Template</a>
+
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+{% block js %}
+<script>
+window.onload = function WindowLoad(event) {
+    {% for i in sp %}
+    {% if i.Progress == 100 %}
+    $("#{{  i.ContractId  }}").hide();
+    {% endif %}
+    {% endfor %}
+}
+
+$("#showall").click(function(){
+        {% for i in sp %}
+        $("#{{  i.ContractId  }}").show();
+        {% endfor %}
+    });
+
+$("#showcom").click(function(){
+        {% for i in sp %}
+        $("#{{  i.ContractId  }}").show();
+        {% endfor %}
+        {% for i in sp %}
+        {% if i.Progress != 100 %}
+        $("#{{  i.ContractId  }}").hide();
+        {% endif %}
+        {% endfor %}
+    });
+
+$("#showprog").click(function(){
+        {% for i in sp %}
+        $("#{{  i.ContractId  }}").show();
+        {% endfor %}
+        {% for i in sp %}
+        {% if i.Progress == 100 %}
+        $("#{{  i.ContractId  }}").hide();
+        {% endif %}
+        {% endfor %}
+    });
+
+$("#showcancel").click(function(){
+        {% for i in sp %}
+        $("#{{  i.ContractId  }}").show();
+        {% endfor %}
+        {% for i in sp %}
+        {% if i.ContactNumber1 != 'Cancelled' %}
+        $("#{{  i.ContractId  }}").hide();
+        {% endif %}
+        {% endfor %}
+    });
+
+ $("#showqc").click(function(){
+        {% for i in sp %}
+        $("#{{  i.ContractId  }}").show();
+        {% endfor %}
+        {% for i in sp %}
+        {% if i.QC != 1 %}
+         $("#{{  i.ContractId  }}").hide();
+          {% endif %}
+         {% endfor %}
+    });
+
+$("#showoh").click(function(){
+        {% for i in sp %}
+        $("#{{  i.ContractId  }}").show();
+        {% endfor %}
+        {% for i in sp %}
+        {% if i.ContactNumber1 != 'On Hold' %}
+         $("#{{  i.ContractId  }}").hide();
+          {% endif %}
+         {% endfor %}
+    });
+
+
+</script>
+
+<script>
+var table = $('#example').DataTable({"dom": 'rt', "fixedHeader": {header: true}, "pageLength": 5000, "aaSorting": [], "ordering": true,
+    columnDefs: [{
+      orderable: false,
+      targets: "no-sort"
+    }],
+
+    drawCallback: function() {
+    $('[data-toggle="popover"]').popover();
+  }
+});
+
+
+
+// #myInput is a <input type="text"> element
+$('#myInput').on( 'keyup', function () {
+    table.search( this.value ).draw();
+} );
+
+$('input[type=file]').change(function (e) {
+    $(this).parents('.parent').find('.element-to-paste-filename').text(e.target.files[0].name);
+});
+
+$(document).ready(function(){
+$('[data-toggle="popover"]').popover({
+})
+});
+</script>
+
+<script>
+$(function(){
+   $("#submit-file").hide();
+    $("#submit-file1").hide();
+   $("#upload-file").hide();
+   $("#upload-file").change(function(){
+        if ($("#upload-file").val() != ""){
+             $("#submit-file").show();
+              $("#submit-file1").show();
+             $("#label").hide();
+        }
+        else{
+             $("#submit-file1").hide();
+        }
+   });
+});
+
+</script>
+
+<script>
+$('#orderModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var ContractReference = $("#ContractReference" + ConID).text();
+    var Desc = $("#Description" + ConID).text();
+    var Customer = $("#Customer" + ConID).text();
+    var Total = $("#Total" + ConID).text();
+    var Value = $("#Value" + ConID).text();
+    var ContractManager = $("#ContractManager" + ConID).text();
+    var DueDate = $("#DueDate" + ConID).text();
+    var ContractStatus = $("#Status" + ConID).text();
+    var Notes = $("#Notes" + ConID).text();
+    var Finish = $("#Finish" + ConID).text();
+    var Status = $("#Status" + ConID).text();
+    var OD = $("#OD" + ConID).text();
+
+    var modal = $(this);
+    modal.find('#ECID').val(ConID);
+    modal.find('#ECRef').val(ContractReference);
+    modal.find('#ECDes').val(Desc);
+    modal.find('#ECusName').val(Customer);
+    modal.find('#ECDate').val(DueDate);
+    modal.find('#FEStatus').val(Finish);
+    modal.find('#FEStatus').text(Finish);
+    modal.find('#EODate').val(OD);
+    modal.find('#VEName').val(Value.replace("R", "").replace(/,/g, ""));
+    modal.find('#ECNotes').val(Notes);
+    modal.find('#ECMan1').text(ContractManager);
+
+
+});
+
+$('#dltbtn').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var ContractReference = $("#ContractReference" + ConID).text();
+    var Customer = $("#Customer" + ConID).text();
+
+
+    var modal = $(this);
+    modal.find('#ECID1').val(ConID);
+    modal.find('#ECRef1').val(ContractReference);
+    modal.find('#ECusName1').val(Customer);
+
+
+
+});
+</script>
+
+<script>
+$(document).ready(function() {
+      window.socket = io.connect('http://' + document.domain + ':' + location.port + '/Update_Status');
+
+
+};
+
+</script>
+
+
+<script>
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+ if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+
+today = yyyy+'-'+mm+'-'+dd;
+document.getElementById("CDate").setAttribute("min", today);
+
+document.getElementById("ODate").setAttribute("max", today);
+</script>
+
+
+
+
+
+{% endblock %}

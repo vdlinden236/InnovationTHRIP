@@ -1,0 +1,490 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+<style>
+#myProgress {
+    width: 100%;
+    background-color: #ddd;
+}
+
+td a:hover {
+    display:block;
+    width:100%;
+
+}
+
+#myBar {
+    height: 30px;
+    line-height: 2;
+    color: #FFFFFF;
+    background-color: #4BAC3F;
+
+}
+
+.progress span{
+    position:absolute; !important
+    left:0; !important
+    width:100%;!important
+    text-align:center;!important
+    z-index:50;!important
+    color:black;
+}
+
+.search {
+    border: 2px solid black;
+    width: 400px;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 5px;
+]
+
+@media (max-width: 991px) {
+    .search {
+        margin-bottom: 20px;
+    }
+}
+
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+    border: 2px solid #9CADBD;
+    color: white;
+    background-color: #9CADBD;
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #FFFFFF;
+    color: #9CADBD;
+    border: 2px solid #9CADBD;
+    cursor: pointer;
+}
+
+.inputfile:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+
+.inputfile + label * {
+	pointer-events: none;
+}
+
+.editbtn {
+    color: #9CADBD;
+}
+
+.dltbtn {
+    color: #DF3062;
+}
+</style>
+
+
+{% endblock %}
+
+
+{% block body %}
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1" style="margin-top: 15px">Innovations</h2>
+                                  <!--add submit button called in ln 229-->
+                                    <span>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#selDep"><i class="fas fa-list-ul"></i> Filter Department</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#submitInnov"><i class="fas fa-plus"></i> Submit an Innovation</a>
+                                    </span>
+
+                                </div><hr>
+                            </div>
+                        </div>
+
+
+ <div class="row m-t-25" style="height:100%">
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c1">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-globe"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  active_innovations[0]  }}</h2>
+                                                <span>All Innovations</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c2">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  actions_campaigns[1]  }}</h2>
+                                                <span>Actions Taken</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c3">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  actions_campaigns[0]  }}</h2>
+                                                <span>Active Campaigns</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div class="row ">
+        <div class="col-md-12">
+                <div class="au-card chart-percent-card">
+                        <div class="au-card-inner">
+
+<div class="" auto-update="true" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+<table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+    <thead class="text-center dot--dblue text-white">
+      <tr class="">
+		<th style="width:18%;">Problem</th>
+        <th style="width:20%;">Innovation</th>
+		<th style="width:30%;">Description</th>
+          <th style="width:10%;">Status</th>
+		<th style="width:12%;">Time</th>
+          <th style="width:5%;">Actions</th>
+            <th style="width:5%;">Campaign</th>
+          <th style="width:5%;">Department</th>
+          <th style="width:10%;">Attachments</th>
+      </tr>
+    </thead>
+    <tbody class="text-center" style="font-size: 14px !important;">
+        {% for i in innovations %}
+        <tr >
+			<td style="display: table-cell; vertical-align: middle;">{{  i.ProbName  }}</td>
+			<td style="display: table-cell; vertical-align: middle;">{{  i.name  }}</td>
+			<td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
+			<td style="display: table-cell; vertical-align: middle;">{{  i.innovationStatusTypeID  }}</td>
+            <td style="display: table-cell; vertical-align: middle;">{{  i.horisonID  }}</td>
+            <td style="display: table-cell; vertical-align: middle;">{{  i.actionID  }}</td>
+            <td style="display: table-cell; vertical-align: middle;">{{  i.campaignID  }}</td>
+            <td style="display: table-cell; vertical-align: middle;">{{  i.Department  }}</td>
+            {% if i.businessCaseFile is none %}
+            <td style="display: table-cell; vertical-align: middle;">-</td>
+            {% else %}
+            <td style="display: table-cell; vertical-align: middle;"><a href = "{{  url_for('surveys_file.download_innovate', filename = i.businessCaseFile)  }}" ><i class="fas fa-download change fa-lg"></i></a></td>
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+ </div>
+
+
+
+
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+    </div>
+<div class="modal fade" id="submitInnov" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form action="{{  url_for('surveys_file.innovations', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="subProb">Submit an Innovation</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Problem:</label>
+            <select class="form-control qlogin" name="UProb" id="UProb">
+              <option value="" selected disabled></option>
+                {% for i in problems %}
+                <option value="{{  i.problemID  }}" >{{  i.name  }}</option>
+                {% endfor %}
+            </select>
+                <label class="text-center">Innovation:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="Innov" id="Innov"/>
+                <label class="text-center">Description:</label>
+                <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="UDesc" id="UDesc"></textarea>
+            <label class="text-center">Time Period:</label>
+            <select class="form-control qlogin" name="UTime" id="UTime">
+              <option value="" selected disabled></option>
+                <option value="Short Term" >Short Term</option>
+                <option value="Medium Term" >Medium Term</option>
+                <option value="Long Term" >Long Term</option>
+            </select>
+                <label class="text-center">Campaign:</label>
+            <select class="form-control qlogin" name="Camp" id="Camp">
+              <option value="" selected disabled></option>
+                <option value="0" >Campaign 1</option>
+                <option value="1" >Campaign 2</option>
+                <option value="2" >Campaign 3</option>
+            </select>
+                <label class="text-center">Business Case File:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="file"  name="file" id="file"/>
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Submit Innovation">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="selDep" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form action="{{  url_for('surveys_file.innovations', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="selDepTit">Submit an Innovation</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">View Department:</label>
+           <select class="form-control qlogin" name="Depart" id="Depart">
+              <option value="" selected disabled></option>
+               <option value="All" >All</option>
+                <option value="Finance" >Finance</option>
+                <option value="HR" >HR</option>
+                <option value="IT" >IT</option>
+                <option value="Production" >Production</option>
+                <option value="Management" >Management</option>
+            </select>
+                 </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Select Department">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="fitertype" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="filterTit">Filter Input Type </h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <label class="text-center">Select Input Type</label>
+                <select class="form-control qlogin" name="InType" id="InType">
+                  <option value="" selected disabled></option>
+                    <option value="All" >All</option>
+                    <option value="Complaints" >Complaints</option>
+                    <option value="Problems" >Problems</option>
+                    <option value="Ideas" >Ideas</option>
+                </select>
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="View Type">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block js %}
+
+
+<script>
+var table = $('#example').DataTable({"dom": 'rt', "fixedHeader": {header: true}, "pageLength": 5000, "aaSorting": [], "ordering": true,
+    columnDefs: [{
+      orderable: false,
+      targets: "no-sort"
+    }],
+
+    drawCallback: function() {
+    $('[data-toggle="popover"]').popover();
+  }
+});
+
+
+
+// #myInput is a <input type="text"> element
+$('#myInput').on( 'keyup', function () {
+    table.search( this.value ).draw();
+} );
+
+$('input[type=file]').change(function (e) {
+    $(this).parents('.parent').find('.element-to-paste-filename').text(e.target.files[0].name);
+});
+
+$(document).ready(function(){
+$('[data-toggle="popover"]').popover({
+})
+});
+</script>
+
+<script>
+$(function(){
+   $("#submit-file").hide();
+    $("#submit-file1").hide();
+   $("#upload-file").hide();
+   $("#upload-file").change(function(){
+        if ($("#upload-file").val() != ""){
+             $("#submit-file").show();
+              $("#submit-file1").show();
+             $("#label").hide();
+        }
+        else{
+             $("#submit-file1").hide();
+        }
+   });
+});
+
+</script>
+
+<script>
+$('#orderModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var ContractReference = $("#ContractReference" + ConID).text();
+    var Desc = $("#Description" + ConID).text();
+    var Customer = $("#Customer" + ConID).text();
+    var Total = $("#Total" + ConID).text();
+    var Value = $("#Value" + ConID).text();
+    var ContractManager = $("#ContractManager" + ConID).text();
+    var DueDate = $("#DueDate" + ConID).text();
+    var ContractStatus = $("#Status" + ConID).text();
+    var Notes = $("#Notes" + ConID).text();
+    var Finish = $("#Finish" + ConID).text();
+    var Status = $("#Status" + ConID).text();
+    var OD = $("#OD" + ConID).text();
+
+    var modal = $(this);
+    modal.find('#ECID').val(ConID);
+    modal.find('#ECRef').val(ContractReference);
+    modal.find('#ECDes').val(Desc);
+    modal.find('#ECusName').val(Customer);
+    modal.find('#ECDate').val(DueDate);
+    modal.find('#FEStatus').val(Finish);
+    modal.find('#FEStatus').text(Finish);
+    modal.find('#EODate').val(OD);
+    modal.find('#VEName').val(Value.replace("R", "").replace(/,/g, ""));
+    modal.find('#ECNotes').val(Notes);
+    modal.find('#ECMan1').text(ContractManager);
+
+
+});
+
+$('#dltbtn').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var ContractReference = $("#ContractReference" + ConID).text();
+    var Customer = $("#Customer" + ConID).text();
+
+
+    var modal = $(this);
+    modal.find('#ECID1').val(ConID);
+    modal.find('#ECRef1').val(ContractReference);
+    modal.find('#ECusName1').val(Customer);
+
+
+
+});
+</script>
+
+<script>
+$(document).ready(function() {
+      window.socket = io.connect('http://' + document.domain + ':' + location.port + '/Update_Status');
+
+
+};
+
+</script>
+
+
+<script>
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+ if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+
+today = yyyy+'-'+mm+'-'+dd;
+document.getElementById("CDate").setAttribute("min", today);
+
+document.getElementById("ODate").setAttribute("max", today);
+</script>
+
+
+
+
+
+{% endblock %}

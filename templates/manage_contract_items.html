@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+
+{% block href %}"{{  url_for('users_file.dashboard', org_name=session["OrgName"])  }}"{% endblock %}
+
+{% block css %}
+<style>
+.dataTables_filter {
+   display: none;
+}
+
+#loading1 {
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   position: fixed;
+   display: none;
+
+   z-index: 99;
+   text-align: center;
+    background-color: white;
+}
+
+#loading2 {
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   position: fixed;
+   display: none;
+
+   z-index: 99;
+   text-align: center;
+    background-color: white;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+{% if Error|length > 1 %}
+<div class="danger text-center">
+    <p>{{  Error  }}</p>
+</div>
+{% endif %}
+
+<div id="loading2">
+
+    <div id="loading-image1" class="d-flex align-items-center">
+        <div class="spinner-border ml-auto m-1" role="status" aria-hidden="true"></div>
+
+    </div>
+
+</div>
+
+<div style="background-color: #364B57; padding: 10px;">
+    <center>
+        <h1 style="color:#FFFFFF; font-size:50px;">{{  contract_data[1]  }} Items</h1>
+        <h3 class="text-white">contract reference: <span class="item_history">{{  contract_data[3]  }}</span></h3>
+        <h3 class="pad text-white" style="padding-bottom: 10px; margin-bottom: 0;">due date: <span class="item_history">{{  contract_data[2]  }}</span></h3>
+    </center>
+</div>
+
+<div class="nt" style="margin-bottom: 0;">
+    <div class="row">
+    <div class="col-md-3 text-center">
+    <a class="newtab" href=# data-toggle="modal" data-target="#AddContract"><i class="fas fa-file-medical"></i> Add a contract item</a>
+    </div>
+    <div class="col-md-3 text-center">
+    <a id="editing"  href=# data-toggle="modal" data-target="#UpdateStatuses" class="newtab"><i class="fas fa-signal"></i> Update multiple items</a>
+    </div>
+    <div class="col-md-3 text-center">
+    <a class="newtab" href="{{  url_for('contracts_file.manage_contracts', org_name=session['OrgName'])  }}"><i class="fas fa-backward"></i> Back to contracts</a>
+    </div>
+    <div class="col-md-3 text-center">
+    <a class="newtab" href="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}"><i class="fas fa-home"></i> Back to main menu</a>
+    </div>
+    </div>
+</div>  
+
+
+    <table id="example" class="table compact" style="width:100%">
+    <thead class="bg-5">
+      <tr class="text-center">
+		<th>Line Reference</th>
+		<th>Product System</th>
+		<th>Rand Value</th>
+		<th>Item Status</th>
+		<th>Assigned User</th>
+		<th style="width:5%;">Edit</th>
+		<th style="width:5%;">History</th>
+          
+      </tr>
+      <tr class="searchin text-center" style="border-top:none;">
+		<td>Line Reference</td>
+		<td>Product System</td>
+		<td>Rand Value</td>
+		<td>Item Status</td>
+		<td>Assigned User</td>
+        <th></th>
+        <th></th>
+
+      </tr>
+    </thead>
+    <tbody class="text-center selected1" id="yyy">
+        {% for i in report_proc %}
+        {% if i.ContractReference == contract_data[3] %}
+        <tr>
+			<td>{{  i.LineReferenceNumber  }}</td>
+			<td>{{  i.AluminiumSystem  }}</td>
+			<td>R{{  i.Value  }}</td>
+			<td>{% if i.Status is not none %}{{  i.Status  }}{% else %}{% endif %}</td>
+			<td>{% if i.UserName is not none %}{{  i.UserName  }}{% else %}{% endif %}</td>
+			<td style="text-align:center;"><a class="" data-toggle="modal" data-target="#exampleModal{{  i.ContractItemId  }}"><i class="fas fa-edit change"></i></a></td>
+            <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+            <input name="ContractItemId" type="hidden" value="{{  i.ContractItemId  }}">
+            <td style="text-align:center;"><input style="" name="ContractItems" type="submit" class="btn btn-secondary no-show" value="View"></td>
+            </form>
+            
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+    </table>
+
+
+
+
+
+
+<!-- Add Modal -->
+<div class="modal fade" id="AddContract" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+      <div class="modal-header bg-5">
+        <h5 class="modal-title" id="exampleModalLabel">Add a contract item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Item Reference:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="IRef" id="IRef"/>
+            <label class="text-center">Product System:</label>
+
+                <select class="form-control qlogin" name="IName" id="IName" required>
+                    <option disabled selected></option>
+              {% for i in products_dict %}
+              <option value="{{  i  }}">{{  i  }}</option>
+              {% endfor %}
+            </select>
+            <label class="text-center">Item Quantity:</label>
+            <input style="text-align:left;" step="1" min="0" class="form-control qlogin" type="number" required name="IQty" id="IQty"/>
+            <label class="text-center">Item Value:</label>
+            <input style="text-align:left;" step="0.01" min="0" class="form-control qlogin" type="number" required name="IValue" id="IValue"/>
+            <label class="text-center">Item Status:</label>
+            <select class="form-control qlogin" name="IStatus" id="IStatus" required>
+              {% for i in activities_data %}
+              <option value="{{  i.StatusId  }}">{{  i.Status  }}</option>
+              {% endfor %}
+            </select>
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-primary no-show mr-auto" name="ContractItems" value="Add Contract Item">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="UpdateStatuses" tabindex="-1" role="dialog" aria-labelledby="UpdateStatuseslabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+      <div class="modal-header bg-5">
+        <h5 class="modal-title" id="exampleModalLabel">Update all Item Statuses</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <h5>Please select the items to be updated</h5>
+               <!-- <label for="searchbox">Search:</label><br><input type="text" id="searchbox" class="alogin" style="width: 50%; height: 30px;"><br>-->
+                <input onClick="toggle(this)" style="margin-top: 10px" id="sacb" name="sa" type="checkbox"/><label for="sacb"> Select All</label>
+            <table id="example123" class="table compact" style="width:100%">
+                <thead class="bg-5">
+                    <tr class="text-center">
+                        <th>Select</th>
+                        <th>Line Reference</th>
+                        <th>Product System</th>
+                        <th>Item Status</th>
+                    </tr>
+                    <tr class="searchin text-center" style="border-top:none;">
+		                <th></th>
+		                <td>Line Reference</td>
+		                <td>Product System</td>
+		                <td>Item Status</td>
+                    </tr>
+                </thead>
+                <tbody class="text-center selected1" id="yyy">
+                {% for i in report_proc %}
+                {% if i.ContractReference == contract_data[3] %}
+                    <tr class="clickable-row3">
+                        <!--<td><input id="example{{  i.ContractItemId  }}1" name="cbstatus" type="checkbox" value="{{  i.ContractItemId  }}"/></td>
+                        <td><label for="example{{  i.ContractItemId  }}1">{{  i.LineReferenceNumber  }}</label></td>
+                        <td><label for="example{{  i.ContractItemId  }}1">{{  i.AluminiumSystem  }}</label></td>
+                        <td><label for="example{{ i.ContractItemId }}1">{{ i.Status }}</label></td>-->
+                        <td><input id="example{{  i.ContractItemId  }}1" name="cbstatus" type="checkbox" value = "{{ i.ContractItemId }}"/></td>
+                        <td id="example{{  i.ContractItemId  }}1">{{ i.LineReferenceNumber }}</td>
+                        <td id = "example{{  i.ContractItemId  }}1">{{ i.AluminiumSystem }}</td>
+                        <td id = "example{{  i.ContractItemId  }}1">{{ i.Status }}</td>
+                    </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+                
+                
+            
+                
+                
+            <label class="text-center">Select a new item status:</label>
+            <select class="form-control qlogin" name="UALLStatus" id="UALLStatus" required>
+              <option selected disabled></option>
+                {% for i in activities_data %}
+              <option value="{{  i.StatusId  }}">{{  i.Status  }}</option>
+              {% endfor %}
+            </select>
+           </center>
+            
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-primary no-show mr-auto" name="ContractItems" value="Update Selected Items">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Modal -->
+{% for i in report_proc %}
+{% if i.ContractReference == contract_data[3] %}
+<div class="modal fade" id="exampleModal{{  i.ContractItemId  }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+      <div class="modal-header bg-5">
+        <h5 class="modal-title" id="exampleModalLabel">Edit the contract item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+
+            <label class="text-center">Item Reference:</label>
+            <input class="form-control qlogin" type="text" required name="EIRef" id="EIRef" value="{{  i.LineReferenceNumber  }}"/>
+            <label class="text-center">Product System:</label>
+            <input class="form-control qlogin" type="text" required name="EIName" id="EIName" value="{{  i.AluminiumSystem  }}"/>
+            <label class="text-center">Item Value:</label>
+            <input class="form-control qlogin" value="{{  i.Value  }}" type="text" required name="EIValue" id="IValue"/>
+
+            <label class="text-center">Item Status:</label>
+            <input type="hidden" name="EIID" id="EIID" value="{{  i.ContractItemId  }}"/>
+            <select class="form-control qlogin" name="EIStatus" id="EIStatus">
+              {% for j in activities_data %}
+              {% if i.Status == j.Status %}
+              <option value="{{  j.StatusId  }}" selected>{{  j.Status  }}</option>
+              {% else %}
+              <option value="{{  j.StatusId  }}">{{  j.Status  }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+            <label class="text-center">Assigned User:</label>
+            <select class="form-control qlogin" name="EIAUser" id="EIAUser">
+              <option value="{{  i.AssignedUserId  }}" selected>{{  i.UserName  }}</option>
+
+
+              {% for j in contract_users %}
+              {% if i.UserName != j.UserName %}
+              <option value="{{  j.UserId  }}">{{  j.UserName  }}</option>
+              {% endif %}
+              {% endfor %}
+                <option></option>
+            </select>
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-primary no-show mr-auto" name="ContractItems" value="Save Contract Item">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        
+      </div>
+    </form>
+        </div>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+
+<script>
+$(document).ready(function() {
+    $('#example thead td').each( function () {
+        var title = $('#example thead th').eq( $(this).index() ).text();
+        $(this).html( '<input class="searching" type="text" placeholder=" Search..." />' );
+    } );
+
+
+
+   $('#example123 thead td').each( function () {
+        var title = $('#example thead th').eq( $(this).index() ).text();
+        $(this).html( '<input class="searching" type="text" placeholder=" Search..." />' );
+    } );
+    
+    var table = $('#example').DataTable({"ordering": false, "dom": 'rtip', "fixedHeader": {header: true}, "pageLength": 100, "aaSorting": []});
+    
+    var table1 = $('#example123').DataTable({"ordering": false, "dom": 'rtip', "fixedHeader": {header: true}, "pageLength": -1, "aaSorting": []});
+
+    table.columns().eq( 0 ).each( function ( colIdx ) {
+        //$( 'input', table.column( colIdx ).header() ).on( 'keyup change', function () {
+         $( 'input', table.column( colIdx ).header() ).keypress(function (e){
+         if (e.which == 13){
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();}
+        } );
+    } );
+
+    table1.columns().eq( 0 ).each( function ( colIdx ) {
+        //$( 'input', table1.column( colIdx ).header() ).on( 'keyup change', function () {
+        $( 'input', table1.column( colIdx ).header() ).keypress(function(e) {
+        if(e.which == 13){
+            table1
+                .column( colIdx )
+                .search( this.value )
+                .draw();}
+        } );
+    } );
+    
+    $("#searchbox").on("keyup search input paste cut", function() {
+       table.search(this.value).draw();
+    });
+    // $('#example2').DataTable({searching: false, "pageLength": 50, "aaSorting": []});
+
+} );
+
+
+
+
+ window.onload = function(){ document.getElementById("loading2").style.display = "none" }
+</script>
+
+<script language="JavaScript">
+function toggle(source) {
+  checkboxes = document.getElementsByName('cbstatus');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
+
+{% endblock %}

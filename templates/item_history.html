@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block href %}"{{  url_for('users_file.dashboard', org_name=session["OrgName"])  }}"{% endblock %}
+
+{% block body %}
+{% if Error|length > 1 %}
+<div class="danger text-center">
+    <p>{{  Error  }}</p>
+</div>
+{% endif %}
+
+<div style="background-color: #364B57; padding: 10px;">
+    <center>
+        <h1 style="color:#FFFFFF; font-szie:50px;">Shop Floor Tracker</h1>
+        <h5 class="text-white">line reference number: <span class="item_history">{{  items_history_name[1]  }}</span></h5>
+        <h5 class="pad text-white" style="padding-bottom: 10px; margin-bottom: 0;">aluminium system: <span class="item_history">{{  items_history_name[2]  }}</span></h5>
+    </center>
+</div>
+
+
+<div class="nt" style="margin-bottom: 0;">
+    <div class="row">
+    <div class="col-md-4 text-center">
+    <a class="newtab" href="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}"><i class="fas fa-arrow-circle-left"></i> Back to contract items</a>
+    </div>
+    <div class="col-md-4 text-center">
+    <a class="newtab" href="{{  url_for('contracts_file.manage_contracts', org_name=session['OrgName'])  }}"><i class="fas fa-backward"></i> Back to contracts</a>
+    </div>
+    <div class="col-md-4 text-center">
+    <a class="newtab" href="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}"><i class="fas fa-home"></i> Back to main menu</a>
+    </div>
+    </div>
+</div>
+
+<table id="example" class="table compact" style="width:100%">
+    <thead class="bg-5">
+      <tr class="text-center">
+		<th>Status changed to:</th>
+        <th>by User:</th>
+		<th>on Date:</th>
+      </tr>
+      <tr class="searchin text-center" style="border-top:none;">
+		<td>Status</td>
+        <td>User Name</td>
+		<td>Date</td>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+        {% for i in items_history %}
+        {% if loop.first == True %}
+        <tr>
+			<td>{{  i.Status  }}</td>
+			<td>{{  i.UserName  }}</td>
+			<td>{{  i.Timestamped.strftime('%Y-%m-%d %H:%M:%S')  }}</td>
+        </tr>
+        {% else %}
+            {% if i.Status != items_history[loop.index0 - 1].Status %}
+            <tr>
+    			<td>{{  i.Status  }}</td>
+    			<td>{{  i.UserName  }}</td>
+    			<td>{{  i.Timestamped.strftime('%Y-%m-%d %H:%M:%S')  }}</td>
+            </tr>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+    </tbody>
+    </table>
+
+<script>
+$(document).ready(function() {
+    $('#example thead td').each( function () {
+        var title = $('#example thead th').eq( $(this).index() ).text();
+        $(this).html( '<input class="searching" type="text" placeholder=" Search..." />' );
+    } );
+
+    var table = $('#example').DataTable({"ordering": false, "dom": 'rt', "fixedHeader": {header: true}, "pageLength": 50, "aaSorting": []});
+
+    table.columns().eq( 0 ).each( function ( colIdx ) {
+        $( 'input', table.column( colIdx ).header() ).on( 'keyup change', function () {
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();
+        } );
+    } );
+    // $('#example2').DataTable({searching: false, "pageLength": 50, "aaSorting": []});
+} );
+</script>
+{% endblock %}

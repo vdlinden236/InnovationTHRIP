@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
+
+    <!-- Title Page-->
+    <title>{% block title %}Innovate{% endblock %}</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="{{ url_for('static', filename='css/font-face.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('static', filename='vendor/font-awesome-5/css/fontawesome-all.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('static', filename='vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet" media="all">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.png') }}"/>
+    <!-- Bootstrap CSS-->
+    <link href="{{ url_for('static', filename='vendor/bootstrap-4.1/bootstrap.min.css') }}" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="{{ url_for('static', filename='vendor/animsition/animsition.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('static', filename='vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('static', filename='vendor/wow/animate.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('static', filename='vendor/css-hamburgers/hamburgers.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('static', filename='vendor/slick/slick.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}" rel="stylesheet" media="all">
+
+    <!-- Datable -->
+    <script src="{{ url_for('static', filename='vendor/jquery-3.2.1.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+
+
+    <!-- Main CSS-->
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet" media="all">
+    {% block css %}
+
+    {% endblock %}
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        {% block navbarmobile %}
+        <header class="header-mobile d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <div class="logo">
+                <a href="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}">
+                    <h1>Innovate</h1>
+                </a>
+            </div>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar-mobile">
+                <div class="container-fluid">
+                    <ul class="navbar-mobile__list list-unstyled">
+
+
+                        <li class="">
+                            <a href="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-tachometer-alt"></i>Home</a>
+                        </li>
+
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.surveys', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-list"></i>Surveys</a>
+                        </li>
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-exclamation-triangle"></i>Inputs</a>
+                        </li>
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.innovations', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-globe"></i>Innovations</a>
+                        </li>
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.analysis', org_name=session['OrgName'])  }}">
+                                <i class="far fa-chart-bar"></i>Analysis</a>
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-briefcase"></i>Knowledge</a>
+                              <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li class="has-sub">
+                                     <a class="js-arrow" href="#">
+                                      <i class="fas fa-briefcase"></i>Innovation Content</a>
+                                       <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                             <li class="has-sub">
+                                                 <a class="js-arrow" href="#">
+                                                  <i class="fas fa-briefcase"></i>Module 1</a>
+                                                   <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                       <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.innov_capab', org_name=session['OrgName'])  }}">Innovation Capability</a>
+                                                        </li>
+                                                        <li>
+                                                            <a style="font-size: 14px;" href="{{  url_for('snags_file.innov_capab_mng', org_name=session['OrgName'])  }}">Innovation Survey</a>
+                                                        </li>
+                                                        <li>
+                                                            <a style="font-size: 14px;" href="{{  url_for('snags_file.strat_pillars', org_name=session['OrgName'])  }}">Strategic Pillars</a>
+                                                        </li>
+                                                        <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.implement_levers', org_name=session['OrgName'])  }}">Implementation Levers</a>
+                                                        </li>
+                                                   </ul>
+                                             </li>
+
+                                             <li class="has-sub">
+                                              <a class="js-arrow" href="#">
+                                               <i class="fas fa-briefcase"></i>Module 2</a>
+                                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIInnovOver', org_name=session['OrgName'])  }}">Innovation Overview</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIInnovBarr', org_name=session['OrgName'])  }}">Innovation Barriers </a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIStat', org_name=session['OrgName'])  }}">Strategic Intent</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIInnovDirec', org_name=session['OrgName'])  }}">Setting your Innovation Journey Direction</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TITypes', org_name=session['OrgName'])  }}">Innovation Types </a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIStrategy', org_name=session['OrgName'])  }}">Innovation Strategy </a>
+                                                    </li>
+                                                </ul>
+                                             </li>
+                                             <li class="has-sub">
+                                              <a class="js-arrow" href="#">
+                                               <i class="fas fa-briefcase"></i>Module 3</a>
+                                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                <li>
+                                                    <a style="font-size: 14px;" href="{{  url_for('snags_file.DIProcess', org_name=session['OrgName'])  }}">Innovation Process</a>
+                                                </li>
+                                                <li>
+                                                    <a style="font-size: 14px;" href="{{  url_for('snags_file.DIInnovman', org_name=session['OrgName'])  }}">Innovation Management </a>
+                                                </li>
+                                                <li>
+                                                    <a style="font-size: 14px;" href="{{  url_for('snags_file.DITypicalPro', org_name=session['OrgName'])  }}">Typical Innovation Process</a>
+                                                </li>
+
+                                                </ul>
+                                             </li>
+                                     </ul>
+                                   </li>
+
+                                    <li class="has-sub">
+                                     <a class="js-arrow" href="#">
+                                      <i class="fas fa-briefcase"></i>Survey Support Content</a>
+                                       <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                <li class="has-sub">
+                                                 <a class="js-arrow" href="#">
+                                                  <i class="fas fa-briefcase"></i>Module 1</a>
+                                                   <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                    <li>
+                                                    <a style="font-size: 14px;" href="{{  url_for('snags_file.survey_method', org_name=session['OrgName'])  }}">Survey Methodology</a>
+                                                    </li>
+                                                   </ul>
+                                                </li>
+                                                <li class="has-sub">
+                                                 <a class="js-arrow" href="#">
+                                                  <i class="fas fa-briefcase"></i>Module 2</a>
+                                                   <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TSInnovCap', org_name=session['OrgName'])  }}">Innovation Capability</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TSPill', org_name=session['OrgName'])  }}">Strategic Pillars</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TSBalSco', org_name=session['OrgName'])  }}">Balanced Scorecard</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.DSReDesScor', org_name=session['OrgName'])  }}">Redesign Scorecard</a>
+                                                    </li>
+                                                   </ul>
+                                                </li>
+
+                                               <li class="has-sub">
+                                                 <a class="js-arrow" href="#">
+                                                  <i class="fas fa-briefcase"></i>Module 3</a>
+                                                   <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.DSPillar', org_name=session['OrgName'])  }}">Strategic Pillars</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.DSBalScore', org_name=session['OrgName'])  }}">Balanced Scorecard</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TSBalSco', org_name=session['OrgName'])  }}">Redesigned Scorecard</a>
+                                                    </li>
+                                                   </ul>
+                                               </li>
+                                       </ul>
+                                    </li>
+                                   </li>
+                                 </ul>
+
+
+                        {% if session['Admin'] == "Yes" %}
+                        <li class="">
+                            <a href="{{  url_for('users_file.manage_users', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-cog"></i>Admin</a>
+                        </li>
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.gatekeeper', org_name=session['OrgName'])  }}">
+                              <i class="fas fa-cog"></i>Innovation Pipeline</a>
+                        </li>
+
+                        {% endif %}
+
+
+                        <li>
+                            <a href="/Logout">
+                                <i class="fas fa-sign-out-alt"></i>Logout</a>
+                        </li>
+
+
+
+
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        {% endblock %}
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        {% block navbar %}
+        <aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo text-center">
+            <center>
+                <a href="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}">
+                    <h1>Innovate</h1>
+                </a>
+            </center>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+
+                        <li>
+                            <a href="#"><i class="fas fa-building"></i>{{  session["OrgName"]  }}</a>
+                        </li><hr>
+
+                        <li class="">
+                            <a href="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-tachometer-alt"></i>Home</a>
+                        </li>
+
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.surveys', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-list"></i>Surveys</a>
+                        </li>
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.problems', org_name=session['OrgName'] )  }}">
+                                <i class="fas fa-exclamation-triangle"></i>Inputs</a>
+                        </li>
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.innovations', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-globe"></i>Innovations</a>
+                        </li>
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.analysis', org_name=session['OrgName'])  }}">
+                                <i class="far fa-chart-bar"></i>Analysis</a>
+                        </li>
+                         <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-briefcase"></i>Knowledge</a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li class="has-sub">
+                                     <a class="js-arrow" href="#">
+                                      <i class="fas fa-briefcase"></i>Innovation Content</a>
+                                       <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                             <li class="has-sub">
+                                                 <a class="js-arrow" href="#">
+                                                  <i class="fas fa-briefcase"></i>Module 1</a>
+                                                   <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                       <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.innov_capab', org_name=session['OrgName'])  }}">Innovation Capability</a>
+                                                        </li>
+                                                        <li>
+                                                            <a style="font-size: 14px;" href="{{  url_for('snags_file.innov_capab_mng', org_name=session['OrgName'])  }}">Innovation Survey</a>
+                                                        </li>
+                                                        <li>
+                                                            <a style="font-size: 14px;" href="{{  url_for('snags_file.strat_pillars', org_name=session['OrgName'])  }}">Strategic Pillars</a>
+                                                        </li>
+                                                        <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.implement_levers', org_name=session['OrgName'])  }}">Implementation Levers</a>
+                                                        </li>
+                                                   </ul>
+                                             </li>
+
+                                             <li class="has-sub">
+                                              <a class="js-arrow" href="#">
+                                               <i class="fas fa-briefcase"></i>Module 2</a>
+                                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIInnovOver', org_name=session['OrgName'])  }}">Innovation Overview</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIInnovBarr', org_name=session['OrgName'])  }}">Innovation Barriers </a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIStat', org_name=session['OrgName'])  }}">Strategic Intent</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIInnovDirec', org_name=session['OrgName'])  }}">Setting your Innovation Journey Direction</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TITypes', org_name=session['OrgName'])  }}">Innovation Types </a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TIStrategy', org_name=session['OrgName'])  }}">Innovation Strategy </a>
+                                                    </li>
+                                                </ul>
+                                             </li>
+                                             <li class="has-sub">
+                                              <a class="js-arrow" href="#">
+                                               <i class="fas fa-briefcase"></i>Module 3</a>
+                                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                <li>
+                                                    <a style="font-size: 14px;" href="{{  url_for('snags_file.DIProcess', org_name=session['OrgName'])  }}">Innovation Process</a>
+                                                </li>
+                                                <li>
+                                                    <a style="font-size: 14px;" href="{{  url_for('snags_file.DIInnovman', org_name=session['OrgName'])  }}">Innovation Management </a>
+                                                </li>
+                                                <li>
+                                                    <a style="font-size: 14px;" href="{{  url_for('snags_file.DITypicalPro', org_name=session['OrgName'])  }}">Typical Innovation Process</a>
+                                                </li>
+
+                                                </ul>
+                                             </li>
+                                     </ul>
+                                   </li>
+
+                                    <li class="has-sub">
+                                     <a class="js-arrow" href="#">
+                                      <i class="fas fa-briefcase"></i>Survey Support Content</a>
+                                       <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                <li class="has-sub">
+                                                 <a class="js-arrow" href="#">
+                                                  <i class="fas fa-briefcase"></i>Module 1</a>
+                                                   <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                    <li>
+                                                    <a style="font-size: 14px;" href="{{  url_for('snags_file.survey_method', org_name=session['OrgName'])  }}">Survey Methodology</a>
+                                                    </li>
+                                                   </ul>
+                                                </li>
+                                                <li class="has-sub">
+                                                 <a class="js-arrow" href="#">
+                                                  <i class="fas fa-briefcase"></i>Module 2</a>
+                                                   <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TSInnovCap', org_name=session['OrgName'])  }}">Innovation Capability</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TSPill', org_name=session['OrgName'])  }}">Strategic Pillars</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TSBalSco', org_name=session['OrgName'])  }}">Balanced Scorecard</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.DSReDesScor', org_name=session['OrgName'])  }}">Redesign Scorecard</a>
+                                                    </li>
+                                                   </ul>
+                                                </li>
+
+                                               <li class="has-sub">
+                                                 <a class="js-arrow" href="#">
+                                                  <i class="fas fa-briefcase"></i>Module 3</a>
+                                                   <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.DSPillar', org_name=session['OrgName'])  }}">Strategic Pillars</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.DSBalScore', org_name=session['OrgName'])  }}">Balanced Scorecard</a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="font-size: 14px;" href="{{  url_for('snags_file.TSBalSco', org_name=session['OrgName'])  }}">Redesigned Scorecard</a>
+                                                    </li>
+                                                   </ul>
+                                               </li>
+                                       </ul>
+                                    </li>
+                                   </li>
+                                 </ul>
+
+
+
+
+
+
+
+                        {% if session['Admin'] == "Yes" %}
+                        <li class="">
+                            <a href="{{  url_for('users_file.manage_users', org_name=session['OrgName'])  }}">
+                                <i class="fas fa-cog"></i>Admin</a>
+                        </li>
+                        <li class="">
+                            <a href="{{  url_for('surveys_file.gatekeeper', org_name=session['OrgName'])  }}">
+                              <i class="fas fa-sitemap"></i>Innovation Pipeline</a>
+                        </li>
+
+                        {% endif %}
+                        <hr>
+                        <li>
+                            <a href="/Logout">
+                                <i class="fas fa-sign-out-alt"></i>Logout</a>
+                        </li>
+
+
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        {% endblock %}
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        {% block body %}
+        {% endblock %}
+
+    </div>
+
+
+    <!-- Jquery JS-->
+
+    <!-- Bootstrap JS-->
+    <script src="{{ url_for('static', filename='vendor/bootstrap-4.1/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap-4.1/bootstrap.min.js') }}"></script>
+    <!-- Vendor JS       -->
+    <script src="{{ url_for('static', filename='vendor/slick/slick.min.js') }}">
+    </script>
+    <script src="{{ url_for('static', filename='vendor/wow/wow.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/animsition/animsition.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap-progressbar/bootstrap-progressbar.min.js') }}">
+    </script>
+    <script src="{{ url_for('static', filename='vendor/counter-up/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/counter-up/jquery.counterup.min.js') }}">
+    </script>
+    <script src="{{ url_for('static', filename='vendor/circle-progress/circle-progress.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <!--script src="{{ url_for('static', filename='vendor/chartjs/Chart.bundle.min.js') }}"></script-->
+
+    <script src="{{ url_for('static', filename='vendor/select2/select2.min.js') }}">
+    </script>
+
+    <!-- Main JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="{{ url_for('static', filename='js/maind.js') }}"></script>
+    {% block js %}
+    {% endblock %}
+</body>
+
+</html>
+<!-- end document-->

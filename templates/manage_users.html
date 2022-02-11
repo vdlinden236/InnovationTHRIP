@@ -1,0 +1,516 @@
+{% extends 'base.html' %}
+
+{% block href %}"{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}"{% endblock %}
+
+{% block body %}
+<style>
+    td a:hover {
+    display:block;
+    width:100%;
+    font-weight: bold;
+    position: relative; !important
+}
+
+
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+}
+
+#myBar {
+  height: 30px;
+    line-height: 2;
+  color: #FFFFFF;
+  background-color: #122854;
+
+}
+
+#loading2 {
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   position: fixed;
+   display: none;
+
+   z-index: 99;
+   text-align: center;
+    background-color: white;
+}
+
+
+#loading-image1 {
+  position: absolute;
+  top: 45%;
+  left: 48%;
+  z-index: 100;
+
+  color: #122854;
+}
+
+.btn-upload {
+  color:  #163269;
+  background-color:  #163269;
+  border-radius: #163269;
+}
+
+.btn-upload:hover {
+  box-shadow: inset 0 0 0 20rem  #1b3c7e;
+  opacity: 0.7;
+}
+
+.np {
+    width: 100%;
+    background-color: #babebf;
+    color: #364B57;
+    margin: 0;
+    padding: 0px;
+}
+
+.nav-link{
+  color:#364B57;
+  font-size: 20px;
+}
+
+.nav-link: hover{
+  color:#364B57;
+  font-size: 20px;
+}
+
+
+
+</style>
+
+
+<div style="background-color: #364B57; padding: 10px;">
+    <center>
+<h1 style="padding-bottom: 10px; color:#FFFFFF; margin-bottom: 0;">Admin Configurations</h1>
+    </center>
+</div>
+
+<div class="np" style="margin-bottom: 0; width:100%;">
+<center>
+<ul class="nav nav-tabs" id="Tab1" role="tablist">
+    <li class="nav-item col-md-6 text-center">
+        {% if active_tab == 'users' %}
+        <a class="nav-link active" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="home" aria-selected="true">Manage Users</a>
+        {% else %}
+        <a class="nav-link" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="home" aria-selected="true">Manage Users</a>
+        {% endif %}
+    </li>
+    <li class="nav-item col-md-6 text-center">
+        {% if active_tab == 'activities' %}
+        <a class="nav-link" id="activities-tab" data-toggle="tab" href="#activities" role="tab" aria-controls="profile" aria-selected="false">Manage Activities</a>
+        {% else %}
+        <a class="nav-link" id="activities-tab" data-toggle="tab" href="#activities" role="tab" aria-controls="profile" aria-selected="false">Manage Activities</a>
+        {% endif %}
+    </li>
+</ul>
+</center>
+</div>
+
+<div class="tab-content" id="Tab1Content">
+  <div class="tab-pane fade show" id="users" role="tabpanel" aria-labelledby="user-tab">
+      <div class="nt" style="margin-bottom: 0;">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <a class="newtab" href=# data-toggle="modal" data-target="#exampleModal"><i class="fas fa-user-plus"></i> Add a user</a>
+                </div>
+                <div class="col-md-6 text-center">
+                    <a class="newtab" href="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}"><i class="fas fa-home"></i> Back to main menu</a>
+                </div>
+            </div>
+      </div>
+
+{% if Error|length > 1 %}
+    <div class="danger text-center">
+        <p>{{  Error  }}</p>
+    </div>
+{% endif %}
+
+
+    <table id="example" class="table compact" style="width:100%">
+    <thead class="bg-5">
+      <tr class="text-center">
+		<th style="width:20%;">Name</th>
+        <th style="width:25%;">Role</th>
+		<th style="width:20%;">PIN</th>
+		<th style="width:15%;">Status</th>
+		<th style="width:10%; text-align:center;">Edit User</th>
+		<th style="width:10%; text-align:center;">Edit Roles</th>
+      </tr>
+      <tr class=" searchin text-center" style="border-top:none;">
+		<td style="width:20%;">Name</td>
+        <td style="width:25%;">Role</td>
+		<td style="width:20%;">PIN</td>
+		<td style="width:15%;">Status</td>
+		<th style="width:10%; text-align:center;"></th>
+		<th style="width:10%; text-align:center;"></th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for i in user_data %}
+        <tr >
+			<td>{{  i.UserName  }}</td>
+			<td>{{  i.RoleName  }}</td>
+			<td>{%if i.PIN >999%}
+                {{  i.PIN  }}
+                {% elif i.PIN > 99 %}
+                {{ "0"+i.PIN|string }}
+                {% elif i.PIN >9 %}
+                {{ "00"+i.PIN|string}}
+                {% else %}
+                {{"000"+i.PIN|string}}
+                {% endif %}
+            </td>
+			<td>{%  if i.IsActive == True  %}Active{%  else  %}Not Active{%  endif  %}</td>
+			<td class="text-center" ><a class="editbtn" data-toggle="modal" data-target="#EditUser" data-id="{{  i.UserId  }}" data-nam="{{  i.UserName  }}" data-pin="{{  i.PIN  }}" data-act="{{  i.IsActive  }}"><i class="fas fa-user-edit change"></i></a></td>
+			<td class="text-center"><a class="editbtn" data-toggle="modal" data-target="#EditRoles" data-whatever="{{  i.UserId  }}" data-role="{{  i.RoleName  }}"><i class="fas fa-user-tie change"></i></a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+
+
+<br><br>
+
+<!-- Add Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('users_file.manage_users', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header bg-5">
+        <h5 class="modal-title" id="exampleModalLabel">Add a user</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Name:</label>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="UName" id="UName"/>
+            <label class="text-center">PIN:</label>
+            <!--input style="text-align:left;" class="form-control ologin" type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="4" required name="UPin" id="UPin"-->
+            <input name="UPin" id="UPin" style="text-align:left;" class="form-control qlogin" pattern="[0-9]{4,4}" required title="Pin must be 4 numbers long" value="{{uniquepin}}">
+            <label class="text-center">Role:</label>
+            <select class="form-control qlogin" name="URole" id="URole" required>
+              <option value="" selected disabled></option>
+              {% for i in roles_data %}
+              <option value="{{  i.RoleId  }}">{{  i.RoleName  }}</option>
+              {% endfor %}
+            </select>
+            <label class="text-center">Is Active:</label><br>
+            <select class="form-control qlogin" name="UAct" id="UAct" required>
+              <option value="1">True</option>
+              <option value="0">False</option>
+            </select>
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-primary no-show mr-auto" name="AddUsers" value="Add User">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="EditRoles" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('users_file.manage_users', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header bg-5">
+        <h5 class="modal-title" id="EditRolesLabel">Edit user role</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <input type="hidden" name="EID" id="EID"/>
+            <label class="text-center">Role:</label>
+            <select class="form-control qlogin" name="ERole" id="ERole">
+
+              {% for j in roles_data %}
+
+              <option value="{{  j.RoleId  }}" selected>{{  j.RoleName  }}</option>
+
+              {% endfor %}
+
+            </select>
+            </center>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-primary no-show mr-auto" name="AddUsers" value="Save Roles">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="EditUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('users_file.manage_users', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header bg-5">
+        <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+            <label class="text-center">Name:</label>
+            <input type="hidden" name="EID" id="EID"/>
+            <input style="text-align:left;" class="form-control qlogin" type="text" required name="EName" id="EName"/>
+            <label class="text-center">PIN:</label>
+            <input name="EPin" id="EPin" style="text-align:left;" class="form-control qlogin" pattern="[0-9]{4,4}" required title="Pin must be 4 numbers long">
+            <label class="text-center">Is Active:</label><br>
+            <select class="form-control qlogin" name="EAct" id="EAct">
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" style="" class="btn btn-primary no-show mr-auto" name="AddUsers" value="Save User">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+    <div class="tab-pane fade" id="activities" role="tabpanel" aria-labelledby="activities-tab">
+        {% if Error|length > 1 %}
+        <div class="danger text-center">
+            <p>{{  Error  }}</p>
+        </div>
+        {% endif %}
+        <div class="nt" style="margin-bottom: 0;">
+    <div class="row">
+    <div class="col-md-12 text-center">
+    <a class="newtab" href="{{  url_for('users_file.dashboard', org_name=session['OrgName'])  }}"><i class="fas fa-home"></i> Back to main menu</a>
+    </div>
+    </div>
+</div>
+<table id = "activities" class="table compact" style="width:100%">
+    <thead class="bg-5" >
+        <tr class="text-center">
+            <th width="25%">Activity</th>
+            <th width="25%">Status</th>
+            <th width="25%">Prerequisite</th>
+            <th width="25%">Edit Activity</th>
+        </tr>
+    </thead>
+    <tbody id = "yyy" class="text-center">
+    <form method="POST" action="{{ url_for('users_file.manage_users',org_name=session['OrgName'])  }}">
+            {% for i in activities_data %}
+            <tr style="width:33%" >
+                <td>{{ i.Activity }}</td>
+                {% if i.IsActive == True %}
+                <td>Active</td>
+                {% else %}
+                <td>Inactive</td>
+                {% endif %}
+                {% if i.Prerequisite == True %}
+                <td>True</td>
+                {% else %}
+                <td>False</td>
+                {% endif %}
+                <td><a class="editactbtn" data-toggle="modal" data-target="#EditActivity" data-activated="{{  i.IsActive  }}" data-role="{{  i.Activity  }}" data-prerequisite="{{ i.Prerequisite }}"><i class="fas fa-edit change"></i></a></td>
+                <!-- {% if i.IsActive == True %}
+                  <td>
+                      <input type="submit" id="{{ i.Activity }}" class="btn btn-sm btn-secondary text-white" name="IsActive" value="Remove" onclick="ChangeStatus(this.id)">
+                  </td>
+                  {% elif i.IsActive == False %}
+                  <td>
+                      <input type="submit" id="{{ i.Activity }}" class="btn btn-sm btn-secondary text-white" name="IsActive" value="Add" onclick="ChangeStatus(this.id)">
+                  </td>
+                  {% endif %}-->
+
+
+         <!--       {% if i.IsActive == True %}
+                <td><form method="POST" action="{{ url_for('users_file.admin_config',org_name=session['OrgName'])  }}">
+                    <input type="hidden" id="Current" name="Current">
+                    <input type="submit" id="{{ i.Activity }}" class="btn btn-sm btn-secondary text-white" name="IsActive" value="Remove" onclick="ChangeStatus(this.id)">
+                    </form>
+                </td>
+                {% else %}
+                <td><form method="POST" action="{{ url_for('users_file.admin_config',org_name=session['OrgName'])  }}">
+                    <input type="hidden" id="Current" name="Current">
+                    <input type="submit" id="{{ i.Activity }}" class="btn btn-sm btn-secondary text-white" name="IsActive" value="Add" onclick="ChangeStatus(this.id)">
+                    </form>
+                </td>
+                {% endif %}-->
+            </tr>
+            {% endfor %}
+            </form>
+    </tbody>
+   </table>
+        <div class="modal fade" id = "EditActivity" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="{{ url_for('users_file.manage_users', org_name = session['OrgName']) }}" method="POST">
+                        <div class = "modal-header bg-5">
+                            <h5 class="modal-title" id="ActivityModalTitle">Edit Activity</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <center>
+                                    <label class="text-center">Prerequisite:</label>
+                                    <select class="form-control qlogin" name="PreReq" id="PreReq">
+                                        <option value = "True">True</option>
+                                        <option value = "False">False</option>
+                                    </select>
+                                    <input type="hidden" name="ACT_ID" id="ACT_ID"/>
+                                    <label class="text-center">Status:</label><br>
+                                    <select class="form-control qlogin" name="IsActive" id="IsActive">
+                                        <option value = "Active">Active</option>
+                                        <option value = "Inactive">Inactive</option>
+                                    </select>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type = "submit" class="btn btn-primary no-show mr-auto" name="UpdateAct" value="Update Activity">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+
+
+
+
+<!--script>
+$(document).ready(function() {
+    $('#example').DataTable({"pageLength": 50, "aaSorting": []});
+});
+
+</script-->
+
+<script>
+$(document).ready(function() {
+        $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    if(activeTab){
+        $('#Tab1 a[href="' + activeTab + '"]').tab('show');
+    }
+
+    $('#example thead td').each( function () {
+        var title = $('#example thead th').eq( $(this).index() ).text();
+        $(this).html( '<input class="searching" type="text" placeholder=" Search..." />' );
+    } );
+
+    var table = $('#example').DataTable({"ordering": false, "dom": 'rtip',"fixedHeader": {header: true}, "pageLength": 100, "aaSorting": []});
+
+    table.columns().eq( 0 ).each( function ( colIdx ) {
+        $( 'input', table.column( colIdx ).header() ).on( 'keyup change', function () {
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();
+        } );
+    } );
+    // $('#example2').DataTable({searching: false, "pageLength": 50, "aaSorting": []});
+
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    if(activeTab){
+        $('#Tab1 a[href="' + activeTab + '"]').tab('show');
+    }
+
+} );
+</script>
+
+<script>
+$('#EditRoles').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var recipient = button.data('whatever');
+    var rec = button.data('role');
+
+    var modal = $(this);
+    modal.find('.modal-title').text('Edit user role: ' + recipient);
+    modal.find('.modal-body input').val(recipient);
+});
+</script>
+
+<script>
+$('#EditUser').on('show.bs.modal', function (event) {
+    var button1 = $(event.relatedTarget);
+    var name = button1.data('nam');
+    var pin = button1.data('pin');
+    var active = button1.data('act');
+    var id = button1.data('id');
+
+    var modal = $(this);
+    modal.find('.modal-title').text('Edit user: ' + name);
+    modal.find('#EID').val(id);
+    modal.find('#EName').val(name);
+    modal.find('#EPin').val(pin);
+    modal.find('#EAct').val(active);
+
+});
+$('#EditActivity').on('show.bs.modal', function(event){
+    var modal = $(this);
+    var button2 = $(event.relatedTarget);
+    var ActName = button2.data('role');
+    var Active = button2.data('activated');
+    var Prereq = button2.data('prerequisite');
+    if (Active == 'True'){
+    modal.find('#IsActive').val('Active');
+    }
+    else{
+    modal.find('#IsActive').val('Inactive');
+    }
+   //  if (Prereq == 'True'){
+     //   alert("changed");
+      //  modal.find('#PreReq').val('True');
+   // }
+   // else{
+   // alert("changed to flaske");
+     //   modal.find('#Prereq').val('False');
+    //}
+    modal.find('#PreReq').val(Prereq);
+    modal.find('.modal-title').text('Edit Activity: '+ActName);
+    modal.find('#ACT_ID').val(ActName);
+    });
+
+
+    function ChangeStatus(ChangeActiveId){
+     if (document.getElementById(ChangeActiveId).value == "Add"){
+        // document.getElementById(ChangeActiveId).value = document.getElementById(ChangeActiveId).id;
+         document.getElementById("Current").value = document.getElementById(ChangeActiveId).id;
+     }else{
+        document.getElementById("Current").value = document.getElementById(ChangeActiveId).id;
+
+     }
+     }
+</script>
+
+{% endblock %}

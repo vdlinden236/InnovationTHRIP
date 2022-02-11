@@ -1,0 +1,923 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+<script src="jquery.toaster.js"></script>
+
+<style>
+td a:hover {
+    display:block;
+    width:100%;
+}
+
+a {
+    color:black;
+}
+
+.search {
+    border: 1px solid grey;
+    border-radius: 15px;
+    padding: 3px;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.container {
+    max-width: 640px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 13px;
+}
+
+
+
+ul.ks-cboxtags {
+    list-style: none;
+    padding: 20px;
+    columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}
+}
+ul.ks-cboxtags li{
+  display: inline;
+}
+ul.ks-cboxtags li label{
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, .9);
+    border: 2px solid rgba(139, 139, 139, .7);
+    color: #adadad;
+    border-radius: 25px;
+    white-space: nowrap;
+    margin: 3px 0px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .2s;
+    font-size: 20px;
+}
+
+ul.ks-cboxtags li label {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+ul.ks-cboxtags li label::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 12px;
+    padding: 2px 6px 2px 2px;
+    content: "\f067";
+    transition: transform .3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
+    content: "\f00c";
+
+    transition: transform .3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="checkbox"]:checked + label {
+    border: 2px solid #1bdbf8;
+    background-color: #12bbd4;
+    color: #fff;
+    transition: all .2s;
+}
+
+ul.ks-cboxtags li input[type="checkbox"] {
+  display: absolute;
+}
+ul.ks-cboxtags li input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+ul.ks-cboxtags li input[type="checkbox"]:focus + label {
+  border: 2px solid #1bdbf8;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="modal hide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+
+
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <input class="form-control" type="hidden" required name="ContractHoldId" readonly id="ContractHoldId" value="{{  contract_data[0]  }}"/>
+            <h3 style="padding: 20px;">{{  activity_on_hold[0]  }} is currently on hold</h3>
+            <p style="padding-bottom: 20px;">Please select an option below:</p>
+
+            <input style="width: 150px; padding: 10px;" type="submit" id="ContractItems" class="btn btn-success no-show mr-auto" name="ContractItems" value="Complete Hold">
+            <button style="width: 150px; padding: 10px;" type="button" class="btn btn-norm2" data-dismiss="modal">Continue</button>
+            <a style="width: 150px; padding: 10px;" type="button" id="GOB" class="btn btn-danger no-show mr-auto" href="{{  url_for('contracts_file.manage_contracts', org_name=session['OrgName'])  }}"> Back to Jobs</i></a>
+            </center>
+        </div>
+  </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal hide" id="ErrorModal" tabindex="-1" role="dialog" aria-labelledby="ErrorModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <input class="form-control" type="hidden" required name="ContractHoldId" readonly id="ContractHoldId" value="{{  contract_data[0]  }}"/>
+            <h3 style="padding-bottom: 20px;">This job is currently on hold</h3>
+            <p style="padding-bottom: 20px;">Please select an option below:</p>
+
+            <input style="width:200px; padding: 10px;" type="submit" id="123" class="btn btn-success no-show mr-auto" name="ContractItems" value="Complete Dispatch">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </center>
+        </div>
+  </div>
+        </form>
+    </div>
+  </div>
+</div>
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+
+                                    <h2 style="margin-top: 15px" class="title-1 " >Activities</h2>
+
+                                    <!--span class="" >
+                                        <h4>Job Number:</h4> <h4 class="title-1">{{  contract_data[3]  }}</h4>
+                                    </span>
+                                     <span class="" >
+                                         <h4>Customer:</h4> <h4 class="title-1">{{  contract_data[4]  }}</h4>
+                                    </span-->
+
+
+                                        <span class="">
+                                        {% if session["RoleId"] > 1 %}
+                                        <a style="width: 200px;" class="btn btn-norm2 btn-lg" href=# data-toggle="modal" data-target="#AddContract" style="width: 200px"><i class="fas fa-plus"></i>  Add Activites</a>
+                                        <a style="width: 200px;" class="btn btn-norm2 btn-lg" href=# data-toggle="modal" data-target="#UpdProg" style="width: 200px"><i class="fas fa-cog"></i>  Progress</a>
+                                        <a class="btn btn-norm btn-lg" href=# data-toggle="modal" data-target="#OnHold"><i class="fas fa-pause"></i> </a>
+
+                                            {% endif %}
+                                            {% if session["RoleId"] > 3 %}
+                                            <a class="btn btn-danger btn-lg" href=# data-toggle="modal" data-target="#DelAct"><i class="fas fa-trash"></i> </a>
+
+                                            {% endif %}
+                                    </span>
+                                </div><hr>
+                            </div>
+                        </div>
+
+<div class="col-md-12 row" style="text-align: center;">
+
+    <div class="col-sm-6 row" style="display: inline-block"><p class="" style="padding-right:10px;">Job Number: <span class="title-2">{{  contract_data[3]  }}</span></p></div>
+    <div class="col-sm-6 row" style="display: inline-block"><p style="padding-right:10px;">Customer: <span class="title-2">{{  contract_data[4]  }}</span></p></div>
+</div>
+
+ <div class="row m-t-5">
+
+    <div class="col-md-12">
+        <div class="au-card chart-percent-card">
+            <div class="au-card-inner">
+{% if Error|length > 1 %}
+    <div class="danger text-center">
+        {{  Error  }}
+    </div>
+{% endif %}
+
+
+<div class="" auto-update="true" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+<table id="example"  class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+    <thead class="card-header text-center dot--dblue text-white">
+      <tr class="card-header">
+		<th style="width: 20%">Activity</th>
+		<th style="width: 15%">Status</th>
+		<th nowrap style="width: 15%">Planned Date</th>
+
+
+          <th style="width:15%;">User</th>
+	<th style="width: 15%">Timestamp</th>
+    {% if session["RoleId"] > 1 %}
+          <th style="width: 10%">Progress</th>
+      {% endif %}
+      </tr>
+
+    </thead>
+    <tbody class="text-center selected1" id="yyy" style="font-size: 14px !important;">
+        {% for i in act_data %}
+        <tr class='clickable-row2 clickable' href="#" id="{{  i.ContractItemId  }}" data-toggle="modal" data-id="{{  i.ContractItemId  }}" {% if i.IsQC == 1 %}data-target="#ActModal"{% else %}data-target="#ActModal1"{% endif %}>
+			<td id="Activity{{  i.ContractItemId  }}">{{  i.Activity  }}</td>
+			<td id="Status{{  i.ContractItemId  }}">{{  i.Description  }}</td>
+			<td id="DD{{  i.ContractItemId  }}">{{  i.DueDate  }}</td>
+
+
+            <td id="UB{{  i.ContractItemId  }}">{% if i.Worker is not none %}{{  i.Worker  }}{% else %}-{% endif %}</td>
+            <td id="TS{{  i.ContractItemId  }}">{{  i.Timestamped.strftime('%Y-%m-%d %H:%M:%S')  }}</td>
+            {% if session["RoleId"] > 1 %}
+            <td id="PR{{  i.ContractItemId  }}">
+                <div class="progress" style="margin-bottom: 0px !important;">
+                    <div id="progbar{{  i.ContractItemId  }}" class="progress-bar dot--green" role="progressbar" style="width: {{  i.Progress  }}%; margin-bottom: 0px !important;" aria-valuenow="{{  i.Progress  }}" aria-valuemin="0" aria-valuemax="100">{{  i.Progress  }}%</div>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+
+
+
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="copyright">
+                                    <p>Copyright © 2020 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+    </div>
+
+
+<div class="modal hide" id="ActModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <!--form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST"-->
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Update Activity</h5>
+
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+
+                <input type="hidden" id="CIIE" name="CIIE">
+
+                <label class="text-center">Job Number:</label>
+            <input class="form-control" type="text" required name="JN" readonly id="JN" value="{{  contract_data[3]  }}"/>
+                <label class="text-center" style="padding-top: 5px;">Customer:</label>
+            <input style="text-align:left;" class="form-control" type="text" readonly required name="CN" id="CN" value="{{  contract_data[4]  }}"/>
+            <label class="text-center" style="padding-top: 5px;">Activity:</label>
+            <input style="text-align:left;" class="form-control" type="text" value="" readonly name="ActJ" id="ActJ"/>
+            <label class="text-center" style="padding-top: 5px;">Status:</label>
+            <input style="text-align:left;" class="form-control" type="text" value="" readonly name="StatusJ" id="StatusJ"/>
+
+
+
+                <br>
+                <div id="Complete">
+                <h3>Please select whether to start or complete the activity:</h3><br>
+                <input style="width:150px; margin-right: 5px;" type="button" id="StatuS" class="btn btn-lg btn-norm1 no-show mr-auto" name="UpdateStatus" value="Start" onclick="update_table('Start')">
+                <input style="width:150px; " type="button" id="StatuQC" class="btn btn-lg btn-norm2 no-show mr-auto" name="UpdateStatus" value="QC Check" onclick="update_table('QC')">
+                {% if session["RoleId"] > 2 %}
+                    <input style="width:150px; " type="submit" id="StatuC" class="btn btn-lg btn-success no-show mr-auto" name="UpdateStatus" value="Complete" onclick="update_table('Complete')">
+                {% endif %}
+                </div>
+                <div id="Done">
+                <h3>This activity has been completed</h3>
+                </div>
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer" >
+        <button style="width:150px;" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+        <!--/form-->
+    </div>
+  </div>
+</div>
+
+<div class="modal hide" id="ActModal1" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <!--form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST"-->
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Update Activity</h5>
+
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+
+                <input type="hidden" id="CIIE1" name="CIIE1">
+
+                <label class="text-center">Job Number:</label>
+            <input class="form-control" type="text" required name="JN1" readonly id="JN1" value="{{  contract_data[3]  }}"/>
+                <label class="text-center" style="padding-top: 5px;">Customer:</label>
+            <input style="text-align:left;" class="form-control" type="text" readonly required name="CN1" id="CN1" value="{{  contract_data[4]  }}"/>
+            <label class="text-center" style="padding-top: 5px;">Activity:</label>
+            <input style="text-align:left;" class="form-control" type="text" value="" readonly name="ActJ1" id="ActJ1"/>
+            <label class="text-center" style="padding-top: 5px;">Status:</label>
+            <input style="text-align:left;" class="form-control" type="text" value="" readonly name="StatusJ1" id="StatusJ1"/>
+
+
+
+                <br>
+                <div id="Complete1">
+                <h3>Please select whether to start or complete the activity:</h3><br>
+                <input style="width:150px; margin-right: 5px;" type="button" id="StatuS1" class="btn btn-lg btn-norm1 no-show mr-auto" name="UpdateStatus" value="Start" onclick="update_table1('Start')">
+                <input style="width:150px; " type="submit" id="StatuC1" class="btn btn-lg btn-success no-show mr-auto" name="UpdateStatus" value="Complete" onclick="update_table1('Complete')">
+                </div>
+                <div id="Done1">
+                <h3>This activity has been completed</h3>
+                </div>
+                <div id="Confirm" style="display: none;">
+                <h3>Not all the activities are complete</h3>
+                    <p style="padding-bottom: 10px;">Do you still want to complete this activity?</p>
+
+                        <input type="submit" class="btn btn-norm btn-lg no-show mr-auto" name="ContractItems" value="Confirm" onclick="update_table2('Confirm')">
+                        <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cancel</button>
+
+                </div>
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer" >
+
+        <button style="width:150px;" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+        <!--/form-->
+    </div>
+  </div>
+</div>
+
+
+<!-- Add Modal -->
+<div class="modal fade" id="AddContract" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Add Activities</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+
+
+
+
+                <div class="container">
+                  <ul class="ks-cboxtags">
+                    {% for i in jobact %}
+                      {% if i.IsActive == 1 %}
+                      <li><input type="checkbox" id="checkbox{{  i.ActivityId  }}" name="Act" value="{{  i.ActivityId  }}"><label for="checkbox{{  i.ActivityId  }}">{{  i.Activity  }}</label></li><br>
+                      {% endif %}
+                      {% endfor %}
+
+
+                  </ul>
+
+                </div>
+
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="ContractItems" value="Add Activities">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="UpdProg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModa12lLabel">Update Progress</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+
+            <input class="form-control" type="hidden" required name="ID1" readonly id="ID1" value="{{  contract_data[3]  }}"/>
+
+            <input class="form-control" type="hidden" readonly required name="ID2" id="ID2" value="{{  contract_data[4]  }}"/>
+            <label class="text-center">Activity:</label>
+            <select required class="form-control qlogin" name="ActSelect" id="ActSelect">
+            <option selected disabled></option>
+            {% for i in act_data %}
+                {% if i.Description != 'Completed' and i.Description != 'Created' %}
+                <option value="{{  i.ContractItemId  }}">{{  i.Activity  }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <br>
+                <div class="slidecontainer">
+              <input type="range" min="0" max="100" value="50" class="slider" id="myRange" name="myProg">
+              <p>Progress: <span id="demo"></span></p>
+            </div>
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="ContractItems" value="Update">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="DelAct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModa112lLabel">Delete an Activity</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+
+            <input class="form-control" type="hidden" required name="ID3" readonly id="ID3" value="{{  contract_data[3]  }}"/>
+
+            <input class="form-control" type="hidden" readonly required name="ID4" id="ID4" value="{{  contract_data[4]  }}"/>
+            <label class="text-center">Activity:</label>
+            <select required class="form-control qlogin" name="ActSelect1" id="ActSelect1">
+            <option selected disabled></option>
+            {% for i in act_data %}
+
+                <option value="{{  i.ContractItemId  }}">{{  i.Activity  }}</option>
+
+            {% endfor %}
+            </select>
+
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="ContractItems" value="Delete">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="OnHold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{  url_for('contracts_file.manage_contract_items', org_name=session['OrgName'], contract_name=contract_name)  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title text-white" id="exampleModa112lLabel">Place Job on Hold</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+
+            <input class="form-control" type="hidden" required name="ContractId" readonly id="ContractId" value="{{  contract_data[0]  }}"/>
+
+            <input class="form-control" type="hidden" readonly required name="Customer" id="Customer" value="{{  contract_data[4]  }}"/>
+
+            <label class="text-center">Activity:</label>
+            <select required class="form-control qlogin" name="OnHoldAct" id="OnHoldAct">
+            <option selected disabled> </option>
+            {% for i in act_data %}
+
+                <option value="{{  i.ContractItemId  }}">{{  i.Activity  }}</option>
+
+            {% endfor %}
+            </select>
+
+            </center>
+        </div>
+  </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="ContractItems" value="Place Job On Hold">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+{% if contract_data[5] == 'On Hold' %}
+<script type="text/javascript">
+    $(window).on('load', function() {
+        $('#myModal').modal('show');
+    });
+</script>
+{% endif %}
+
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
+
+<script>
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+</script>
+
+<script>
+$('#ActModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var Activity = $("#Activity" + ConID).text();
+    var Status = $("#Status" + ConID).text();
+
+
+
+    var modal = $(this);
+    modal.find('#ECID').val(ConID);
+    modal.find('#ActJ').val(Activity);
+    modal.find('#StatusJ').val(Status);
+    modal.find('#CIIE').val(ConID);
+
+    var x = document.getElementById("StatusJ");
+      if (x.value === "Completed") {
+        document.getElementById("Complete").style.display = "none";
+        document.getElementById("Done").style.display = "block";
+      }
+
+      else {
+        document.getElementById("Complete").style.display = "block";
+        document.getElementById("Done").style.display = "none";
+      }
+
+});
+</script>
+
+<script>
+$('#ActModal1').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ConID = button.data('id');
+    var Activity = $("#Activity" + ConID).text();
+    var Status = $("#Status" + ConID).text();
+
+    var modal = $(this);
+    modal.find('#ECID1').val(ConID);
+    modal.find('#ActJ1').val(Activity);
+    modal.find('#StatusJ1').val(Status);
+    modal.find('#CIIE1').val(ConID);
+    document.getElementById("Confirm").style.display = "none";
+
+    var x = document.getElementById("StatusJ1");
+      if (x.value === "Completed") {
+        document.getElementById("Complete1").style.display = "none";
+        document.getElementById("Done1").style.display = "block";}
+
+      else {
+        document.getElementById("Complete1").style.display = "block";
+        document.getElementById("Done1").style.display = "none";
+      }
+
+
+});
+</script>
+
+<script>
+$(document).ready(function() {
+      window.socket = io.connect('http://' + document.domain + ':' + location.port + '/Update_Status');
+
+
+
+    // DataTable
+    var table = $('#example2').DataTable({"ordering": false, "dom": 'rtip', "fixedHeader": {header: true}, "pageLength": 100, "aaSorting": []});
+
+       table.columns().eq( 0 ).each( function ( colIdx ) {
+        //$( 'input', table.column( colIdx ).header() ).on( 'keyup change', function () {
+         $( 'input', table.column( colIdx ).header() ).keypress(function (e){
+         if (e.which == 13){
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();}
+        } );
+    } );
+   /* Apply the search
+    table.columns().every( function () {
+        var that = this;
+
+        $( 'input', this.header() ).on( 'keyup input', function () {
+            if ( that.search() !== this.value ) {
+                that
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );*/
+} );
+
+$('#test').click(function() {
+    $('.searching').val('');
+    $('#example2').dataTable().fnDestroy();
+    $('#example2').DataTable({"ordering": false, "dom": 'rtip', "fixedHeader": {header: true}, "pageLength": 100, "aaSorting": []});
+});
+</script>
+
+<script>
+
+    function update_table(action){
+    var CIIE = document.getElementById("CIIE").value;
+
+    var JN = document.getElementById("JN").value;
+    var CUS = document.getElementById("CN").value;
+    var StaName1 = document.getElementById("StatusJ").value;
+    var CurrentAct = document.getElementById("ActJ").value;
+
+
+    if (action == 'Start' || action == "Complete" || action == "QC"){
+        if (action == 'Start'){
+            document.getElementById("Status"+CIIE).innerHTML = "Started";
+            document.getElementById("UB"+CIIE).innerHTML = "{{  session['UserName']  }}";
+            window.socket.emit('WorkerPage',{
+                    ContractItem_Id : CIIE,
+                    Action: action
+            });
+        }
+        else if (action == 'Complete'){
+            document.getElementById("Status"+CIIE).innerHTML = "Completed";
+
+            document.getElementById("UB"+CIIE).innerHTML = "{{  session['UserName']  }}";
+
+            window.socket.emit('WorkerPage',{
+                ContractItem_Id : CIIE,
+                StatusName: StaName1,
+                Action: action
+            });
+        }
+        else if (action == 'QC'){
+            document.getElementById("Status"+CIIE).innerHTML = "QC Check";
+            document.getElementById("UB"+CIIE).innerHTML = "{{  session['UserName']  }}";
+
+            window.socket.emit('WorkerPage',{
+                ContractItem_Id : CIIE,
+                StatusName: StaName1,
+                Action: action
+            });
+        }
+
+        //$('body').removeClass('modal-open');
+        $('.modal').modal('hide')
+        $('.modal-backdrop').remove()
+
+        document.getElementById('ActModal').style.display = "none";
+
+        document.getElementById("Status"+CIIE).style.color = "limegreen";
+        document.getElementById("UB"+CIIE).style.color = "limegreen";
+    }
+
+
+}
+
+</script>
+
+
+<script>
+
+    function update_table1(action){
+    var CIIE = document.getElementById("CIIE1").value;
+
+    var JN = document.getElementById("JN1").value;
+    var CUS = document.getElementById("CN1").value;
+    var StaName1 = document.getElementById("StatusJ1").value;
+    var CurrentAct = document.getElementById("ActJ1").value;
+
+
+    if (action == 'Start' || action == "Complete"){
+        if (action == 'Start'){
+            document.getElementById("Status"+CIIE).innerHTML = "Started";
+            document.getElementById("UB"+CIIE).innerHTML = "{{  session['UserName']  }}";
+
+            window.socket.emit('WorkerPage',{
+                    ContractItem_Id : CIIE,
+                    Action: action
+            });
+            //$('body').removeClass('modal-open');
+            $('.modal').modal('hide')
+            $('.modal-backdrop').remove()
+
+            document.getElementById('ActModal1').style.display = "none";
+
+
+        }
+
+        else if (action == 'Complete' && parseInt({{  completion_rate[0]  }}) > parseInt(1) && CurrentAct == 'Dispatch'){
+
+            document.getElementById('Confirm').style.display = "block";
+            document.getElementById('Complete1').style.display = "none";
+
+        }
+
+        else if (action == 'Complete'){
+
+            document.getElementById("Status"+CIIE).innerHTML = "Completed";
+            document.getElementById("UB"+CIIE).innerHTML = "{{  session['UserName']  }}";
+
+            window.socket.emit('WorkerPage',{
+                ContractItem_Id : CIIE,
+                StatusName: StaName1,
+                Action: action
+            });
+            //$('body').removeClass('modal-open');
+            $('.modal').modal('hide')
+            $('.modal-backdrop').remove()
+
+            document.getElementById('ActModal1').style.display = "none";
+        }
+
+
+
+        document.getElementById("Status"+CIIE).style.color = "limegreen";
+        document.getElementById("UB"+CIIE).style.color = "limegreen";
+    }
+
+
+}
+
+</script>
+
+<script>
+
+function update_table2(action){
+    var CIIE = document.getElementById("CIIE1").value;
+
+    var JN = document.getElementById("JN1").value;
+    var CUS = document.getElementById("CN1").value;
+    var StaName1 = document.getElementById("StatusJ1").value;
+    var CurrentAct = document.getElementById("ActJ1").value;
+
+    if (action == 'Confirm'){
+
+        document.getElementById("Status"+CIIE).innerHTML = "Completed";
+        document.getElementById("UB"+CIIE).innerHTML = "{{  session['UserName']  }}";
+
+        window.socket.emit('WorkerPage',{
+            ContractItem_Id : CIIE,
+            StatusName: StaName1,
+            Action: action
+        });
+        //$('body').removeClass('modal-open');
+        $('.modal').modal('hide')
+        $('.modal-backdrop').remove()
+
+        document.getElementById('ActModal1').style.display = "none";
+    }
+
+        document.getElementById("Status"+CIIE).style.color = "limegreen";
+        document.getElementById("UB"+CIIE).style.color = "limegreen";
+
+}
+
+</script>
+
+<script>
+function submitForm() {
+    document.getElementById('registration').style.display = "none";
+
+    $('#orderModal').modal('hide');
+    document.getElementById('loading1').style.display = "block";
+    //alert(document.getElementByID("CIIE1").value);
+
+
+}
+</script>
+
+
+<script>
+$(document).ready(function() {
+    $('#example thead td').each( function () {
+        var title = $('#example thead th').eq( $(this).index() ).text();
+        $(this).html( '<input class="searching" type="text" placeholder=" Search..." />' );
+    } );
+
+
+
+   $('#example123 thead td').each( function () {
+        var title = $('#example thead th').eq( $(this).index() ).text();
+        $(this).html( '<input class="searching" type="text" placeholder=" Search..." />' );
+    } );
+
+    var table = $('#example').DataTable({"ordering": false, "dom": 'rt', "fixedHeader": {header: true}, "pageLength": 50, "aaSorting": []});
+
+    $('#myInput').on( 'keyup', function () {
+        table.search( this.value ).draw();
+    } );
+
+    var table1 = $('#example123').DataTable({"ordering": false, "dom": 'rti', "fixedHeader": {header: true}, "pageLength": -1, "aaSorting": []});
+
+    table.columns().eq( 0 ).each( function ( colIdx ) {
+        //$( 'input', table.column( colIdx ).header() ).on( 'keyup change', function () {
+         $( 'input', table.column( colIdx ).header() ).keypress(function (e){
+         if (e.which == 13){
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();}
+        } );
+    } );
+
+    table1.columns().eq( 0 ).each( function ( colIdx ) {
+        //$( 'input', table1.column( colIdx ).header() ).on( 'keyup change', function () {
+        $( 'input', table1.column( colIdx ).header() ).keypress(function(e) {
+        if(e.which == 13){
+            table1
+                .column( colIdx )
+                .search( this.value )
+                .draw();}
+        } );
+    } );
+
+    $("#searchbox").on("keyup search input paste cut", function() {
+       table.search(this.value).draw();
+    });
+    // $('#example2').DataTable({searching: false, "pageLength": 50, "aaSorting": []});
+
+} );
+
+
+
+
+
+
+function yesnoCheck(that) {
+    if (that.value == "Conveyor") {
+        document.getElementById("TUFQ").style.display = "block";
+        document.getElementById("DPQ").style.display = "block";
+        document.getElementById("FE").style.display = "block";
+        document.getElementById("BE").style.display = "block";
+    } else {
+        document.getElementById("TUFQ").style.display = "none";
+        document.getElementById("DPQ").style.display = "none";
+        document.getElementById("FE").style.display = "none";
+        document.getElementById("BE").style.display = "none";
+    }
+}
+
+</script>
+
+<script language="JavaScript">
+function toggle(source) {
+  checkboxes = document.getElementsByName('cbstatus');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
+{% endblock %}
