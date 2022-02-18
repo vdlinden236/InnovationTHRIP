@@ -113,6 +113,9 @@
                         <div class="overview-wrap">
                             <center>
                               <div class = "a">
+                                <a style="padding-right: 10px;" href="{{  url_for('gamification_file.report', org_name=session['OrgName'])  }}" data-toggle="modal" data-target="#gamreport"> User report            
+                                </a>
+                                
                                 {% if (session['OftheWeek'] == "1"): %}
                                 <br>
                                  <div class = 'topprob'> 
@@ -140,6 +143,7 @@
                                   </a>
                                 </div>
                                  {% endif %} 
+
                               </div>
                              </center>   
                         </div>
