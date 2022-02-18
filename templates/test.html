@@ -1,0 +1,45 @@
+<center>
+<h1>Open Innovation</h1>
+
+
+<br><br>
+<p>Hope to see you soon on the Open Innovation App. </p>
+<div class="row ">
+    <div class="col-md-12">
+            <div class="au-card chart-percent-card">
+                    <div class="au-card-inner">
+
+<div class="" auto-update="true" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+<table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+<thead class="text-center dot--dblue text-white">
+  <tr class="">
+    <th style="width:15%;">Problems</th>
+    <th style="width:40%;">Description</th>
+     <!-- <th style="width:10%;">Type</th> -->
+    <th style="width:10%;">Department</th>
+  </tr>
+</thead>
+<tbody class="text-center" style="font-size: 14px !important;">
+    <!--{# for i in Problems #}. format({{output}}) -- test a variable here to display the select box-->
+
+    {% for i in Problems %}
+    <tr >
+        <td style="display: table-cell; vertical-align: middle;">{{  i.name  }}</td>
+        <td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
+        <!-- <td style="display: table-cell; vertical-align: middle;">{{  i.qtype  }}</td> -->
+        <td style="display: table-cell; vertical-align: middle;">{{  i.orgFunctionName  }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+<br>
+
+<hr>
+
+<br><br>
+
+<p>
+To get in contact with us please use the following email: vdlinden@fourier.co.za
+</p>
+</center>

@@ -1,7 +1,8 @@
-import pdfkit
+import pdfkit 
+import jinja2
 from pdfkit.api import configuration
 import pyodbc
-from flask import Flask, make_response, Blueprint, render_template, request, session, redirect, url_for, flash
+from flask import Flask, make_response, send_from_directory, Blueprint, render_template, request, session, redirect, url_for, flash
 from flask_database import db
 from datetime import timedelta
 import pdfkit
@@ -12,6 +13,7 @@ from threading import Thread
 from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import os
 print()
 
 gamification_file = Blueprint('gamification_file', __name__, template_folder='templates', static_folder='static')
@@ -115,24 +117,27 @@ def dashboardg(org_name):
 
 @gamification_file.route('/<string:org_name>/.download', methods=['GET', 'POST'])
 def download(org_name):
- 
-    return render_template("login.html", directory='/<string:org_name>/.download', filename= org_name, mimetype='application/pdf')
+   # dynamic html to pdf with variable passing  - install wkhtmltopdf - pip pdfkit jinja2, os , 
+   # add if statement to get innovation pdf here 
+    Problems = db.execute(
+            "Select p.*, h.description as 'Horizon' from [thrip].[problemstatements] p join [thrip].[horisons] h on p.[horisonID] = h.[horisonID] where p.OrgID = {}".format(
+                session['OrgId'])).fetchall()
 
-    # filepath = 'emptyspace'
-    # file_content = 'emptyspace'
-    # with open(filepath) as f:
-    #     file_content = f.read()
+    templateLoader = jinja2.FileSystemLoader(searchpath="./")
+    templateEnv = jinja2.Environment(loader=templateLoader)
+    TEMPLATE_FILE = "templates/test.html"
+    template = templateEnv.get_template(TEMPLATE_FILE)
+    outputText = template.render(Problems = Problems )
+    html_file = open('test.html', 'w')
+    html_file.write(outputText)
+    html_file.close()
+    #return outputText
+
+    file = "name.pdf"
+    name = "names"
+    pdfkit.from_file('test.html',  'name.pdf' )
+    workingdir = os.path.abspath(os.getcwd())
+    return send_from_directory(workingdir, file)
+   
+
     
-    # response = make_response(file_content)
-    # response.headers['Content-type'] = 'application/pdf'
-    # response.headers['Content-disposition'] = 'inline; filename = output.pdf
-
-#  rendered = render_template('pdf_problems.html')
-#  pdf = pdfkit.from_string(rendered, False)
- 
-#  response = make_response(pdf)
-#  response.headers['Content-Type'] = 'application/pdf'
-#  response.headers['Content-Dispositional'] = 'inline; filename = output.pdf'
-
-#  return response
-#  render_template('login.html')
