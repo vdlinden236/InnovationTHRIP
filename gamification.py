@@ -139,5 +139,10 @@ def download(org_name):
     workingdir = os.path.abspath(os.getcwd())
     return send_from_directory(workingdir, file)
    
-
+@gamification_file.route('/<string:org_name>/.report', methods=['GET', 'POST'])
+def report(org_name):
     
+
+    return render_template('AdminDash.html',allprob = allprob, allinnov = allinnov, org_name=session["OrgName"],users=users )
+
+            
