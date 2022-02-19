@@ -141,8 +141,23 @@ def download(org_name):
    
 @gamification_file.route('/<string:org_name>/.report', methods=['GET', 'POST'])
 def report(org_name):
-    
-
-    return render_template('AdminDash.html',allprob = allprob, allinnov = allinnov, org_name=session["OrgName"],users=users )
+    test = 1
+    active_problems_user = db.execute(
+            "Select count(*) from [thrip].[problemstatements] where OrgID = {} and userID = {} and IsActive = 'Yes'".format(session['OrgId'],session['UserId'])).fetchall()
+    active_problems = db.execute(
+            "Select count(*) from [thrip].[problemstatements] where OrgID = {} and IsActive = 'Yes'".format(session['OrgId'])).fetchall()
+    innovations_user = db.execute(
+            "select count(*) from [thrip].[innovation] where OrgID = {} and userID = {}".format(session['OrgId'],session['UserId'])).fetchall()
+   
+    # closed_problems = db.execute(
+    #         "Select count(*) from [thrip].[problemstatements] where OrgID = {} and IsActive = 'No'".format(session['OrgId'])).fetchall()
+    innovations = db.execute(
+            "select count(*) from [thrip].[innovation] where OrgID = {}".format(session['OrgId'])).fetchall()
+    ratingsrate_user = db.execute(
+            "select count(*) from [thrip].[problemratings] where OrgID = {} and userID ={}".format(session['OrgId'], session['UserId'])).fetchall()
+    ratingsrate = db.execute(
+            "select count(*) from [thrip].[problemratings] where OrgID = {} ".format(session['OrgId'])).fetchall()
+   
+    return render_template('gamification_report.html', ratingsrate_user = ratingsrate_user, ratingsrate = ratingsrate, innovations = innovations, innovations_user = innovations_user, active_problems = active_problems, active_problems_user = active_problems_user, test = test, )
 
             

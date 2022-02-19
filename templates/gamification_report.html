@@ -1,0 +1,479 @@
+{% extends 'AdminBase.html' %}
+
+{% block css %}
+<style>
+textarea {
+    height: 150px;
+}
+
+.star-rating {
+   padding: 10px;
+  font-size: 0;
+  white-space: nowrap;
+  display: inline-block;
+  width: 175px;
+  height: 35px;
+  overflow: hidden;
+  position: relative;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: contain;
+}
+
+.star-rating i {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 20%;
+  z-index: 1;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: contain;
+}
+
+.star-rating input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  opacity: 0;
+  display: inline-block;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  position: relative;
+}
+
+.star-rating input:hover + i,
+.star-rating input:checked + i {
+  opacity: 1;
+}
+.star-rating i ~ i {
+  width: 40%;
+}
+.star-rating i ~ i ~ i {
+  width: 60%;
+}
+.star-rating i ~ i ~ i ~ i {
+  width: 80%;
+}
+.star-rating i ~ i ~ i ~ i ~ i {
+  width: 100%;
+}
+
+.choice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 20px;
+  display: block;
+}
+span.scale-rating{
+margin: 5px 0 15px;
+    display: inline-block;
+
+    width: 100%;
+
+}
+span.scale-rating>label {
+  position:relative;
+    -webkit-appearance: none;
+  outline:0 !important;
+    border: 1px solid grey;
+    height:33px;
+    margin: 0 5px 0 0;
+  width: calc(10% - 7px);
+    float: left;
+  cursor:pointer;
+}
+
+span.scale-rating label {
+  position:relative;
+    -webkit-appearance: none;
+  outline:0 !important;
+    height:33px;
+
+    margin: 0 5px 0 0;
+  width: calc(10% - 7px);
+    float: left;
+  cursor:pointer;
+}
+
+span.scale-rating input[type=radio] {
+  position:absolute;
+    -webkit-appearance: none;
+  opacity:0;
+  outline:0 !important;
+    /*border-right: 1px solid grey;*/
+    height:33px;
+
+    margin: 0 5px 0 0;
+
+  width: 100%;
+    float: left;
+  cursor:pointer;
+  z-index:3;
+}
+span.scale-rating label:hover{
+background: orange;
+}
+span.scale-rating input[type=radio]:last-child{
+border-right:0;
+}
+span.scale-rating label input[type=radio]:checked ~ label{
+    -webkit-appearance: none;
+
+    margin: 0;
+  background: orange;
+}
+span.scale-rating label:before
+{
+  content:attr(value);
+    top: 7px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    vertical-align: middle;
+  z-index:2;
+}
+
+
+.checked {
+  color: orange;
+}
+
+/* Three column layout */
+.side {
+  float: left;
+  width: 15%;
+  margin-top:10px;
+}
+
+.middle {
+  margin-top:10px;
+  float: left;
+  width: 70%;
+}
+
+/* Place text to the right */
+.right {
+  text-align: right;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* The bar container */
+.bar-container {
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: center;
+  color: white;
+}
+
+/* Individual bars */
+.bar-5 {width: 60%; height: 18px; background-color: #4CAF50;}
+.bar-4 {width: 30%; height: 18px; background-color: #2196F3;}
+.bar-3 {width: 10%; height: 18px; background-color: #00bcd4;}
+.bar-2 {width: 4%; height: 18px; background-color: #ff9800;}
+.bar-1 {width: 15%; height: 18px; background-color: #f44336;}
+
+/* Responsive layout - make the columns stack on top of each other instead of next to each other */
+@media (max-width: 400px) {
+  .side, .middle {
+    width: 100%;
+  }
+  .right {
+    display: none;
+  }
+}
+
+.heading {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+div.badgepane {
+      position: absolute;
+      right: 0;
+      top: 280px;
+      width: 1600px;
+      height: 250px;
+      /* background-color: rgb(184, 37, 37); */
+      
+    }  
+ .grid-container {
+  display: grid;
+  justify-content: space-evenly;
+  grid-template-columns:  20% 20% 20% 20% ; /*Make the grid smaller than the container*/
+  gap: 5px;
+  /* background-color: #2196F3; */
+  padding: 5px;
+}
+
+.grid-container > div {
+  /* background-color: rgba(255, 255, 255, 0.8); */
+  text-align: center;
+  padding: 0 0;
+  font-size: 30px;
+}
+
+/* ------------------- */
+
+
+        
+</style>
+
+
+
+{% endblock %}
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+{% block body %}
+
+        <!-- PAGE CONTAINER-->
+<div class="page-container">
+           <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1" style="margin-top: 15px">Gamification Report </h2>
+                                    <span>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#downloadpdf"><i class="fas fa-fas fa-list-ul"></i> Download pdf</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#fitertype"><i class="fas fa-fas fa-list-ul"></i> Filter Input Type</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#submitProb"><i class="fas fa-plus"></i> Submit a Input</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate a Input</a>
+                                    </span>
+                                </div><hr>
+                            </div>
+                        </div>   
+                      
+
+        
+            <div class="row m-t-25" style="height:100%">
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c1">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  active_problems_user[0][0]  }} out of {{  active_problems[0][0]  }}</h2>
+                                                <span>Total Problems</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c2">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                             <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-globe"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  innovations_user[0][0] }} out of {{  innovations[0][0] }}</h2>
+                                                <span>Total Innovations</span>
+                                            </div>
+                                            </a>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <div class="overview-item overview-item--c3">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix row">
+                                            <div class="icon" style="padding-left:10px;">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{  ratingsrate_user[0][0]  }} out of {{  ratingsrate[0][0]  }}</h2>
+                                                <span>Total Ranked</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                   
+     
+
+
+    <div class="grid-container">
+        <div>
+            {% if (session['OftheWeek'] == "1"): %}
+                           
+                <a href=# data-toggle="modal" data-target="#topprobb">             
+                    <img src="../static/images/badge10.png"  width="100%" alt="Image"style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a> 
+                <label>30 Index </label>   
+            {% endif %}
+        </div>
+        <div>
+            {% if (session['OftheWeeki'] == "1"): %}
+        
+                <a  href=# data-toggle="modal" data-target="#topprobb">             
+                    <img src="../static/images/badge50.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a>
+                <label>50 Index </label>   
+            {% endif %}
+        </div>
+        <div>
+            {% if (session['OftheWeekr'] == "1"): %}
+                            
+                <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badge100.png" width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a>
+                <label>100 Index</label>   
+            {% endif %}
+        </div>   
+        <div>
+            {% if (session['OftheWeekr'] == "1"): %}
+                <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgehat.png" width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a>
+                <label>10+ Problems</label>   
+            {% endif %}
+        </div> 
+        <div>
+            {% if (session['OftheWeekr'] == "1"): %}
+                <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgeglobe.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a>
+                <label>10+ Innovations</label>   
+            {% endif %}
+        </div> 
+        <div>
+            {% if (session['OftheWeekr'] == "1"): %}
+                <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgerank.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a>
+                <label>10+ Ranker</label>   
+            {% endif %}
+        </div> 
+        <div>
+            {% if (session['OftheWeekr'] == "1"): %}
+                <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgecalender.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a>
+                <label>Regular visitor</label>   
+            {% endif %}
+        </div>
+        <div>
+            {% if (session['OftheWeekr'] == "1"): %}
+                  <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgetime.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a>
+                <label>Time challenger</label>   
+            {% endif %}
+        </div> 
+        </div>
+                           
+                            
+                              
+                        
+                            
+                    </div></div>
+                    <br>
+                </div>
+            </div>
+        </div>
+        
+            <div class="overview-item overview-item--c2">
+                <div class="overview__inner">
+                    <div class="overview-box clearfix row">
+                       
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-lg-4">
+            <div class="overview-item overview-item--c3">
+                <div class="overview__inner">
+                    <div class="overview-box clearfix row">
+                       
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>               
+                  
+       
+   
+    {% endblock %}  
+
+
+                <div class="content-wrapper">
+                    <div class="container-fluid">
+                      <div class="row">
+                
+                      <!-- Icon Cards-->
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-2 mt-4">
+                            <div class="inforide">
+                              <div class="row">
+                                <div class="col-lg-3 col-md-4 col-sm-4 col-4 rideone">
+                                    <!-- <img src="https://vignette.wikia.nocookie.net/nationstates/images/2/29/WS_Logo.png/revision/latest?cb=20080507063620">
+                                </div> -->
+                                <div class="col-lg-9 col-md-8 col-sm-8 col-8 fontsty">
+                                    <h4>Employee</h4>
+                                    <h2>20</h2>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-2 mt-4">
+                            <div class="inforide">
+                              <div class="row">
+                                <div class="col-lg-3 col-md-4 col-sm-4 col-4 ridetwo">
+                                    <!-- <img src="https://vignette.wikia.nocookie.net/nationstates/images/2/29/WS_Logo.png/revision/latest?cb=20080507063620">
+                                </div> -->
+                                <div class="col-lg-9 col-md-8 col-sm-8 col-8 fontsty">
+                                    <h4>Clients</h4>
+                                    <h2>120</h2>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-2 mt-4">
+                            <div class="inforide">
+                              <div class="row">
+                                <div class="col-lg-3 col-md-4 col-sm-4 col-4 ridethree">
+                                    <!-- <img src="https://vignette.wikia.nocookie.net/nationstates/images/2/29/WS_Logo.png/revision/latest?cb=20080507063620">
+                                </div> -->
+                                <div class="col-lg-9 col-md-8 col-sm-8 col-8 fontsty">
+                                    <h4>Jobs</h4>
+                                    <h2>50</h2>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                
+                    </div>
+                  </div>
+                </div>
+    <script>
+    
+
+    </script>
