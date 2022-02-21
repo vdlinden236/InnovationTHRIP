@@ -608,7 +608,7 @@ def gatekeeper(org_name):
             elif request.form["Com"] == "CloseTobadge":
                     test = "CloseTobadge"        
                     #get the problemsID and find the top 5 and save only the name (first element in list)  
-                    gamscores = db.execute("select p.userID, p.gscore from [thrip].[gamification] p join [thrip].[orgusers] u on p.[userID] = u.[userID] where u.OrgID = {}".format(session["OrgId"])).fetchall()
+                    gamscores = db.execute("select p.userID, p.gcpsi from [thrip].[gamification] p join [thrip].[orgusers] u on p.[userID] = u.[userID] where u.OrgID = {}".format(session["OrgId"])).fetchall()
 
                             #"Select p.problemID, g.problemID from [thrip].[problemstatements] p join [thrip].[gateinputs] g on p.[problemID] <> g.[problemID] where p.OrgID = {}".format(session['OrgId'])).fetchall()
                     badgelist = []

@@ -3,7 +3,8 @@
 {% block css %}
 <style>
 textarea {
-    height: 150px;
+    height: 5000px;
+    overflow-x: hidden;
 }
 
 .star-rating {
@@ -201,15 +202,36 @@ span.scale-rating label:before
   margin-bottom: 10px;
 }
 
-div.badgepane {
+div.cpspane {
       position: absolute;
       right: 0;
-      top: 280px;
-      width: 1600px;
-      height: 250px;
+      top: 100%;
+      width: 30%;
+      height: 20%;
+      background-color: #289dd2;
+      color: #FFFFFF;
+      
+    }
+div.leadpane {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      width: 30%;
+      height: 70%;
       /* background-color: rgb(184, 37, 37); */
       
-    }  
+      
+    }
+    div.badgepane2 {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 70%;
+      height: 60%;
+      /* background-color: rgb(30, 165, 30); */
+      
+      
+    }   
  .grid-container {
   display: grid;
   justify-content: space-evenly;
@@ -221,6 +243,21 @@ div.badgepane {
 
 .grid-container > div {
   /* background-color: rgba(255, 255, 255, 0.8); */
+  text-align: center;
+  padding: 0 0;
+  font-size: 20px;
+}
+.grid-container2 {
+  display: grid;
+  justify-content: space-evenly;
+  grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% ; /*Make the grid smaller than the container*/
+  gap: 5px;
+  /* background-color: #2196F3; */
+  padding: 5px;
+}
+
+.grid-container2 > div {
+   background-color: rgba(255, 255, 255, 0.8); 
   text-align: center;
   padding: 0 0;
   font-size: 20px;
@@ -247,7 +284,7 @@ div.badgepane {
 {% block body %}
 
         <!-- PAGE CONTAINER-->
-<div class="page-container">
+<div class="page-container" style = "overflow-x: hidden">
            <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
@@ -257,11 +294,13 @@ div.badgepane {
                                 <div class="overview-wrap">
                                     <h2 class="title-1" style="margin-top: 15px">Gamification Report </h2>
                                     <span>
-                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#downloadpdf"><i class="fas fa-fas fa-list-ul"></i> Download pdf</a>
+                                    <!-- <a class="btn btn-norm" href=# data-toggle="modal" data-target="#downloadpdf"><i class="fas fa-fas fa-list-ul"></i> Download pdf</a>
                                     <a class="btn btn-norm" href=# data-toggle="modal" data-target="#fitertype"><i class="fas fa-fas fa-list-ul"></i> Filter Input Type</a>
                                     <a class="btn btn-norm" href=# data-toggle="modal" data-target="#submitProb"><i class="fas fa-plus"></i> Submit a Input</a>
-                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate a Input</a>
-                                    </span>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate a Input</a>--> 
+                                    <h1 style="margin-top: 15px"> Well done, {{ username[0]  }} </h1>
+                                  
+                                  </span> 
                                 </div><hr>
                             </div>
                         </div>   
@@ -269,7 +308,7 @@ div.badgepane {
 
         
             <div class="row m-t-25" style="height:100%">
-                            <div class="col-sm-12 col-lg-4">
+                            <div class="col-sm-8 col-lg-3">
                                 <div class="overview-item overview-item--c1">
                                     <div class="overview__inner">
                                         <div class="overview-box clearfix row">
@@ -285,7 +324,7 @@ div.badgepane {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-lg-4">
+                            <div class="col-sm-8 col-lg-3">
                                 <div class="overview-item overview-item--c2" style="background-color:#2D4C5B">
                                     <div class="overview__inner">
                                         <div class="overview-box clearfix row">
@@ -302,7 +341,7 @@ div.badgepane {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-lg-4">
+                            <div class="col-sm-8 col-lg-3">
                                 <div class="overview-item overview-item--c3" style="background-color:#41C1BA">
                                     <div class="overview__inner">
                                         <div class="overview-box clearfix row">
@@ -317,9 +356,25 @@ div.badgepane {
                                         <br>
                                     </div>
                                 </div>
-                            </div>
-                   
-     <!-- <p>  {{ allprobs }}--10, {{  allinnov }}-50, {{allranks  }} -100  </p> -->
+                            </div>       
+                            <div class="col-sm-8 col-lg-3">
+                              <div class="overview-item overview-item--c1" style="background-color:#1A2140">
+                                  <div class="overview__inner">
+                                      <div class="overview-box clearfix row">
+                                          <div class="icon" style="padding-left:10px;">
+                                            <i class="fas fa-trophy"></i>
+                                          </div>
+                                          <div class="text">
+                                              <h2> {{  user_cpsi[0]  }}</h2>
+                                              <span>CPS Index</span>
+                                          </div>
+                                      </div>
+                                      <br>
+                                  </div>
+                              </div>
+                          </div> 
+            </div>
+     <!-- <p>  {{  user_cpsi  }}--10, {{  usernamesleaderboard }}-50, {{allranks  }} -100  </p> -->
 
 
     <div class="grid-container">
@@ -348,7 +403,10 @@ div.badgepane {
             
             {% else %}
                 <div class = "myImageOcc">
-                  
+                  <a  href=# data-toggle="modal" data-target="#topprobb">             
+                    <img src="../static/images/badge50.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a>
+                <label>50 Index </label> 
                 </div>
             {% endif %}
         </div>
@@ -360,8 +418,11 @@ div.badgepane {
                 <label>100 Index</label>   
             {% else %}
                 <div class = "myImageOcc">
-                  
-                </div>
+                  <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badge100.png" width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                  </a>
+                  <label>100 Index</label> 
+                  </div>
             {% endif %}
         </div>   
         <div>
@@ -372,8 +433,11 @@ div.badgepane {
                 <label>10+ Problems</label>   
             {% else %}
                 <div class = "myImageOcc">
-                  
-                </div>
+                  <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgehat.png" width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                  </a>
+                  <label>10+ Problems</label> 
+                  </div>
             {% endif %}
         </div> 
         <div>
@@ -384,8 +448,11 @@ div.badgepane {
                 <label>10+ Innovations</label>   
             {% else %}
                 <div class = "myImageOcc">
-                  
-                </div>
+                  <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgeglobe.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                  </a>
+                  <label>10+ Innovations</label> 
+                  </div>
             {% endif %}
         </div> 
         <div>
@@ -396,8 +463,11 @@ div.badgepane {
                 <label>10+ Ranker</label>   
             {% else %}
                 <div class = "myImageOcc">
-                  
-                </div>
+                  <a  href=# data-toggle="modal" data-target="#toprank">             
+                      <img src="../static/images/badgerank.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                  </a>
+                  <label>10+ Ranker</label> 
+                  </div>
             {% endif %}
         </div> 
         <div>
@@ -408,91 +478,169 @@ div.badgepane {
                 <label>Regular visitor</label>   
             {% else %}
                 <div class = "myImageOcc">
-                  
-                </div>
+                  <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgecalender.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                  </a>
+                  <label>Regular visitor</label>
+                  </div>
             {% endif %}
         </div>
         <div>
             {% if (session['gbadgetime'] == "1"): %}
                   <a  href=# data-toggle="modal" data-target="#toprank">             
                     <img src="../static/images/badgetime.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
-                </a>
-                <label>Time challenger</label>   
+                  </a>
+                  <label>Time challenger</label>   
              {% else %}
                 <div class = "myImageOcc">
-                  
-                </div>
+                  <a  href=# data-toggle="modal" data-target="#toprank">             
+                    <img src="../static/images/badgetime.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                  </a>
+                  <label>Time challenger</label> 
+                  </div>
             {% endif %}
         </div> 
+      </div>
+
+
+
+
+ <div class = "leadpane">
+    <div class="row ">
+      <div class="col-md-12">
+         <div class="au-card chart-percent-card">
+           <div class="au-card-inner">
+
+            <div class="" auto-update="true" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+            <table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+            <thead class="text-center dot--dblue text-white" style="background-color:#EBA144" >
+              <tr class="">
+                  <th style="width:1%;"></th>
+                  <th style="width:1%;"></th>
+                  <th style="width:2%;">Score</th>
+                  <th style="width:15%;">Name</th>
+                  <th style="width:20%;">Surname</th>
+              </tr>
+            </thead>
+            <tbody class="text-center" style="font-size: 14px !important;">
+                <!--{# for i in Problems #}. format({{output}}) -- test a variable here to display the select box-->
+
+                {% for i in usernamesleaderboard %}
+                <tr >
+                  <td class="fas fa-check-circle"> </td>
+                  <td style="text-align: justify; text-justify: inter-word;"></td>
+                  <td style="text-align: justify; text-justify: inter-word;">{{  i[1]  }}</td>
+                  <td style="display: table-cell; vertical-align: middle;">{{   i[2]  }}</td>
+                  <td style="display: table-cell; vertical-align: middle;">{{   i[3]  }}</td>
+                </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+              </div>
+          </div>
+      </div>
+  </div>
+
+  </div>
+</div>   
+ <div class = "badgepane2">
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    </script>
+    <canvas id="mixed-chart" width="700" height="200" left = 10px ></canvas>
+
+
+    <script>
+    // v = request.get_json().get('allranks')
+    // var orgprob = '{{ allprobs}}';
+    // var orginnov = '{{ allinnov }}';
+    // var orgranks = '{{ allranks }}';
+    // var active_problems = '{{  active_problems  }}';
+    // var innovations = '{{ innovations }}';
+    // var ratingsrate= '{{ ratingsrate }}';
+    // var active_problems_user = '{{ active_problems_user}}';
+    // var innovations_user = '{{ innovations_user }}';
+    // var  ratingsrate_user = '{{  ratingsrate_user }}';
+      
+    new Chart(document.getElementById("mixed-chart"), {
+        type: 'bar',
+        data: {
+          labels: ["# Problems", "# Innovations", "# Ranked"],
+          datasets: [{
+              label: "All Organisations",
+              type: "line",
+              borderColor: "#EBA144",
+              data: [15,18,33],
+              fill: false,
+              borderWidth: 5
+            }, {
+              label: "Fourier",
+              type: "line",
+              borderColor: "#41C1BA",
+              data: [11,12,19],
+              fill: false,
+              borderWidth: 5
+            }, {
+              label: "User",
+              type: "bar",
+              backgroundColor: "#2D4C5B",
+              data: [3,3,6],
+            }
+            //, {
+            //   label: "Africa",
+            //   type: "bar",
+            //   backgroundColor: "rgba(0,0,0,0.2)",
+            //   backgroundColorHover: "#3e95cd",
+            //   data: [133,221,783,2478]
+            // }
+          ]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Test"
+          },
+          legend: { display: true }
+        }
+    });
+
+      </script>                                      
+                                  
+<div class="modal fade" id="downloadpdf" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{{  url_for('gamification_file.download', org_name=session['OrgName'])  }}" method="POST">
+      <div class="modal-header dot--dblue">
+        <h5 class="modal-title dot--dblue text-white" id="filterTit">Download a pdf of the problems </h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <center>
+                <label class="text-center">Select Download Group</label>
+                <select class="form-control qlogin" name="InType" id="InType">
+                  <option value="" selected disabled></option>
+                    <option value="Problems" >Problems</option>
+                    <option value="Innovations" >Innovations</option>
+                    <!-- <option value="Inputs" >Inputs</option>  --- change to inputs - npt problems -->
+                  
+                </select>
+            </center>
         </div>
-                           
- <script
-src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
-</script>
-<canvas id="mixed-chart" width="700" height="250"  ></canvas>
-
-
-<script>
-// v = request.get_json().get('allranks')
-// var orgprob = '{{ allprobs}}';
-// var orginnov = '{{ allinnov }}';
-// var orgranks = '{{ allranks }}';
-// var active_problems = '{{  active_problems  }}';
-// var innovations = '{{ innovations }}';
-// var ratingsrate= '{{ ratingsrate }}';
-// var active_problems_user = '{{ active_problems_user}}';
-// var innovations_user = '{{ innovations_user }}';
-// var  ratingsrate_user = '{{  ratingsrate_user }}';
-   
-new Chart(document.getElementById("mixed-chart"), {
-    type: 'bar',
-    data: {
-      labels: ["# Problems", "# Innovations", "# Ranked"],
-      datasets: [{
-          label: "All Organisations",
-          type: "line",
-          borderColor: "#EBA144",
-          data: [15,18,33],
-          fill: false,
-          borderWidth: 5
-        }, {
-          label: "Fourier",
-          type: "line",
-          borderColor: "#41C1BA",
-          data: [11,12,19],
-          fill: false,
-          borderWidth: 5
-        }, {
-          label: "User",
-          type: "bar",
-          backgroundColor: "#2D4C5B",
-          data: [3,3,6],
-         }
-        //, {
-        //   label: "Africa",
-        //   type: "bar",
-        //   backgroundColor: "rgba(0,0,0,0.2)",
-        //   backgroundColorHover: "#3e95cd",
-        //   data: [133,221,783,2478]
-        // }
-      ]
-    },
-    options: {
-      title: {
-        display: true,
-        text: "Test"
-      },
-      legend: { display: true }
-    }
-});
-
-  </script>                                      
-                              
-
-                            
-                    </div></div>
-                    <br>
-                </div>
+        </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Download pdf">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+                                
+                  
+</div>                        
+       
             </div>
         </div>
         

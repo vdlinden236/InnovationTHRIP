@@ -161,17 +161,26 @@ def report(org_name):
     ratingsrate = db.execute(
             "select count(*) from [thrip].[problemratings] where OrgID = {} ".format(session['OrgId'])).fetchall()
 #    display all the orgs in db amount of innov rabnks anf probs for graph 
-    allprobs = db.execute(
-            "Select count(*) from [thrip].[problemstatements] where not OrgID = '0'").fetchall()
-    allinnov = db.execute(
-            "Select count(*) from [thrip].[innovation] where not OrgID = '0'").fetchall()
-    allranks = db.execute(
-            "Select count(*) from [thrip].[problemratings] where not OrgID = '0'").fetchall()
-    allorg = [allprobs,allinnov, allranks]
-    org = [active_problems, innovations, ratingsrate ]
-    user = [active_problems_user,innovations_user,ratingsrate_user]
-   
-
-    return render_template('gamification_report.html', allranks = allranks, allinnov=allinnov, allprobs=allprobs, ratingsrate_user = ratingsrate_user, ratingsrate = ratingsrate, innovations = innovations, innovations_user = innovations_user, active_problems = active_problems, active_problems_user = active_problems_user, test = test)
+    # allprobs = db.execute(
+    #         "Select count(*) from [thrip].[problemstatements] where not OrgID = '0'").fetchall()
+    # allinnov = db.execute(
+    #         "Select count(*) from [thrip].[innovation] where not OrgID = '0'").fetchall()
+    # allranks = db.execute(
+    #         "Select count(*) from [thrip].[problemratings] where not OrgID = '0'").fetchall()
+    # allorg = [allprobs,allinnov, allranks]
+    # org = [active_problems, innovations, ratingsrate ]
+    # user = [active_problems_user,innovations_user,ratingsrate_user]
+    user_cpsi = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
+    username =  db.execute("select firstname from [thrip].[orgusers] where userID ={}".format( session['UserId'])).fetchone()
+      
+    leaderbord = db.execute("select userId, gcpsi from [thrip].[gamification] where gcpsi in (select distinct top 10 gcpsi from [thrip].[gamification] order by gcpsi desc) order by gcpsi desc").fetchall()
+    usernamesleaderboard = []
+    temp = []
+    for i in leaderbord:
+        names =  ( db.execute("select firstname, surname from [thrip].[orgusers]  where userID = {}".format(i[0])).fetchone())
+        temp = (i[0], i[1], names[0], names[1])
+        usernamesleaderboard.append(temp)
+    return render_template('gamification_report.html', username = username, usernamesleaderboard = usernamesleaderboard, user_cpsi =  user_cpsi,  ratingsrate_user = ratingsrate_user, ratingsrate = ratingsrate, innovations = innovations, innovations_user = innovations_user, active_problems = active_problems, active_problems_user = active_problems_user, test = test)
+    # return render_template('gamification_report.html', usernamesleaderboard = usernamesleaderboard, user_cpsi =  user_cpsi, allranks = allranks, allinnov=allinnov, allprobs=allprobs, ratingsrate_user = ratingsrate_user, ratingsrate = ratingsrate, innovations = innovations, innovations_user = innovations_user, active_problems = active_problems, active_problems_user = active_problems_user, test = test)
 
             # 
