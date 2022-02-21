@@ -14,6 +14,9 @@ from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
+import json 
+
+
 print()
 
 gamification_file = Blueprint('gamification_file', __name__, template_folder='templates', static_folder='static')
@@ -157,7 +160,18 @@ def report(org_name):
             "select count(*) from [thrip].[problemratings] where OrgID = {} and userID ={}".format(session['OrgId'], session['UserId'])).fetchall()
     ratingsrate = db.execute(
             "select count(*) from [thrip].[problemratings] where OrgID = {} ".format(session['OrgId'])).fetchall()
+#    display all the orgs in db amount of innov rabnks anf probs for graph 
+    allprobs = db.execute(
+            "Select count(*) from [thrip].[problemstatements] where not OrgID = '0'").fetchall()
+    allinnov = db.execute(
+            "Select count(*) from [thrip].[innovation] where not OrgID = '0'").fetchall()
+    allranks = db.execute(
+            "Select count(*) from [thrip].[problemratings] where not OrgID = '0'").fetchall()
+    allorg = [allprobs,allinnov, allranks]
+    org = [active_problems, innovations, ratingsrate ]
+    user = [active_problems_user,innovations_user,ratingsrate_user]
    
-    return render_template('gamification_report.html', ratingsrate_user = ratingsrate_user, ratingsrate = ratingsrate, innovations = innovations, innovations_user = innovations_user, active_problems = active_problems, active_problems_user = active_problems_user, test = test, )
 
-            
+    return render_template('gamification_report.html', allranks = allranks, allinnov=allinnov, allprobs=allprobs, ratingsrate_user = ratingsrate_user, ratingsrate = ratingsrate, innovations = innovations, innovations_user = innovations_user, active_problems = active_problems, active_problems_user = active_problems_user, test = test)
+
+            # 

@@ -89,7 +89,19 @@ def login_org():
                                   SET times = '{}' where userID = '{}'
                                   """.format(timesf, session['UserId'] ))
          db.commit()
-         
+         oftheweek1 = db.execute(
+                "select gtopprob, gtopinnov, gtoprank, gbadge1, gbadge2, gbadge3, gbadge4, gbadge5, gbadge6, gbadge7, gbadge8 from [thrip].[gamification] where userID= {}".format(newuser[2])).fetchone()
+         session['OftheWeek'] = oftheweek1[0]
+         session['OftheWeeki'] = oftheweek1[1]
+         session['OftheWeekr'] = oftheweek1[2]
+         session['gbadge10'] = oftheweek1[3]
+         session['gbadge50'] = oftheweek1[4]
+         session['gbadge100'] = oftheweek1[5]
+         session['gbadgeprob'] = oftheweek1[6]
+         session['gbadgeinnov'] = oftheweek1[7]
+         session['gbadgerank'] = oftheweek1[8]
+         session['gbadgecal'] = oftheweek1[9]
+         session['gbadgetime'] = oftheweek1[10]  
           #  ----------------------------------------------------------------------
          return redirect(url_for('users_file.dashboard', org_name=session["OrgName"]))
     else:
@@ -100,10 +112,10 @@ def login_org():
                 u.verified from [thrip].[orgusers] u join [thrip].[organisations] o on u.OrgId = o.OrgId where 
                 u.email = '{}'""".format(
                     request.form["Email"])).fetchone()
-            oftheweek1 = ['0','0','0']
+            
             oftheweek1 = db.execute(
-                "select gtopprob, gtopinnov, gtoprank from [thrip].[gamification] where userID= {}".format(newuser[2])).fetchone()
-
+                "select gtopprob, gtopinnov, gtoprank, gbadge1, gbadge2, gbadge3, gbadge4, gbadge5, gbadge6, gbadge7, gbadge8 from [thrip].[gamification] where userID= {}".format(newuser[2])).fetchone()
+            
             if sha256_crypt.verify(request.form["Pswd"], newuser[5]):
                 session['OrgId'] = newuser[1]
                 session['type'] = 'All'
@@ -117,6 +129,14 @@ def login_org():
                 session['OftheWeek'] = oftheweek1[0]
                 session['OftheWeeki'] = oftheweek1[1]
                 session['OftheWeekr'] = oftheweek1[2]
+                session['gbadge10'] = oftheweek1[3]
+                session['gbadge50'] = oftheweek1[4]
+                session['gbadge100'] = oftheweek1[5]
+                session['gbadgeprob'] = oftheweek1[6]
+                session['gbadgeinnov'] = oftheweek1[7]
+                session['gbadgerank'] = oftheweek1[8]
+                session['gbadgecal'] = oftheweek1[9]
+                session['gbadgetime'] = oftheweek1[10]
                 print(session['OrgId'])
 
                 return redirect(url_for('users_file.dashboard', org_name=session["OrgName"]))
@@ -160,9 +180,8 @@ def signup():
            
            
             oftheweek1 = db.execute(
-                "select gtopprob,gtopinnov, gtoprank from [thrip].[gamification] where userID= {}".format(newuser[1])).fetchone()
-    
-#create session variables after log in (times == today()), gtopinnov, gtoprank,
+                "select gtopprob,gtopinnov, gtoprank, gbadge1, gbadge2, gbadge3, gbadge4, gbadge5, gbadge6, gbadge7, gbadge8  from [thrip].[gamification] where userID= {}".format(newuser[1])).fetchone()
+            #create session variables after log in (times == today()), gtopinnov, gtoprank,
             session['OrgId'] = request.form["Organisation"]
             session['OrgName'] = newuser[0]
             session['type'] = 'All'
@@ -173,9 +192,16 @@ def signup():
             session['logged_in'] = 1
             session['Surname'] = newuser[3]
             session['OftheWeek'] = oftheweek1[0]
-            session['OftheWeek'] = oftheweek1[0]
             session['OftheWeeki'] = oftheweek1[1]
             session['OftheWeekr'] = oftheweek1[2]
+            session['gbadge10'] = oftheweek1[3]
+            session['gbadge50'] = oftheweek1[4]
+            session['gbadge100'] = oftheweek1[5]
+            session['gbadgeprob'] = oftheweek1[6]
+            session['gbadgeinnov'] = oftheweek1[7]
+            session['gbadgerank'] = oftheweek1[8]
+            session['gbadgecal'] = oftheweek1[9]
+            session['gbadgetime'] = oftheweek1[10]
           
             if session['Verified'] == 0:
                 return render_template('verification.html', org=orgs)
@@ -240,6 +266,20 @@ def dashboard(org_name):
         allinnov = db.execute("Select innovationID, userID, name, description from [thrip].[innovation] where OrgID = {} ".format(session['OrgId'])).fetchall()
        
         users = db.execute("Select * from [thrip].[orgusers] where OrgID = {} and userID = {}".format(session['OrgId'], session['UserId'])).fetchone()
+        oftheweek1 = db.execute(
+                "select gtopprob, gtopinnov, gtoprank, gbadge1, gbadge2, gbadge3, gbadge4, gbadge5, gbadge6, gbadge7, gbadge8 from [thrip].[gamification] where userID= {}".format(session['UserId'])).fetchone()
+        session['OftheWeek'] = oftheweek1[0]
+        session['OftheWeeki'] = oftheweek1[1]
+        session['OftheWeekr'] = oftheweek1[2]
+        session['gbadge10'] = oftheweek1[3]
+        session['gbadge50'] = oftheweek1[4]
+        session['gbadge100'] = oftheweek1[5]
+        session['gbadgeprob'] = oftheweek1[6]
+        session['gbadgeinnov'] = oftheweek1[7]
+        session['gbadgerank'] = oftheweek1[8]
+        session['gbadgecal'] = oftheweek1[9]
+        session['gbadgetime'] = oftheweek1[10]  
+        
         if request.method == "POST":
             db.execute("""
                                 Update [thrip].[orgusers]

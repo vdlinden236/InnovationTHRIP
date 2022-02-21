@@ -213,7 +213,7 @@ div.badgepane {
  .grid-container {
   display: grid;
   justify-content: space-evenly;
-  grid-template-columns:  20% 20% 20% 20% ; /*Make the grid smaller than the container*/
+  grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% ; /*Make the grid smaller than the container*/
   gap: 5px;
   /* background-color: #2196F3; */
   padding: 5px;
@@ -223,8 +223,15 @@ div.badgepane {
   /* background-color: rgba(255, 255, 255, 0.8); */
   text-align: center;
   padding: 0 0;
-  font-size: 30px;
+  font-size: 20px;
 }
+.myImageOcc {
+    opacity: 0.2;
+    filter: alpha(opacity=20); 
+}
+
+
+
 
 /* ------------------- */
 
@@ -312,82 +319,176 @@ div.badgepane {
                                 </div>
                             </div>
                    
-     
+     <!-- <p>  {{ allprobs }}--10, {{  allinnov }}-50, {{allranks  }} -100  </p> -->
 
 
     <div class="grid-container">
         <div>
-            {% if (session['OftheWeek'] == "1"): %}
+            {% if (session['gbadge10'] == "1"): %}
                            
                 <a href=# data-toggle="modal" data-target="#topprobb">             
                     <img src="../static/images/badge10.png"  width="100%" alt="Image"style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
                 </a> 
                 <label>30 Index </label>   
+            {% else %}
+                <div class = "myImageOcc">
+                  <a href=# data-toggle="modal" data-target="#topprobb">             
+                    <img src="../static/images/badge10.png"  width="100%" alt="Image"style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
+                </a> 
+                <label>30 Index </label> 
+                </div>
             {% endif %}
         </div>
         <div>
-            {% if (session['OftheWeeki'] == "1"): %}
-        
+            {% if (session['gbadge50'] != "1"): %}
                 <a  href=# data-toggle="modal" data-target="#topprobb">             
                     <img src="../static/images/badge50.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
                 </a>
                 <label>50 Index </label>   
+            
+            {% else %}
+                <div class = "myImageOcc">
+                  
+                </div>
             {% endif %}
         </div>
         <div>
-            {% if (session['OftheWeekr'] == "1"): %}
-                            
+            {% if (session['gbadge100'] != "1"): %}            
                 <a  href=# data-toggle="modal" data-target="#toprank">             
                     <img src="../static/images/badge100.png" width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
                 </a>
                 <label>100 Index</label>   
+            {% else %}
+                <div class = "myImageOcc">
+                  
+                </div>
             {% endif %}
         </div>   
         <div>
-            {% if (session['OftheWeekr'] == "1"): %}
+            {% if (session['gbadgeprob'] == "1"): %}
                 <a  href=# data-toggle="modal" data-target="#toprank">             
                     <img src="../static/images/badgehat.png" width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
                 </a>
                 <label>10+ Problems</label>   
+            {% else %}
+                <div class = "myImageOcc">
+                  
+                </div>
             {% endif %}
         </div> 
         <div>
-            {% if (session['OftheWeekr'] == "1"): %}
+            {% if (session['gbadgeinnov'] == "1"): %}
                 <a  href=# data-toggle="modal" data-target="#toprank">             
                     <img src="../static/images/badgeglobe.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
                 </a>
                 <label>10+ Innovations</label>   
+            {% else %}
+                <div class = "myImageOcc">
+                  
+                </div>
             {% endif %}
         </div> 
         <div>
-            {% if (session['OftheWeekr'] == "1"): %}
+            {% if (session['gbadgerank'] == "1"): %}
                 <a  href=# data-toggle="modal" data-target="#toprank">             
                     <img src="../static/images/badgerank.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
                 </a>
                 <label>10+ Ranker</label>   
+            {% else %}
+                <div class = "myImageOcc">
+                  
+                </div>
             {% endif %}
         </div> 
         <div>
-            {% if (session['OftheWeekr'] == "1"): %}
+            {% if (session['gbadgecal'] == "1"): %}
                 <a  href=# data-toggle="modal" data-target="#toprank">             
                     <img src="../static/images/badgecalender.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
                 </a>
                 <label>Regular visitor</label>   
+            {% else %}
+                <div class = "myImageOcc">
+                  
+                </div>
             {% endif %}
         </div>
         <div>
-            {% if (session['OftheWeekr'] == "1"): %}
+            {% if (session['gbadgetime'] == "1"): %}
                   <a  href=# data-toggle="modal" data-target="#toprank">             
                     <img src="../static/images/badgetime.png"  width="100%" alt="Image" style="-webkit-filter: drop-shadow(5px 5px 5px #222); filter: drop-shadow(5px 5px 5px #222);">
                 </a>
                 <label>Time challenger</label>   
+             {% else %}
+                <div class = "myImageOcc">
+                  
+                </div>
             {% endif %}
         </div> 
         </div>
                            
-                            
+ <script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+<canvas id="mixed-chart" width="700" height="250"  ></canvas>
+
+
+<script>
+// v = request.get_json().get('allranks')
+// var orgprob = '{{ allprobs}}';
+// var orginnov = '{{ allinnov }}';
+// var orgranks = '{{ allranks }}';
+// var active_problems = '{{  active_problems  }}';
+// var innovations = '{{ innovations }}';
+// var ratingsrate= '{{ ratingsrate }}';
+// var active_problems_user = '{{ active_problems_user}}';
+// var innovations_user = '{{ innovations_user }}';
+// var  ratingsrate_user = '{{  ratingsrate_user }}';
+   
+new Chart(document.getElementById("mixed-chart"), {
+    type: 'bar',
+    data: {
+      labels: ["# Problems", "# Innovations", "# Ranked"],
+      datasets: [{
+          label: "All Organisations",
+          type: "line",
+          borderColor: "#EBA144",
+          data: [15,18,33],
+          fill: false,
+          borderWidth: 5
+        }, {
+          label: "Fourier",
+          type: "line",
+          borderColor: "#41C1BA",
+          data: [11,12,19],
+          fill: false,
+          borderWidth: 5
+        }, {
+          label: "User",
+          type: "bar",
+          backgroundColor: "#2D4C5B",
+          data: [3,3,6],
+         }
+        //, {
+        //   label: "Africa",
+        //   type: "bar",
+        //   backgroundColor: "rgba(0,0,0,0.2)",
+        //   backgroundColorHover: "#3e95cd",
+        //   data: [133,221,783,2478]
+        // }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Test"
+      },
+      legend: { display: true }
+    }
+});
+
+  </script>                                      
                               
-                        
+
                             
                     </div></div>
                     <br>
@@ -395,31 +496,11 @@ div.badgepane {
             </div>
         </div>
         
-            <div class="overview-item overview-item--c2">
-                <div class="overview__inner">
-                    <div class="overview-box clearfix row">
-                       
-                    </div>
-                    <br>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12 col-lg-4">
-            <div class="overview-item overview-item--c3">
-                <div class="overview__inner">
-                    <div class="overview-box clearfix row">
-                       
-                    </div>
-                    <br>
-                </div>
-            </div>
-        </div>
-    
+           
     </div>
 </div>               
-                  
-       
-   
+                           
+
     {% endblock %}  
 
 
