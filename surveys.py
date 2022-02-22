@@ -164,7 +164,13 @@ def problems(org_name):
                                                              secure_filename(f.filename), request.form["Utype"] ))
 
                     db.commit()
-# add here the CPSI score change
+                    cps = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
+                    cps = cps[0] + int(request.form["UTime"]) 
+                    db.execute("""
+                                UPDATE [thrip].[gamification] 
+                                        SET gcpsi = '{}' where userID = {}
+                                        """.format(cps, session["UserId"]))    
+                    db.commit()
                     return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
 
                 except:
@@ -178,6 +184,13 @@ def problems(org_name):
                                          request.form["PName"], request.form["UDesc"],
                                          request.form["UFunc"], request.form["UTime"], request.form["Utype"]))
 
+                    db.commit()
+                    cps = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
+                    cps = cps[0] + int(request.form["UTime"]) 
+                    db.execute("""
+                                UPDATE [thrip].[gamification] 
+                                        SET gcpsi = '{}' where userID = {}
+                                        """.format(cps, session["UserId"]))    
                     db.commit()
                     return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
 
@@ -196,6 +209,13 @@ def problems(org_name):
                                   values 
                                   ({}, {}, {}, {}, '{}', '1', 'smithm@fourier.co.za')
                                   """.format(session['OrgId'], session['UserId'], request.form["UProb"], request.form["rating1"], request.form["UFeed"]))
+                db.commit()
+                cps = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
+                cps = cps[0] + int(request.form["rating1"]) 
+                db.execute("""
+                            UPDATE [thrip].[gamification] 
+                                    SET gcpsi = '{}' where userID = {}
+                                    """.format(cps, session["UserId"]))    
                 db.commit()
                 return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
 
@@ -263,9 +283,15 @@ def innovations(org_name):
             "select count(*) from [thrip].[innovation] where OrgID = {}".format(session['OrgId'])).fetchall()
         actions_campaigns = db.execute(
             "select sum(campaignID), sum(actionID) from [thrip].[innovation] where OrgID = {}".format(session['OrgId'])).fetchall()
+        # Need to be changes to gateproblemstatements
+        # problems = db.execute(
+        #     "Select * from [thrip].[gateproblemstatements] where OrgID = {}".format(session['OrgId'])).fetchall()
+       
         problems = db.execute(
             "Select * from [thrip].[problemstatements] where OrgID = {}".format(session['OrgId'])).fetchall()
-
+        active_problems = db.execute(
+            "Select count(*) from [thrip].[problemstatements] where OrgID = {} and IsActive = 'Yes'".format(session['OrgId'])).fetchall()
+        innovperprob = active_innovations[0][0] // active_problems[0][0]
         if request.method == "POST":
           if request.form["problems"] == "Submit Innovation":
             try:
@@ -285,6 +311,14 @@ def innovations(org_name):
                                              request.form["UProb"], request.form["Innov"],
                                              request.form["UDesc"], request.form["UTime"], request.form["Camp"], secure_filename(f.filename)))
                 db.commit()
+                cps = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
+                cps = cps[0] + int(request.form["UTime"]) 
+                db.execute("""
+                                  UPDATE [thrip].[gamification] 
+                                SET gcpsi = '{}' where userID = {}
+                                """.format(cps, session["UserId"]))    
+                db.commit()
+                
                 return redirect(url_for('surveys_file.innovations', org_name=session["OrgName"]))
             except:
                 db.execute("""
@@ -296,6 +330,13 @@ def innovations(org_name):
                                      request.form["UProb"], request.form["Innov"],
                                      request.form["UDesc"], request.form["UTime"],
                                      request.form["Camp"]))
+                db.commit()
+                cps = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
+                cps = cps[0] + int(request.form["UTime"]) 
+                db.execute("""
+                                  UPDATE [thrip].[gamification] 
+                                SET gcpsi = '{}' where userID = {}
+                                """.format(cps,session["UserId"]))    
                 db.commit()
                 return redirect(url_for('surveys_file.innovations', org_name=session["OrgName"]))
           elif request.form["problems"] == "Edit Problem":
@@ -316,29 +357,54 @@ def innovations(org_name):
                                 """.format(session['OrgId'], session['UserId'], request.form["UProb"],
                                            request.form["rating1"], request.form["UFeed"]))
               db.commit()
+              cps = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
+              cps = cps[0] + int(request.form["rating1"]) 
+              db.execute("""
+                           UPDATE [thrip].[gamification] 
+                                SET gcpsi = '{}' where userID = {}
+                                """.format(cps, session["UserId"]))    
+              db.commit()
               return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
+        #  Email + options can be removed from both th einnovation and problem ratings tables
+          elif request.form["problems"] == "Rate Innovation":
+              db.execute("""
+                                Insert into [thrip].[innovationratings]
+                                (OrgId, userID, innovationID, rating, feedback, options, email) 
+                                values 
+                                ({}, {}, {}, {}, '{}', '1', 'smithm@fourier.co.za')
+                                """.format(session['OrgId'], session['UserId'], request.form["UProb"],
+                                           request.form["rating1"], request.form["UFeed"]))
+              db.commit()
+              cps = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
+              cps = cps[0] + int(request.form["rating1"]) 
+              db.execute("""
+                           UPDATE [thrip].[gamification] 
+                                SET gcpsi = '{}' where userID = {}
+                                """.format(cps, session["UserId"]))    
+              db.commit()
+              return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))    
           elif request.form["problems"] == "Select Department":
               department = request.form["Depart"]
               if department == "HR":
-                return render_template('innovations.html', innovations=inHR, active_innovations=active_innovations[0], actions_campaigns=actions_campaigns[0], problems=problems)
+                return render_template('innovations.html', innovations=inHR,innovperprob=innovperprob, active_problems=active_problems, active_innovations=active_innovations[0], actions_campaigns=actions_campaigns[0], problems=problems)
               elif department == "Finance":
-                return render_template('innovations.html', innovations=inFin, active_innovations=active_innovations[0],
+                return render_template('innovations.html', innovations=inFin, innovperprob=innovperprob, active_problems=active_problems, active_innovations=active_innovations[0],
                                    actions_campaigns=actions_campaigns[0], problems=problems)
               elif department == "Management":
-                return render_template('innovations.html', innovations=inMan, active_innovations=active_innovations[0],
+                return render_template('innovations.html', innovations=inMan, innovperprob=innovperprob, active_problems=active_problems, active_innovations=active_innovations[0],
                                    actions_campaigns=actions_campaigns[0], problems=problems)
               elif department == "Production":
-                return render_template('innovations.html', innovations=inProd, active_innovations=active_innovations[0],
+                return render_template('innovations.html', innovations=inProd,innovperprob=innovperprob, active_problems=active_problems,  active_innovations=active_innovations[0],
                                    actions_campaigns=actions_campaigns[0], problems=problems)
               elif department == "IT":
-                return render_template('innovations.html', innovations=inIT, active_innovations=active_innovations[0],
+                return render_template('innovations.html', innovations=inIT,innovperprob=innovperprob, active_problems=active_problems,  active_innovations=active_innovations[0],
                                    actions_campaigns=actions_campaigns[0], problems=problems)
               else:
-                return render_template('innovations.html', innovations=innovations,
+                return render_template('innovations.html',innovperprob=innovperprob, active_problems=active_problems,  innovations=innovations,
                                              active_innovations=active_innovations[0],
                                              actions_campaigns=actions_campaigns[0], problems=problems)
 
-        return render_template('innovations.html', innovations=innovations, active_innovations=active_innovations[0], actions_campaigns=actions_campaigns[0], problems=problems)
+        return render_template('innovations.html',innovperprob=innovperprob, active_problems=active_problems,  innovations=innovations, active_innovations=active_innovations[0], actions_campaigns=actions_campaigns[0], problems=problems)
     else:
         error = 'You are not logged in'
         return render_template('login.html', Error=error)

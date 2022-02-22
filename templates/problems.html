@@ -240,7 +240,7 @@ span.scale-rating label:before
                                             </div>
                                             <div class="text">
                                                 <h2>{{  active_problems[0]  }}</h2>
-                                                <span>Active Inputs</span>
+                                                <span>Active Problems</span>
                                             </div>
                                         </div>
                                         <br>
@@ -257,7 +257,7 @@ span.scale-rating label:before
                                             </div>
                                             <div class="text">
                                                 <h2>{{  innovations[0]  }}</h2>
-                                                <span>All Innovations</span>
+                                                <span>Active Innovations</span>
                                             </div>
                                             </a>
                                         </div>
@@ -274,7 +274,7 @@ span.scale-rating label:before
                                             </div>
                                             <div class="text">
                                                 <h2>{{  closed_problems[0]  }}</h2>
-                                                <span>Closed Inputs</span>
+                                                <span>Closed Problems</span>
                                             </div>
                                         </div>
                                         <br>
@@ -372,9 +372,9 @@ span.scale-rating label:before
                 <label class="text-center">Time Period:</label>
             <select class="form-control qlogin" name="UTime" id="UTime">
               <option value="" selected disabled></option>
-                <option value="3" >Short Term (Urgent)</option>
-                <option value="2" >Medium Term</option>
-                <option value="1" >Long Term</option>
+                <option value="3"> Short Term (Urgent)</option>
+                <option value="2"> Medium Term</option>
+                <option value="1"> Long Term</option>
             </select>
                 <label class="text-center">Functional Area:</label>
             <select class="form-control qlogin" name="UFunc" id="UFunc">
@@ -425,9 +425,9 @@ span.scale-rating label:before
             </select><label class="text-center">Time Period:</label>
             <select class="form-control qlogin" name="ETime" id="ETime">
               <option value="{{  i.horisonID  }}" selected>{{  i.Horizon  }}</option>
-                <option value="1" >Short Term</option>
+                <option value="3" >Short Term</option>
                 <option value="2" >Medium Term</option>
-                <option value="3" >Long Term</option>
+                <option value="1" >Long Term</option>
             </select>
                 <label class="text-center">Functional Area:</label>
             <select class="form-control qlogin" name="EFunc" id="EFunc">

@@ -107,7 +107,9 @@ td a:hover {
                                     <span>
                                     <a class="btn btn-norm" href=# data-toggle="modal" data-target="#selDep"><i class="fas fa-list-ul"></i> Filter Department</a>
                                     <a class="btn btn-norm" href=# data-toggle="modal" data-target="#submitInnov"><i class="fas fa-plus"></i> Submit an Innovation</a>
-                                    </span>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate an Innovation</a>
+                                    
+                                </span>
 
                                 </div><hr>
                             </div>
@@ -139,8 +141,8 @@ td a:hover {
                                                 <i class="fas fa-briefcase"></i>
                                             </div>
                                             <div class="text">
-                                                <h2>{{  actions_campaigns[1]  }}</h2>
-                                                <span>Actions Taken</span>
+                                                <h2>{{  active_problems[0][0]  }}</h2>
+                                                <span>Active Problems</span>
                                             </div>
                                         </div>
                                         <br>
@@ -155,8 +157,8 @@ td a:hover {
                                                 <i class="fas fa-file-alt"></i>
                                             </div>
                                             <div class="text">
-                                                <h2>{{  actions_campaigns[0]  }}</h2>
-                                                <span>Active Campaigns</span>
+                                                <h2>{{  innovperprob  }}</h2>
+                                                <span>Innovations per Problem</span>
                                             </div>
                                         </div>
                                         <br>
@@ -176,11 +178,9 @@ td a:hover {
       <tr class="">
 		<th style="width:18%;">Problem</th>
         <th style="width:20%;">Innovation</th>
-		<th style="width:30%;">Description</th>
+		<th style="width:40%;">Description</th>
           <th style="width:10%;">Status</th>
-		<th style="width:12%;">Time</th>
-          <th style="width:5%;">Actions</th>
-            <th style="width:5%;">Campaign</th>
+		<!-- <th style="width:12%;">Time</th> -->
           <th style="width:5%;">Department</th>
           <th style="width:10%;">Attachments</th>
       </tr>
@@ -192,9 +192,7 @@ td a:hover {
 			<td style="display: table-cell; vertical-align: middle;">{{  i.name  }}</td>
 			<td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
 			<td style="display: table-cell; vertical-align: middle;">{{  i.innovationStatusTypeID  }}</td>
-            <td style="display: table-cell; vertical-align: middle;">{{  i.horisonID  }}</td>
-            <td style="display: table-cell; vertical-align: middle;">{{  i.actionID  }}</td>
-            <td style="display: table-cell; vertical-align: middle;">{{  i.campaignID  }}</td>
+            <!-- <td style="display: table-cell; vertical-align: middle;">{{  i.horisonID  }}</td> -->
             <td style="display: table-cell; vertical-align: middle;">{{  i.Department  }}</td>
             {% if i.businessCaseFile is none %}
             <td style="display: table-cell; vertical-align: middle;">-</td>
@@ -254,9 +252,9 @@ td a:hover {
             <label class="text-center">Time Period:</label>
             <select class="form-control qlogin" name="UTime" id="UTime">
               <option value="" selected disabled></option>
-                <option value="Short Term" >Short Term</option>
-                <option value="Medium Term" >Medium Term</option>
-                <option value="Long Term" >Long Term</option>
+                <option value="3" >Short Term</option>
+                <option value="2" >Medium Term</option>
+                <option value="1" >Long Term</option>
             </select>
                 <label class="text-center">Campaign:</label>
             <select class="form-control qlogin" name="Camp" id="Camp">
@@ -310,7 +308,48 @@ td a:hover {
     </div>
   </div>
 </div>
-
+<div class="modal fade" id="rateProb" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <form action="{{  url_for('surveys_file.innovations', org_name=session['OrgName'])  }}" method="POST">
+        <div class="modal-header dot--dblue">
+          <h5 class="modal-title dot--dblue text-white" id="rateP">Rate an Innovation</h5>
+  
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+              <center>
+  
+              <label class="text-center">Innovation:</label>
+              <select class="form-control qlogin" name="UProb" id="UProb">
+                <option value="" selected disabled></option>
+                  {% for i in innovations %}
+                  <option value="{{  i.innovationID  }}" >{{  i.name  }}</option>
+                  {% endfor %}
+              </select>
+  
+                  <label style="padding-top: 10px;" class="text-center">Rating:</label><br>
+                  <span class="star-rating">
+                    <input type="radio" name="rating1" value="1"><i></i>
+                    <input type="radio" name="rating1" value="2"><i></i>
+                    <input type="radio" name="rating1" value="3"><i></i>
+                    <input type="radio" name="rating1" value="4"><i></i>
+                    <input type="radio" name="rating1" value="5"><i></i>
+                  </span>
+                  <br>
+                  <label class="text-center"  style="padding-top: 10px;">Feedback:</label>
+                  <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="UFeed" id="UFeed"></textarea>
+              </center>
+          </div>
+          </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Rate Innovation">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
