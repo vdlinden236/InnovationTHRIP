@@ -6,7 +6,185 @@
 
 {% block body %}
 <style>
- 
+ .star-rating {
+   padding: 10px;
+  font-size: 0;
+  white-space: nowrap;
+  display: inline-block;
+  width: 175px;
+  height: 35px;
+  overflow: hidden;
+  position: relative;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: contain;
+}
+
+.star-rating i {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 20%;
+  z-index: 1;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: contain;
+}
+
+.star-rating input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  opacity: 0;
+  display: inline-block;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  position: relative;
+}
+
+.star-rating input:hover + i,
+.star-rating input:checked + i {
+  opacity: 1;
+}
+.star-rating i ~ i {
+  width: 40%;
+}
+.star-rating i ~ i ~ i {
+  width: 60%;
+}
+.star-rating i ~ i ~ i ~ i {
+  width: 80%;
+}
+.star-rating i ~ i ~ i ~ i ~ i {
+  width: 100%;
+}
+
+.choice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 20px;
+  display: block;
+}
+span.scale-rating{
+margin: 5px 0 15px;
+    display: inline-block;
+
+    width: 100%;
+
+}
+span.scale-rating>label {
+  position:relative;
+    -webkit-appearance: none;
+  outline:0 !important;
+    border: 1px solid grey;
+    height:33px;
+    margin: 0 5px 0 0;
+  width: calc(10% - 7px);
+    float: left;
+  cursor:pointer;
+}
+
+span.scale-rating label {
+  position:relative;
+    -webkit-appearance: none;
+  outline:0 !important;
+    height:33px;
+
+    margin: 0 5px 0 0;
+  width: calc(10% - 7px);
+    float: left;
+  cursor:pointer;
+}
+
+span.scale-rating input[type=radio] {
+  position:absolute;
+    -webkit-appearance: none;
+  opacity:0;
+  outline:0 !important;
+    /*border-right: 1px solid grey;*/
+    height:33px;
+
+    margin: 0 5px 0 0;
+
+  width: 100%;
+    float: left;
+  cursor:pointer;
+  z-index:3;
+}
+span.scale-rating label:hover{
+background: orange;
+}
+span.scale-rating input[type=radio]:last-child{
+border-right:0;
+}
+span.scale-rating label input[type=radio]:checked ~ label{
+    -webkit-appearance: none;
+
+    margin: 0;
+  background: orange;
+}
+span.scale-rating label:before
+{
+  content:attr(value);
+    top: 7px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    vertical-align: middle;
+  z-index:2;
+}
+
+
+.checked {
+  color: orange;
+}
+
+ .grid-container3 {
+  display: inline-grid;
+  justify-content: space-evenly;
+  grid-template-columns: 640px 680px;
+  grid-template-rows: 40px 500px 80px ; 
+  gap: 5px;
+   background-color: #41c1ba; 
+  padding: 5px;
+  border: 5px solid #2d4c5b;
+  border-left:5px solid #2d4c5b;
+}
+
+.grid-container3 > div {
+  /* background-color: rgba(133, 13, 13, 0.8);  */
+  text-align: center;
+  padding: 2px 2px;
+  font-size: 20px;
+}
+.item1 {
+  grid-column: 1 / span 2;
+  grid-row: 3 / span 1;
+}
+
+.grid-containerhead {
+  display: grid;
+  justify-content: space-evenly;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 60px ; 
+  gap: 5px;
+  /* background-color: #f36421; */
+  padding: 1px;
+}
+
+.grid-containerhead > div {
+  /* background-color: rgba(41, 133, 13, 0.8);  */
+  text-align: center;
+  padding: 0 0;
+  font-size: 40px;
+}
     
  div.a {
       position: absolute;
@@ -20,11 +198,15 @@
     
     div.b {
       position: absolute;
-      left: 50;
-      width: 1300px;
-      height: 120px;
+      left: 10px;
+      width: 1360px;
+      height: 20000px;
       
     } 
+    .icon-image {
+    width: 1200px;
+    height: 1200px;
+}
    
 
     .buttoncssgam {font-size: 12px;}
@@ -33,7 +215,7 @@
     </style>
         
         <!-- PAGE CONTAINER-->
-        <div class="page-container">
+   <div class="page-container" style = "overflow-x: hidden">
        
             <!-- MAIN CONTENT-->
             <div class="main-content">
@@ -42,7 +224,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="overview-wrap">
-                                    <h2 class="title-1">Home</h2>
+                                    <h2 class="title-1">Dashboard - Welcome to Open Innovation</h2>
 
                                     <div class="form-inline row" style="display: table; vertical-align: middle;">
 <!--User profile-->
@@ -54,13 +236,133 @@
                     
 
                     <div class = "b">
-                        <h6 class="mbr-fonts-style mbr-section-title align-center display-4">Welcome to Open Innovation</h6>
-         <div class="underline align-center">
+                        <h6 class="mbr-fonts-style mbr-section-title align-center display-4"></h6>
+                        <div class="grid-containerhead">
+                          <div>
+                            <h1> Problems</h1>
+                          </div>
+                          <div>
+                            <h1> Innovations</h1>
+                          </div>
+                        </div>  
+                        <div class="grid-container3">
+                          
+<!-- grid 1.1 div open -->  <div > 
+                                <a class="btn btn-norm" style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#submitProb"><i class="fas fa-plus"></i> Submit a Problem</a>
+                               <a class="btn btn-norm"style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate a Input</a>
+                                <input type="text" id="probsearch" onkeyup="searchprob()" placeholder="Search problems... " title="Seach ">
+<!-- grid 1.1 div c -->           
+</div>
+<!-- grid 2.1 d o-->         <div Style ="border-left:5px solid #2d4c5b; ">
+                              <span>
+                                <a class="btn btn-norm" style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#submitInnov"><i class="fas fa-plus"></i> Submit an Innov..</a>
+                                 <a class="btn btn-norm" style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate an Innov..</a>
+                                <input type="text" id="innovsearch" onkeyup="searchinnov()" placeholder="Search innovations..." title="Seach">
+                                 
+                                </span> 
+<!-- grid 2.1 div c -->      </div>
+<!-- grid 1.2 d o-->         <div style = "overflow-x: hidden">
+                              <div class="row ">
+                                <div class="col-md-12">
+                                   <div class="au-card chart-percent-card">
+                                     <div class="au-card-inner">
+                                      <div class="" auto-update="true" font-size=10px style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+                                      <table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+                                          <thead class="text-center dot--dblue text-white" style="background-color:#EBA144" >
+                                            <tr class="" style ="font-size:10px;" >
+                                              <th style="width:15%;">Inputs</th>
+                                              <th style="width:40%;">Description</th>
+                                              <th style="width:10%;">Type</th>
+                                              <th style="width:10%;">Department</th>
+                                              <th style="width:5%;">Rate</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody class="text-center" style="font-size: 9px !important;">
+                                              <!--{# for i in Problems #}. format({{output}}) -- test a variable here to display the select box-->
+                                      
+                                              {% for i in allprob %}
+                                              <tr >
+                                                <td style="display: table-cell; vertical-align: middle;">{{  i.name  }}</td>
+                                                <td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
+                                                <td style="display: table-cell; vertical-align: middle;">{{  i.qtype  }}</td>
+                                                <td style="display: table-cell; vertical-align: middle;">{{  i.orgFunctionName  }}</td>
+                                                <td style="display: table-cell; vertical-align: middle;"></td>
+                                              </tr>
+                                              {% endfor %}
+                                          </tbody>
+                                        </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                         </div>
+                        
+<!-- grid 1.2 div c -->      </div>
+<!-- grid 2.2 d o-->         <div style = "overflow-x: hidden; border-left:5px solid #2d4c5b;">
+               <div class="row ">
+                <div class="col-md-12">
+                  <div class="au-card chart-percent-card">
+                    <div class="au-card-inner">
+        
+                    <div class="" auto-update="true" style="table-layout:fixed; width:100%; background-color: #FFFFFF;  border-radius: 10px;">
+                    <table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
+                        <thead class="text-center dot--dblue text-white"style="background-color:#EBA144" >
+                          <tr class=""  style ="font-size:10px;" >
+                            <th style="width:22%;">Problem</th>
+                             <th style="width:25%;">Innovation</th>
+                             <th style="width:40%;">Description</th>
+                              <th style="width:5%;">Department</th>
+                              <th style="width:5%;">Rate</th>
+                              </tr>
+                        </thead>
+                        <tbody class="text-center" style="font-size: 9px !important;">
+                            {% for i in allinnov %}
+                            <tr >
+                              <td style="display: table-cell; vertical-align: middle;">{{  i.ProbName  }}</td>
+                              <td style="display: table-cell; vertical-align: middle;">{{  i.name  }}</td>
+                              <td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
+                              <!-- <td style="display: table-cell; vertical-align: middle;">{{  i.innovationStatusTypeID  }}</td> -->
+                              <!-- <td style="display: table-cell; vertical-align: middle;">{{  i.horisonID  }}</td> -->
+                              <td style="display: table-cell; vertical-align: middle;">{{  i.Department  }}</td>
+                              <td style="display: table-cell; vertical-align: middle;"></td>
+                                            
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+<!-- grid 2.2 div c -->   </div>
+<!-- grid 3.1+3.2 d o-->   <div class ="item1">
+                            <div class="icon-image" >
+                              <center>
+                            <!-- Fianance here -->
+                            <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-user-circle fa-3x"></i></a>
+                            <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-credit-card fa-3x"></i></a>
+                            <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-rocket fa-3x"></i></a>
+                            <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-cogs fa-3x"></i></a>
+                            <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-clipboard-list fa-3x"></i></a>
+                            <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-laptop fa-3x"></i></a>
+                           </center> 
+                          </div>
+  	                        </div>
+                       
+                        
+                          
+                            
+
+
+        
+                         </div>    
+                        <div class="underline align-center">
              <div class="line"></div>
          </div>
 
         <p class="mbr-fonts-style mbr-section-subtitle align-center mbr-light pt-3 display-5">The Open Innovation (OI) process is as follows:</p>
-
         <div class="row justify-content-center pt-3">
 
             <div class="col-md-12 row-item col-lg-12">
@@ -113,8 +415,10 @@
                         <div class="overview-wrap">
                             <center>
                               <div class = "a">
-                                <a style="padding-right: 10px;" href="{{  url_for('gamification_file.report', org_name=session['OrgName'])  }}" data-toggle="modal" data-target="#gamreport"> User report            
-                                </a>
+                                
+                                <label class="text-center"> User Report </label>
+                                <a href="{{  url_for('gamification_file.report', org_name=session['OrgName'])  }}" id="filter1" data-toggle="modal"  data-target="#gamreport"><i class="fa fa-newspaper fa-3x"></i></a>
+                         
                                 
                                 {% if (session['OftheWeek'] == "1"): %}
                                 <br>
@@ -152,7 +456,110 @@
             <!-- END MAIN CONTENT-->
             <!-- END PAGE CONTAINER-->
         </div>
+    
+      <!-- <div class="modal fade" id="toprank" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <form action="{{  url_for('gamification_file.dashboardg', org_name=session['OrgName'])  }}" method="POST">
+              <div class="modal-header dot--dblue">
+                <h5 class="modal-title dot--dblue text-white" id="exampleModalLabel">Email your view to a specific problem or innovation</h5>
+              </div>
 
+  
+                <div class="modal-body">
+                  <label class="text-center"> Well done Top Ranker of the Week. Select a problem or solution and discuss your views with the owner.</label>
+                    <div class="form-group">
+                    <center>
+                      <label class="text-center">Select a Problem </label>
+                      <select class="form-control qlogin" name="selprob" id="selprob">
+                        <option value="" selected disabled></option>
+                          {% for i in allprob %}
+                            <option value="{{  i.problemID }}" >{{  i.name  }}</option>
+                          {% endfor %}
+                        </select> 
+                        <label class="text-center">OR</label>
+                        <label class="text-center">Select an Innovation:</label>
+                        <select class="form-control qlogin" name="inprob" id="inprob">
+                          <option value="" selected disabled></option>
+                            {% for i in allinnov %}
+                              <option value="{{  i.innovationID }}" >{{  i.name  }}</option>
+                            {% endfor %}
+                        </select> 
+                        <label class="text-center">Type your views:</label><br>
+                        <textarea rows = "4" cols = "50"  style="text-align:left;" class="form-control qlogin" type="text" required name="emailviews" id="emailviews">
+          
+                     </center>
+                    </div>
+                 </div>
+
+                <div class="modal-footer">
+                <input type="submit" class="btn btn-success no-show mr-auto" name="topotw" value="Schedule Brainstorming Session">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </form>
+          </div>
+        </div>
+      </div>
+  </div> -->
+
+      </div>
+    </div>
+
+    <div class="modal fade" id="submitProb" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+              <div class="modal-header dot--dblue">
+                <h5 class="modal-title dot--dblue text-white" id="subProb">Submit a Input</h5>
+        
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                    <label class="text-center">Input:</label>
+                    <input style="text-align:left;" class="form-control qlogin" type="text" required name="PName" id="PName"/>
+                        <label class="text-center">Description:</label>
+                        <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="UDesc" id="UDesc"></textarea>
+                        <label class="text-center">Input Type:</label>
+                    <select class="form-control qlogin" name="Utype" id="Utype">
+                      <option value="" selected disabled></option>
+                        <option value="Complaint" >Complaint</option>
+                        <option value="Problem" >Problem</option>
+                        <option value="Idea" >Idea</option>
+                    </select>
+                   <div display = "none">
+                    <select class="form-control qlogin" name="passvar" id="passvar" style='display:none'>
+                        <option value="1" selected ></option>
+                    </select> </div>     
+                        <label class="text-center">Time Period:</label>
+                    <select class="form-control qlogin" name="UTime" id="UTime">
+                      <option value="" selected disabled></option>
+                        <option value="3"> Short Term (Urgent)</option>
+                        <option value="2"> Medium Term</option>
+                        <option value="1"> Long Term</option>
+                    </select>
+                        <label class="text-center">Functional Area:</label>
+                    <select class="form-control qlogin" name="UFunc" id="UFunc">
+                      <option value="" selected disabled></option>
+                        <option value="Finance" >Finance</option>
+                        <option value="HR" >HR</option>
+                        <option value="IT" >IT</option>
+                        <option value="Production" >Production</option>
+                        <option value="Management" >Management</option>
+                    </select>
+                        <label class="text-center">Attachments:</label>
+                    <input style="text-align:left;" class="form-control qlogin" type="file"  name="file" id="file"/>
+                    </center>
+                </div>
+              </div>
+                      <div class="modal-footer">
+                        <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Submit Problem">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                  </form>
+                      </div>
+            </div>
+          </div>
+        </div>
+        
 <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -212,7 +619,50 @@
   </div>
                 </div>
             </div>
-
+            <div class="modal fade" id="rateProb" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST">
+                  <div class="modal-header dot--dblue">
+                    <h5 class="modal-title dot--dblue text-white" id="rateP">Rate a Problem</h5>
+            
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">
+                        <center>
+                          <select class="form-control qlogin" name="passvar" id="passvar" style='display:none'>
+                            <option value="1" selected ></option>
+                        </select>    
+                        <label class="text-center">Problem:</label>
+                        <select class="form-control qlogin" name="UProb" id="UProb">
+                          <option value="" selected disabled></option>
+                            {% for i in allprob %}
+                            <option value="{{  i.problemID  }}" >{{  i.name  }}</option>
+                            {% endfor %}
+                        </select>
+            
+                            <label style="padding-top: 10px;" class="text-center">Rating:</label><br>
+                            <span class="star-rating">
+                              <input type="radio" name="rating1" value="1"><i></i>
+                              <input type="radio" name="rating1" value="2"><i></i>
+                              <input type="radio" name="rating1" value="3"><i></i>
+                              <input type="radio" name="rating1" value="4"><i></i>
+                              <input type="radio" name="rating1" value="5"><i></i>
+                            </span>
+                            <br>
+                            <label class="text-center"  style="padding-top: 10px;">Feedback:</label>
+                            <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="UFeed" id="UFeed"></textarea>
+                        </center>
+                    </div>
+                    </div>
+                  <div class="modal-footer">
+                    <input type="submit" class="btn btn-success no-show mr-auto" name="problems" value="Rate Problem">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                      </form>
+                  </div>
+                </div>
+              </div>
+            </div>
   <div class="modal fade" id="topprobb" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -292,56 +742,9 @@
               </div>
             </div>
         </div>
-              </div>
-      <!-- <div class="modal fade" id="toprank" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <form action="{{  url_for('gamification_file.dashboardg', org_name=session['OrgName'])  }}" method="POST">
-              <div class="modal-header dot--dblue">
-                <h5 class="modal-title dot--dblue text-white" id="exampleModalLabel">Email your view to a specific problem or innovation</h5>
-              </div>
-
-  
-                <div class="modal-body">
-                  <label class="text-center"> Well done Top Ranker of the Week. Select a problem or solution and discuss your views with the owner.</label>
-                    <div class="form-group">
-                    <center>
-                      <label class="text-center">Select a Problem </label>
-                      <select class="form-control qlogin" name="selprob" id="selprob">
-                        <option value="" selected disabled></option>
-                          {% for i in allprob %}
-                            <option value="{{  i.problemID }}" >{{  i.name  }}</option>
-                          {% endfor %}
-                        </select> 
-                        <label class="text-center">OR</label>
-                        <label class="text-center">Select an Innovation:</label>
-                        <select class="form-control qlogin" name="inprob" id="inprob">
-                          <option value="" selected disabled></option>
-                            {% for i in allinnov %}
-                              <option value="{{  i.innovationID }}" >{{  i.name  }}</option>
-                            {% endfor %}
-                        </select> 
-                        <label class="text-center">Type your views:</label><br>
-                        <textarea rows = "4" cols = "50"  style="text-align:left;" class="form-control qlogin" type="text" required name="emailviews" id="emailviews">
-          
-                     </center>
-                    </div>
-                 </div>
-
-                <div class="modal-footer">
-                <input type="submit" class="btn btn-success no-show mr-auto" name="topotw" value="Schedule Brainstorming Session">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </form>
-          </div>
-        </div>
-      </div>
-  </div> -->
-
-      </div>
-    </div>
-
-      
-
+              </div>      
+              
+        
 
  {% endblock %}
 

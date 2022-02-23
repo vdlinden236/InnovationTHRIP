@@ -222,7 +222,7 @@ span.scale-rating label:before
                                     <span>
                                     <a class="btn btn-norm" href=# data-toggle="modal" data-target="#downloadpdf"><i class="fas fa-fas fa-list-ul"></i> Download pdf</a>
                                     <a class="btn btn-norm" href=# data-toggle="modal" data-target="#fitertype"><i class="fas fa-fas fa-list-ul"></i> Filter Input Type</a>
-                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#submitProb"><i class="fas fa-plus"></i> Submit a Input</a>
+                                    <a class="btn btn-norm" href=# data-toggle="modal" data-target="#submitProb"><i class="fas fa-plus"></i> Submit a Problem</a>
                                     <a class="btn btn-norm" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate a Input</a>
                                     </span>
                                 </div><hr>
@@ -369,6 +369,11 @@ span.scale-rating label:before
                 <option value="Problem" >Problem</option>
                 <option value="Idea" >Idea</option>
             </select>
+
+            <select class="form-control qlogin" name="passvar" id="passvar" style='display:none'>
+                <option value="2" selected >Complaint</option>
+            </select>
+                   
                 <label class="text-center">Time Period:</label>
             <select class="form-control qlogin" name="UTime" id="UTime">
               <option value="" selected disabled></option>
@@ -526,7 +531,9 @@ span.scale-rating label:before
       <div class="modal-body">
         <div class="form-group">
             <center>
-
+              <select class="form-control qlogin" name="passvar" id="passvar" style='display:none'>
+                <option value="2" selected ></option>
+            </select>   
             <label class="text-center">Problem:</label>
             <select class="form-control qlogin" name="UProb" id="UProb">
               <option value="" selected disabled></option>

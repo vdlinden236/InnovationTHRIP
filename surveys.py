@@ -171,7 +171,10 @@ def problems(org_name):
                                         SET gcpsi = '{}' where userID = {}
                                         """.format(cps, session["UserId"]))    
                     db.commit()
-                    return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
+                    if (request.form["passvar"]=="1"):
+                      return redirect(url_for('users_file.AdminDashboard', org_name=session["OrgName"]))
+                    else:  
+                      return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
 
                 except:
 
@@ -192,7 +195,10 @@ def problems(org_name):
                                         SET gcpsi = '{}' where userID = {}
                                         """.format(cps, session["UserId"]))    
                     db.commit()
-                    return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
+                    if (request.form["passvar"]=="1"):
+                      return redirect(url_for('users_file.dashboard', org_name=session["OrgName"]))
+                    else:  
+                      return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
 
             elif request.form["problems"] == "Edit Problem":
                 db.execute("""
@@ -200,22 +206,6 @@ def problems(org_name):
                                   SET name = '{}', description = '{}', orgFunctionName = '{}', horisonID = {}, qtype = '{}' where problemID = {}
                                   """.format(request.form["EName"], request.form["EDesc"],
                                              request.form["EFunc"], request.form["ETime"], request.form["Etype"], request.form["probID"]))
-                db.commit()
-                return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
-            if request.form["problems"] == "Rate Problem":
-                db.execute("""
-                                  Insert into [thrip].[problemratings]
-                                  (OrgId, userID, problemID, rating, feedback, options, email) 
-                                  values 
-                                  ({}, {}, {}, {}, '{}', '1', 'smithm@fourier.co.za')
-                                  """.format(session['OrgId'], session['UserId'], request.form["UProb"], request.form["rating1"], request.form["UFeed"]))
-                db.commit()
-                cps = db.execute("select gcpsi from [thrip].[gamification] where userID ={}".format( session['UserId'])).fetchone()
-                cps = cps[0] + int(request.form["rating1"]) 
-                db.execute("""
-                            UPDATE [thrip].[gamification] 
-                                    SET gcpsi = '{}' where userID = {}
-                                    """.format(cps, session["UserId"]))    
                 db.commit()
                 return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
 
@@ -364,8 +354,13 @@ def innovations(org_name):
                                 SET gcpsi = '{}' where userID = {}
                                 """.format(cps, session["UserId"]))    
               db.commit()
-              return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
-        #  Email + options can be removed from both th einnovation and problem ratings tables
+            #   if (request.form["passvar"]=="1"):
+            #           return redirect(url_for('users_file.AdminDashboard', org_name=session["OrgName"]))
+            #   else:  
+            #           return redirect(url_for('surveys_file.problems', org_name=session["OrgName"]))
+              return redirect(url_for('users_file.AdminDashboard', org_name=session["OrgName"]))
+          
+                #  Email + options can be removed from both th einnovation and problem ratings tables
           elif request.form["problems"] == "Rate Innovation":
               db.execute("""
                                 Insert into [thrip].[innovationratings]

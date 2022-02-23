@@ -259,12 +259,16 @@ def reset_with_token(token):
     return render_template('reset_password_with_token.html', token=token)
 
 
-@users_file.route('/<string:org_name>/Dashboard', methods=['GET', 'POST'])
-def dashboard(org_name):
+@users_file.route('/<string:org_name>/Dashboard', methods=['GET', 'POST','HEAD'])
+def dashboard( org_name):
     if session.get('UserId'):
-        allprob = db.execute("Select problemID, userID, name, description from [thrip].[problemstatements] where OrgID = {} and IsActive = 'Yes' ".format(session['OrgId'])).fetchall()
-        allinnov = db.execute("Select innovationID, userID, name, description from [thrip].[innovation] where OrgID = {} ".format(session['OrgId'])).fetchall()
-       
+        allprob = db.execute("Select problemID, userID, name, description, orgFunctionName, qtype from [thrip].[problemstatements] where OrgID = {} and IsActive = 'Yes' ".format(session['OrgId'])).fetchall()
+        allfinprob = db.execute("Select problemID, userID, name, description, orgFunctionName, qtype from [thrip].[problemstatements] where OrgID = {} and IsActive = 'Yes' and orgFunctionName = 'Finance' ".format(session['OrgId'])).fetchall()
+        allinnov = db.execute(
+            "Select i.*, p.name as 'ProbName', p.orgFunctionName as Department  from [thrip].[innovation] i join [thrip].[problemstatements] p on i.problemID = p.problemID where i.OrgID = {}".format(session['OrgId'])).fetchall()
+        allfininnov = db.execute(
+            "Select i.*, p.name as 'ProbName', p.orgFunctionName as Department  from [thrip].[innovation] i join [thrip].[problemstatements] p on i.problemID = p.problemID where i.OrgID = {} and p.orgFunctionName = 'Finance'".format(session['OrgId'])).fetchall()
+        
         users = db.execute("Select * from [thrip].[orgusers] where OrgID = {} and userID = {}".format(session['OrgId'], session['UserId'])).fetchone()
         oftheweek1 = db.execute(
                 "select gtopprob, gtopinnov, gtoprank, gbadge1, gbadge2, gbadge3, gbadge4, gbadge5, gbadge6, gbadge7, gbadge8 from [thrip].[gamification] where userID= {}".format(session['UserId'])).fetchone()
@@ -280,15 +284,21 @@ def dashboard(org_name):
         session['gbadgecal'] = oftheweek1[9]
         session['gbadgetime'] = oftheweek1[10]  
         
+         
+      
         if request.method == "POST":
+          
             db.execute("""
                                 Update [thrip].[orgusers]
                                 set firstname = '{}', surname = '{}', gender = '{}', language = '{}', qualification = '{}', department = '{}'
                                 where OrgID = {} and userID = {}
                                 """.format(request.form["Name"], request.form["Surname"], request.form["Gender"], request.form["Language"], request.form["Qualification"], request.form["Department"], session['OrgId'], session['UserId']))
             db.commit()
-            return render_template('AdminDash.html', allinnov = allinnov, allprob = allprob, org_name=session["OrgName"], users=users)
+        
         return render_template('AdminDash.html', allinnov = allinnov, allprob = allprob, org_name=session["OrgName"],  users=users)
+        # else:
+        #     return render_template('AdminDash.html', allfinprob = allfinprob, allinnov = allinnov, allprob = allfinprob, org_name=session["OrgName"],  users=users)
+        
     else:
         error = 'You are not logged in'
         return render_template('login.html', Error=error)
