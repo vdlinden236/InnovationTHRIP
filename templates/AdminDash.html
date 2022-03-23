@@ -249,14 +249,14 @@ span.scale-rating label:before
                           
 <!-- grid 1.1 div open -->  <div > 
                                 <a class="btn btn-norm" style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#submitProb"><i class="fas fa-plus"></i> Submit a Problem</a>
-                               <a class="btn btn-norm"style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate a Input</a>
+                               <a class="btn btn-norm"style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate </a>
                                 <input type="text" id="probsearch" onkeyup="searchprob()" placeholder="Search problems... " title="Seach ">
 <!-- grid 1.1 div c -->           
 </div>
 <!-- grid 2.1 d o-->         <div Style ="border-left:5px solid #2d4c5b; ">
                               <span>
                                 <a class="btn btn-norm" style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#submitInnov"><i class="fas fa-plus"></i> Submit an Innov..</a>
-                                 <a class="btn btn-norm" style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate an Innov..</a>
+                                 <a class="btn btn-norm" style= "background-color: #2d4c5b;" href=# data-toggle="modal" data-target="#rateProb"><i class="fas fa-star"></i> Rate </a>
                                 <input type="text" id="innovsearch" onkeyup="searchinnov()" placeholder="Search innovations..." title="Seach">
                                  
                                 </span> 
@@ -270,11 +270,11 @@ span.scale-rating label:before
                                       <table id="example" class="table compact table-hover" style="border-collapse: collapse; border-radius:10px; overflow:hidden;">
                                           <thead class="text-center dot--dblue text-white" style="background-color:#EBA144" >
                                             <tr class="" style ="font-size:10px;" >
-                                              <th style="width:15%;">Inputs</th>
+                                              <th style="width:15%;">Problems</th>
                                               <th style="width:40%;">Description</th>
                                               <th style="width:10%;">Type</th>
                                               <th style="width:10%;">Department</th>
-                                              <th style="width:5%;">Rate</th>
+                                              
                                             </tr>
                                           </thead>
                                           <tbody class="text-center" style="font-size: 9px !important;">
@@ -286,7 +286,7 @@ span.scale-rating label:before
                                                 <td style="text-align: justify; text-justify: inter-word;">{{  i.description  }}</td>
                                                 <td style="display: table-cell; vertical-align: middle;">{{  i.qtype  }}</td>
                                                 <td style="display: table-cell; vertical-align: middle;">{{  i.orgFunctionName  }}</td>
-                                                <td style="display: table-cell; vertical-align: middle;"></td>
+                                         
                                               </tr>
                                               {% endfor %}
                                           </tbody>
@@ -313,7 +313,7 @@ span.scale-rating label:before
                              <th style="width:25%;">Innovation</th>
                              <th style="width:40%;">Description</th>
                               <th style="width:5%;">Department</th>
-                              <th style="width:5%;">Rate</th>
+                              
                               </tr>
                         </thead>
                         <tbody class="text-center" style="font-size: 9px !important;">
@@ -325,7 +325,7 @@ span.scale-rating label:before
                               <!-- <td style="display: table-cell; vertical-align: middle;">{{  i.innovationStatusTypeID  }}</td> -->
                               <!-- <td style="display: table-cell; vertical-align: middle;">{{  i.horisonID  }}</td> -->
                               <td style="display: table-cell; vertical-align: middle;">{{  i.Department  }}</td>
-                              <td style="display: table-cell; vertical-align: middle;"></td>
+                              
                                             
                             </tr>
                             {% endfor %}
@@ -341,7 +341,7 @@ span.scale-rating label:before
                             <div class="icon-image" >
                               <center>
                             <!-- Fianance here -->
-                            <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-user-circle fa-3x"></i></a>
+                            <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-user-circle fa-3x" ></i></a>
                             <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-credit-card fa-3x"></i></a>
                             <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-rocket fa-3x"></i></a>
                             <a href="#" id="filter1" data-toggle="modal"  data-target="#Filter1"><i class="fa fa-cogs fa-3x"></i></a>
@@ -507,7 +507,7 @@ span.scale-rating label:before
     <div class="modal fade" id="submitProb" tabindex="-1" role="dialog" aria-labelledby="EditRolesLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data">
+                <form action="{{  url_for('surveys_file.problems', org_name=session['OrgName'])  }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               <div class="modal-header dot--dblue">
                 <h5 class="modal-title dot--dblue text-white" id="subProb">Submit a Input</h5>
         
@@ -515,11 +515,11 @@ span.scale-rating label:before
               <div class="modal-body">
                 <div class="form-group">
                     <center>
-                    <label class="text-center">Input:</label>
+                    <label class="text-center">Problem:</label>
                     <input style="text-align:left;" class="form-control qlogin" type="text" required name="PName" id="PName"/>
                         <label class="text-center">Description:</label>
                         <textarea style="text-align:left;" class="form-control qlogin" type="text" required name="UDesc" id="UDesc"></textarea>
-                        <label class="text-center">Input Type:</label>
+                        <label class="text-center">Problem Type:</label>
                     <select class="form-control qlogin" name="Utype" id="Utype">
                       <option value="" selected disabled></option>
                         <option value="Complaint" >Complaint</option>

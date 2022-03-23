@@ -558,7 +558,7 @@ span.scale-rating label:before
               <option value="" selected disabled></option>
                <option value="AllCommunication" >All Communication</option>
                 <option value="InactiveUsers" >Inactive Users</option>
-                <option value="HighImportanceInput" >High Importance Input</option>
+                <option value="HighImportanceInput" >High Importance Problem</option>
                 <option value="CloseTobadge" >Close To Badge</option>
                 <option value="UserProblemClosed" >User Problem Closed</option>
                 <option value="TimeBasedChallenge" >Time Based Challenge</option>
@@ -576,7 +576,8 @@ span.scale-rating label:before
           <label class="text-center">Select a Problem Statement :</label>
           <select class="form-control qlogin" name="probtbchal" id="probtbchal"  >
         <option value="" selected disabled></option>
-          {% for i in gatePS %}
+          
+          {% for i in problemnotgate %} 
           <option value="{{  i.gateproblemID  }}" >{{  i.name  }}</option>
           {% endfor %}
       </select>
